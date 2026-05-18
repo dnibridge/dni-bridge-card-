@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -9,18 +10,22 @@
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f5f3;color:#1a1a1a;min-height:100vh}
   .topbar{background:#fff;border-bottom:1px solid #e8e8e4;padding:0 2rem;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
-  .logo{font-size:16px;font-weight:600;letter-spacing:0.05em;color:#1a1a1a}
+  .logo{font-size:16px;font-weight:600;letter-spacing:0.05em}
   .logo span{color:#185FA5}
   .topbar-right{display:flex;align-items:center;gap:10px}
   .btn{padding:7px 14px;border-radius:8px;border:1px solid #d0d0cc;background:#fff;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:6px;color:#444}
   .btn:hover{background:#f5f5f3}
   .btn-primary{background:#185FA5;color:#fff;border-color:#185FA5}
   .btn-primary:hover{background:#0C447C}
+  .btn-warn{background:#fff;color:#854F0B;border-color:#EF9F27}
+  .btn-warn:hover{background:#FAEEDA}
+  .btn-danger{background:#fff;color:#A32D2D;border-color:#F09595}
+  .btn-danger:hover{background:#FCEBEB}
   .main{max-width:1200px;margin:0 auto;padding:1.5rem 2rem}
   .alert{background:#FCEBEB;border:1px solid #F7C1C1;border-radius:8px;padding:10px 16px;font-size:13px;color:#791F1F;display:flex;align-items:center;gap:8px;margin-bottom:1.25rem}
   .metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:1.25rem}
   .metric{background:#fff;border:1px solid #e8e8e4;border-radius:10px;padding:1rem 1.1rem}
-  .metric-label{font-size:12px;color:#888;margin-bottom:6px;display:flex;align-items:center;gap:5px}
+  .metric-label{font-size:12px;color:#888;margin-bottom:6px}
   .metric-value{font-size:24px;font-weight:600;color:#1a1a1a}
   .metric-sub{font-size:11px;color:#aaa;margin-top:3px}
   .metric.danger .metric-value{color:#A32D2D}
@@ -32,7 +37,7 @@
   .card-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid #f0f0ec;font-size:13px}
   .card-row:last-child{border-bottom:none}
   .card-left{display:flex;align-items:center;gap:10px}
-  .avatar{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600}
+  .avatar{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0}
   .av-blue{background:#E6F1FB;color:#185FA5}
   .av-teal{background:#E1F5EE;color:#0F6E56}
   .av-amber{background:#FAEEDA;color:#854F0B}
@@ -50,6 +55,11 @@
   .amt-ok{color:#3B6D11}
   .amt-warn{color:#854F0B}
   .amt-low{color:#A32D2D}
+  .card-actions{display:flex;gap:4px;margin-left:8px}
+  .icon-btn{background:none;border:none;cursor:pointer;padding:3px 5px;border-radius:5px;font-size:13px;color:#aaa;line-height:1}
+  .icon-btn:hover{background:#f0f0ec;color:#444}
+  .icon-btn.edit:hover{color:#185FA5;background:#E6F1FB}
+  .icon-btn.del:hover{color:#A32D2D;background:#FCEBEB}
   .dept-row{display:flex;align-items:center;gap:8px;margin-bottom:9px;font-size:12px}
   .dept-name{width:56px;color:#666;flex-shrink:0}
   .dept-bar-wrap{flex:1;background:#f0f0ec;border-radius:4px;height:8px;overflow:hidden}
@@ -57,10 +67,10 @@
   .dept-amt{width:80px;text-align:right;color:#1a1a1a;font-weight:600;font-size:12px}
   .chart-wrap{position:relative;width:100%;height:140px;margin-top:10px}
   .full-card{background:#fff;border:1px solid #e8e8e4;border-radius:12px;padding:1.1rem 1.25rem;margin-bottom:14px}
-  .tab-row{display:flex;gap:6px}
+  .tab-row{display:flex;gap:6px;flex-wrap:wrap}
   .tab{font-size:12px;padding:4px 11px;border-radius:7px;border:1px solid #e0e0dc;cursor:pointer;color:#666;background:#fff}
   .tab.active{background:#185FA5;color:#fff;border-color:#185FA5}
-  .tx-row{display:grid;grid-template-columns:50px 64px 70px 1fr 88px 52px;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #f0f0ec;font-size:12px}
+  .tx-row{display:grid;grid-template-columns:50px 64px 72px 1fr 88px 52px;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #f0f0ec;font-size:12px}
   .tx-row:last-child{border-bottom:none}
   .tx-head{font-size:11px;color:#aaa;font-weight:600;border-bottom:2px solid #e8e8e4;padding-bottom:6px;margin-bottom:2px}
   .cat-badge{display:inline-block;padding:2px 8px;border-radius:6px;font-size:11px}
@@ -69,6 +79,8 @@
   .cat-supply{background:#EEEDFE;color:#534AB7}
   .cat-other{background:#F1EFE8;color:#5F5E5A}
   .cat-fuel{background:#E6F1FB;color:#185FA5}
+  .cat-enter{background:#FBEAF0;color:#993556}
+  .cat-night{background:#26215C;color:#CECBF6}
   .s-ok{background:#EAF3DE;color:#3B6D11;padding:2px 8px;border-radius:6px;font-size:11px}
   .s-pend{background:#FAEEDA;color:#854F0B;padding:2px 8px;border-radius:6px;font-size:11px}
   .overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.45);z-index:100;align-items:center;justify-content:center}
@@ -80,14 +92,14 @@
   .form-group input,.form-group select{width:100%;padding:8px 10px;border:1px solid #ddd;border-radius:8px;font-size:13px;color:#1a1a1a;background:#fff}
   .form-group input:focus,.form-group select:focus{outline:none;border-color:#185FA5;box-shadow:0 0 0 3px rgba(24,95,165,0.1)}
   .modal-btns{display:flex;gap:8px;justify-content:flex-end;margin-top:14px}
-  .modal-overlay2{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.45);z-index:100;align-items:center;justify-content:center}
-  .modal-overlay2.show{display:flex}
   .empty-msg{text-align:center;padding:2rem;color:#aaa;font-size:13px}
+  .charge-note{font-size:11px;color:#888;margin-top:4px}
   @media(max-width:768px){
     .metrics{grid-template-columns:1fr 1fr}
     .two-col{grid-template-columns:1fr}
     .main{padding:1rem}
-    .tx-row{grid-template-columns:44px 1fr 80px 44px}
+    .topbar{padding:0 1rem}
+    .tx-row{grid-template-columns:40px 1fr 76px 40px}
   }
 </style>
 </head>
@@ -100,7 +112,7 @@
     <button class="btn" onclick="showAddCard()">+ 카드 추가</button>
     <button class="btn btn-primary" onclick="showAddTx()">+ 사용내역</button>
     <button class="btn" onclick="exportCSV()">⬇ CSV</button>
-    <button class="btn" onclick="if(confirm('모든 데이터를 초기화하시겠습니까?')){localStorage.clear();location.reload()}">초기화</button>
+    <button class="btn btn-danger" onclick="if(confirm('모든 데이터를 초기화하시겠습니까?')){localStorage.clear();location.reload()}">초기화</button>
   </div>
 </div>
 
@@ -108,7 +120,6 @@
   <div class="alert" id="alertBox" style="display:none">
     ⚠️ <span id="alertMsg"></span>
   </div>
-
   <div class="metrics">
     <div class="metric">
       <div class="metric-label">💳 총 카드 수</div>
@@ -152,7 +163,7 @@
       사용내역
       <div class="tab-row">
         <button class="tab active" onclick="filterTx('전체',this)">전체</button>
-        <div id="deptTabs"></div>
+        <div id="deptTabs" style="display:flex;gap:6px;flex-wrap:wrap"></div>
       </div>
     </div>
     <div class="tx-row tx-head">
@@ -162,10 +173,11 @@
   </div>
 </div>
 
-<!-- 카드 추가 모달 -->
+<!-- 카드 추가/수정 모달 -->
 <div class="overlay" id="cardModal">
   <div class="modal">
-    <h3>법인카드 추가</h3>
+    <h3 id="cardModalTitle">법인카드 추가</h3>
+    <input type="hidden" id="c-edit-idx" value="-1">
     <div class="form-group">
       <label>담당자 이름</label>
       <input type="text" id="c-name" placeholder="예: 홍길동">
@@ -181,10 +193,11 @@
     <div class="form-group">
       <label>충전 금액 (원)</label>
       <input type="number" id="c-charged" placeholder="예: 500000">
+      <div class="charge-note" id="chargeNote" style="display:none">※ 수정 시 기존 충전 금액에 추가됩니다</div>
     </div>
     <div class="modal-btns">
-      <button class="btn" onclick="document.getElementById('cardModal').classList.remove('show')">취소</button>
-      <button class="btn btn-primary" onclick="addCard()">추가</button>
+      <button class="btn" onclick="closeCardModal()">취소</button>
+      <button class="btn btn-primary" onclick="saveCard()">저장</button>
     </div>
   </div>
 </div>
@@ -204,7 +217,13 @@
     <div class="form-group">
       <label>카테고리</label>
       <select id="t-cat">
-        <option>식비</option><option>교통/출장</option><option>사무용품</option><option>연료</option><option>기타</option>
+        <option>식비</option>
+        <option>교통/출장</option>
+        <option>접대비</option>
+        <option>야식비</option>
+        <option>사무용품</option>
+        <option>연료</option>
+        <option>기타</option>
       </select>
     </div>
     <div class="form-group">
@@ -241,6 +260,8 @@ function catClass(cat){
   if(cat==='식비') return 'cat-meal';
   if(cat==='사무용품') return 'cat-supply';
   if(cat==='연료') return 'cat-fuel';
+  if(cat==='접대비') return 'cat-enter';
+  if(cat==='야식비') return 'cat-night';
   return 'cat-other';
 }
 
@@ -277,10 +298,13 @@ function renderCards(){
           <div class="card-dept">${c.dept} · *${c.num||'????'}</div>
         </div>
       </div>
-      <div style="display:flex;align-items:center;gap:8px">
+      <div style="display:flex;align-items:center;gap:6px">
         <div class="bar-wrap"><div class="bar-fill ${barClass(pct)}" style="width:${pct}%"></div></div>
         <div class="amt ${amtClass(pct)}">${fmt(bal)}</div>
-        <button onclick="deleteCard(${i})" style="background:none;border:none;cursor:pointer;color:#ccc;font-size:16px;padding:0 4px" title="삭제">×</button>
+        <div class="card-actions">
+          <button class="icon-btn edit" onclick="showEditCard(${i})" title="수정">✏️</button>
+          <button class="icon-btn del" onclick="deleteCard(${i})" title="삭제">🗑</button>
+        </div>
       </div>
     </div>`;
   }).join('');
@@ -332,7 +356,7 @@ function renderTx(){
   const filtered = currentFilter==='전체' ? tx : tx.filter(t=>t.dept===currentFilter);
   const el = document.getElementById('txList');
   if(!filtered.length){ el.innerHTML='<div class="empty-msg">사용내역이 없습니다</div>'; return; }
-  el.innerHTML = filtered.slice(0,20).map((t,i)=>`
+  el.innerHTML = filtered.slice(0,30).map(t=>`
     <div class="tx-row">
       <span style="color:#aaa">${t.date}</span>
       <span style="font-weight:600">${t.card}</span>
@@ -350,26 +374,71 @@ function filterTx(dept, el){
   renderTx();
 }
 
-function showAddCard(){ document.getElementById('cardModal').classList.add('show'); }
-function showAddTx(){
-  const cards = loadCards();
-  if(!cards.length){ alert('먼저 카드를 추가해주세요'); return; }
-  const sel = document.getElementById('t-card');
-  sel.innerHTML = cards.map(c=>`<option value="${c.name}|${c.dept}">${c.name} (${c.dept}) *${c.num}</option>`).join('');
-  document.getElementById('txModal').classList.add('show');
+// 카드 추가 모달 열기
+function showAddCard(){
+  document.getElementById('cardModalTitle').textContent = '법인카드 추가';
+  document.getElementById('c-edit-idx').value = '-1';
+  document.getElementById('c-name').value = '';
+  document.getElementById('c-dept').value = '';
+  document.getElementById('c-num').value = '';
+  document.getElementById('c-charged').value = '';
+  document.getElementById('c-charged').placeholder = '예: 500000';
+  document.getElementById('chargeNote').style.display = 'none';
+  document.getElementById('cardModal').classList.add('show');
 }
 
-function addCard(){
+// 카드 수정 모달 열기
+function showEditCard(i){
+  const cards = loadCards();
+  const c = cards[i];
+  document.getElementById('cardModalTitle').textContent = '카드 정보 수정';
+  document.getElementById('c-edit-idx').value = i;
+  document.getElementById('c-name').value = c.name || '';
+  document.getElementById('c-dept').value = c.dept || '';
+  document.getElementById('c-num').value = c.num || '';
+  document.getElementById('c-charged').value = '';
+  document.getElementById('c-charged').placeholder = '추가 충전 금액 (없으면 0 또는 빈칸)';
+  document.getElementById('chargeNote').style.display = 'block';
+  document.getElementById('cardModal').classList.add('show');
+}
+
+function closeCardModal(){
+  document.getElementById('cardModal').classList.remove('show');
+}
+
+// 카드 저장 (추가 or 수정)
+function saveCard(){
   const name = document.getElementById('c-name').value.trim();
   const dept = document.getElementById('c-dept').value.trim();
   const num = document.getElementById('c-num').value.trim();
-  const charged = parseInt(document.getElementById('c-charged').value)||0;
+  const chargedInput = parseInt(document.getElementById('c-charged').value) || 0;
+  const editIdx = parseInt(document.getElementById('c-edit-idx').value);
   if(!name||!dept){ alert('담당자 이름과 부서를 입력해주세요'); return; }
+
   const cards = loadCards();
-  cards.push({name, dept, num, charged, used:0});
+
+  if(editIdx >= 0) {
+    // 수정 모드 — 이름/부서/카드번호 업데이트, 충전금액은 추가
+    const old = cards[editIdx];
+    cards[editIdx] = {
+      ...old,
+      name,
+      dept,
+      num: num || old.num,
+      charged: (old.charged || 0) + chargedInput,
+    };
+    // 사용내역에서도 담당자/부서 이름 업데이트
+    const tx = loadTx();
+    tx.forEach(t=>{ if(t.card===old.name){ t.card=name; t.dept=dept; } });
+    saveTx(tx);
+  } else {
+    // 추가 모드
+    if(!chargedInput){ alert('충전 금액을 입력해주세요'); return; }
+    cards.push({name, dept, num, charged:chargedInput, used:0});
+  }
+
   saveCards(cards);
-  ['c-name','c-dept','c-num','c-charged'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('cardModal').classList.remove('show');
+  closeCardModal();
   renderAll();
 }
 
@@ -379,6 +448,14 @@ function deleteCard(i){
   cards.splice(i,1);
   saveCards(cards);
   renderAll();
+}
+
+function showAddTx(){
+  const cards = loadCards();
+  if(!cards.length){ alert('먼저 카드를 추가해주세요'); return; }
+  const sel = document.getElementById('t-card');
+  sel.innerHTML = cards.map(c=>`<option value="${c.name}|${c.dept}">${c.name} (${c.dept}) *${c.num}</option>`).join('');
+  document.getElementById('txModal').classList.add('show');
 }
 
 function addTx(){
@@ -419,7 +496,7 @@ function renderAll(){ renderMetrics(); renderCards(); renderDept(); renderTabs()
 
 document.getElementById('todayDate').textContent = new Date().toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric'});
 window.onclick = e => {
-  if(e.target.id==='cardModal') document.getElementById('cardModal').classList.remove('show');
+  if(e.target.id==='cardModal') closeCardModal();
   if(e.target.id==='txModal') document.getElementById('txModal').classList.remove('show');
 };
 renderAll();
