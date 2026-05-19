@@ -12,13 +12,11 @@
   .topbar{background:#fff;border-bottom:1px solid #e8e8e4;padding:0 2rem;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
   .logo{font-size:16px;font-weight:600;letter-spacing:0.05em}
   .logo span{color:#185FA5}
-  .topbar-right{display:flex;align-items:center;gap:10px}
-  .btn{padding:7px 14px;border-radius:8px;border:1px solid #d0d0cc;background:#fff;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:6px;color:#444}
+  .topbar-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .btn{padding:7px 14px;border-radius:8px;border:1px solid #d0d0cc;background:#fff;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:6px;color:#444;white-space:nowrap}
   .btn:hover{background:#f5f5f3}
   .btn-primary{background:#185FA5;color:#fff;border-color:#185FA5}
   .btn-primary:hover{background:#0C447C}
-  .btn-warn{background:#fff;color:#854F0B;border-color:#EF9F27}
-  .btn-warn:hover{background:#FAEEDA}
   .btn-danger{background:#fff;color:#A32D2D;border-color:#F09595}
   .btn-danger:hover{background:#FCEBEB}
   .main{max-width:1200px;margin:0 auto;padding:1.5rem 2rem}
@@ -55,7 +53,6 @@
   .amt-ok{color:#3B6D11}
   .amt-warn{color:#854F0B}
   .amt-low{color:#A32D2D}
-  .card-actions{display:flex;gap:4px;margin-left:8px}
   .icon-btn{background:none;border:none;cursor:pointer;padding:3px 5px;border-radius:5px;font-size:13px;color:#aaa;line-height:1}
   .icon-btn:hover{background:#f0f0ec;color:#444}
   .icon-btn.edit:hover{color:#185FA5;background:#E6F1FB}
@@ -70,27 +67,33 @@
   .tab-row{display:flex;gap:6px;flex-wrap:wrap}
   .tab{font-size:12px;padding:4px 11px;border-radius:7px;border:1px solid #e0e0dc;cursor:pointer;color:#666;background:#fff}
   .tab.active{background:#185FA5;color:#fff;border-color:#185FA5}
-  .tx-row{display:grid;grid-template-columns:50px 64px 72px 1fr 88px 52px;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #f0f0ec;font-size:12px}
-  .tx-row:last-child{border-bottom:none}
-  .tx-head{font-size:11px;color:#aaa;font-weight:600;border-bottom:2px solid #e8e8e4;padding-bottom:6px;margin-bottom:2px}
-  .cat-badge{display:inline-block;padding:2px 8px;border-radius:6px;font-size:11px}
-  .cat-travel{background:#E1F5EE;color:#0F6E56}
+  .tx-table{width:100%;border-collapse:collapse}
+  .tx-table th{font-size:11px;color:#aaa;font-weight:600;text-align:left;padding:6px 8px;border-bottom:2px solid #e8e8e4}
+  .tx-table td{font-size:12px;padding:8px 8px;border-bottom:1px solid #f0f0ec;vertical-align:middle}
+  .tx-table tr:last-child td{border-bottom:none}
+  .tx-table tr:hover td{background:#fafaf8}
+  .cat-badge{display:inline-block;padding:2px 8px;border-radius:6px;font-size:11px;white-space:nowrap}
   .cat-meal{background:#FAEEDA;color:#854F0B}
-  .cat-supply{background:#EEEDFE;color:#534AB7}
-  .cat-other{background:#F1EFE8;color:#5F5E5A}
-  .cat-fuel{background:#E6F1FB;color:#185FA5}
+  .cat-travel{background:#E1F5EE;color:#0F6E56}
   .cat-enter{background:#FBEAF0;color:#993556}
-  .cat-night{background:#26215C;color:#CECBF6}
+  .cat-night{background:#EEEDFE;color:#534AB7}
+  .cat-supply{background:#E6F1FB;color:#185FA5}
+  .cat-fuel{background:#EAF3DE;color:#3B6D11}
+  .cat-other{background:#F1EFE8;color:#5F5E5A}
   .s-ok{background:#EAF3DE;color:#3B6D11;padding:2px 8px;border-radius:6px;font-size:11px}
   .s-pend{background:#FAEEDA;color:#854F0B;padding:2px 8px;border-radius:6px;font-size:11px}
   .overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.45);z-index:100;align-items:center;justify-content:center}
   .overlay.show{display:flex}
-  .modal{background:#fff;border-radius:14px;padding:1.5rem;width:360px;box-shadow:0 8px 32px rgba(0,0,0,0.15)}
+  .modal{background:#fff;border-radius:14px;padding:1.5rem;width:380px;box-shadow:0 8px 32px rgba(0,0,0,0.15);max-height:90vh;overflow-y:auto}
   .modal h3{font-size:15px;font-weight:600;margin-bottom:1.1rem;color:#1a1a1a}
   .form-group{margin-bottom:12px}
   .form-group label{font-size:12px;color:#666;display:block;margin-bottom:4px;font-weight:500}
   .form-group input,.form-group select{width:100%;padding:8px 10px;border:1px solid #ddd;border-radius:8px;font-size:13px;color:#1a1a1a;background:#fff}
   .form-group input:focus,.form-group select:focus{outline:none;border-color:#185FA5;box-shadow:0 0 0 3px rgba(24,95,165,0.1)}
+  .memo-suggestions{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+  .memo-chip{padding:4px 10px;border-radius:20px;border:1px solid #ddd;background:#f9f9f7;font-size:12px;cursor:pointer;color:#444;transition:all 0.15s}
+  .memo-chip:hover{background:#E6F1FB;border-color:#185FA5;color:#185FA5}
+  .memo-chip.selected{background:#185FA5;border-color:#185FA5;color:#fff}
   .modal-btns{display:flex;gap:8px;justify-content:flex-end;margin-top:14px}
   .empty-msg{text-align:center;padding:2rem;color:#aaa;font-size:13px}
   .charge-note{font-size:11px;color:#888;margin-top:4px}
@@ -98,8 +101,7 @@
     .metrics{grid-template-columns:1fr 1fr}
     .two-col{grid-template-columns:1fr}
     .main{padding:1rem}
-    .topbar{padding:0 1rem}
-    .tx-row{grid-template-columns:40px 1fr 76px 40px}
+    .topbar{padding:0 1rem;height:auto;padding:8px 1rem;flex-wrap:wrap;gap:6px}
   }
 </style>
 </head>
@@ -117,9 +119,8 @@
 </div>
 
 <div class="main">
-  <div class="alert" id="alertBox" style="display:none">
-    ⚠️ <span id="alertMsg"></span>
-  </div>
+  <div class="alert" id="alertBox" style="display:none">⚠️ <span id="alertMsg"></span></div>
+
   <div class="metrics">
     <div class="metric">
       <div class="metric-label">💳 총 카드 수</div>
@@ -154,22 +155,28 @@
     <div class="card">
       <div class="card-title">부서별 사용 현황</div>
       <div id="deptBars"></div>
-      <div class="chart-wrap"><canvas id="deptChart" role="img" aria-label="부서별 사용 금액 차트">부서별 사용 데이터</canvas></div>
+      <div class="chart-wrap"><canvas id="deptChart" role="img" aria-label="부서별 사용 금액 차트"></canvas></div>
     </div>
   </div>
 
   <div class="full-card">
-    <div class="card-title" style="margin-bottom:8px">
+    <div class="card-title" style="margin-bottom:10px">
       사용내역
       <div class="tab-row">
         <button class="tab active" onclick="filterTx('전체',this)">전체</button>
         <div id="deptTabs" style="display:flex;gap:6px;flex-wrap:wrap"></div>
       </div>
     </div>
-    <div class="tx-row tx-head">
-      <span>날짜</span><span>담당자</span><span>카테고리</span><span>메모</span><span style="text-align:right">금액</span><span>상태</span>
+    <div style="overflow-x:auto">
+      <table class="tx-table">
+        <thead>
+          <tr>
+            <th>날짜</th><th>담당자</th><th>카테고리</th><th>메모</th><th style="text-align:right">금액</th><th>상태</th><th>수정/삭제</th>
+          </tr>
+        </thead>
+        <tbody id="txList"><tr><td colspan="7" class="empty-msg">사용내역이 없습니다</td></tr></tbody>
+      </table>
     </div>
-    <div id="txList"><div class="empty-msg">사용내역이 없습니다</div></div>
   </div>
 </div>
 
@@ -193,7 +200,7 @@
     <div class="form-group">
       <label>충전 금액 (원)</label>
       <input type="number" id="c-charged" placeholder="예: 500000">
-      <div class="charge-note" id="chargeNote" style="display:none">※ 수정 시 기존 충전 금액에 추가됩니다</div>
+      <div class="charge-note" id="chargeNote" style="display:none">※ 수정 시 입력하면 기존 충전액에 추가됩니다</div>
     </div>
     <div class="modal-btns">
       <button class="btn" onclick="closeCardModal()">취소</button>
@@ -202,10 +209,11 @@
   </div>
 </div>
 
-<!-- 사용내역 추가 모달 -->
+<!-- 사용내역 추가/수정 모달 -->
 <div class="overlay" id="txModal">
   <div class="modal">
-    <h3>사용내역 추가</h3>
+    <h3 id="txModalTitle">사용내역 추가</h3>
+    <input type="hidden" id="t-edit-idx" value="-1">
     <div class="form-group">
       <label>카드 선택</label>
       <select id="t-card"></select>
@@ -216,23 +224,31 @@
     </div>
     <div class="form-group">
       <label>카테고리</label>
-      <select id="t-cat">
-        <option>식비</option>
-        <option>교통/출장</option>
-        <option>접대비</option>
-        <option>야식비</option>
-        <option>사무용품</option>
-        <option>연료</option>
-        <option>기타</option>
+      <select id="t-cat" onchange="updateMemoSuggestions()">
+        <option value="식대">식대</option>
+        <option value="교통/출장">교통/출장</option>
+        <option value="접대비">접대비</option>
+        <option value="야식비">야식비</option>
+        <option value="사무용품">사무용품</option>
+        <option value="연료">연료</option>
+        <option value="기타">기타</option>
       </select>
     </div>
     <div class="form-group">
-      <label>메모</label>
-      <input type="text" id="t-memo" placeholder="예: 고객 점심 식사">
+      <label>메모 <span style="color:#aaa;font-weight:400;font-size:11px">— 아래에서 빠르게 선택하거나 직접 입력</span></label>
+      <div class="memo-suggestions" id="memoChips"></div>
+      <input type="text" id="t-memo" placeholder="직접 입력도 가능해요" style="margin-top:8px">
+    </div>
+    <div class="form-group">
+      <label>상태</label>
+      <select id="t-status">
+        <option value="승인">승인</option>
+        <option value="대기">대기</option>
+      </select>
     </div>
     <div class="modal-btns">
-      <button class="btn" onclick="document.getElementById('txModal').classList.remove('show')">취소</button>
-      <button class="btn btn-primary" onclick="addTx()">추가</button>
+      <button class="btn" onclick="closeTxModal()">취소</button>
+      <button class="btn btn-primary" onclick="saveTx()">저장</button>
     </div>
   </div>
 </div>
@@ -241,263 +257,293 @@
 const fmt = n => Number(n).toLocaleString('ko-KR') + '원';
 const avColors = ['av-blue','av-teal','av-amber','av-coral','av-purple','av-gray'];
 const deptColors = {'영업팀':'#185FA5','관리팀':'#1D9E75','운영팀':'#854F0B','재무팀':'#993556','기획팀':'#534AB7'};
-function getDeptColor(d){ return deptColors[d] || '#888780'; }
+function getDeptColor(d){ return deptColors[d]||'#888780'; }
+
+// 카테고리별 메모 자동완성 목록
+const MEMO_MAP = {
+  '식대':    ['팀 점심','고객 점심','회의 식사','팀 저녁','간식 구매','회식'],
+  '교통/출장':['KTX 출장','택시비','주차비','버스/지하철','항공권','렌터카'],
+  '접대비':  ['고객 접대','파트너 식사','거래처 미팅','골프 접대','고객 선물'],
+  '야식비':  ['야근 야식','팀 야식','배달 주문','편의점 구매'],
+  '사무용품':['복사지 구매','문구류','토너 교체','사무기기','소모품'],
+  '연료':    ['차량 주유','법인차 주유','렌트카 주유'],
+  '기타':    ['기타 비용','잡비','소액 지출'],
+};
 
 function loadCards(){ try{ return JSON.parse(localStorage.getItem('dni_cards')||'[]'); }catch(e){ return []; } }
 function saveCards(c){ localStorage.setItem('dni_cards', JSON.stringify(c)); }
 function loadTx(){ try{ return JSON.parse(localStorage.getItem('dni_tx')||'[]'); }catch(e){ return []; } }
-function saveTx(t){ localStorage.setItem('dni_tx', JSON.stringify(t)); }
+function saveTxData(t){ localStorage.setItem('dni_tx', JSON.stringify(t)); }
 
 let currentFilter = '전체';
 let chartInst = null;
 
-function getBalance(c){ return (c.charged||0) - (c.used||0); }
-function getBarPct(c){ if(!c.charged) return 0; return Math.min(100, Math.round(getBalance(c)/c.charged*100)); }
+function getBalance(c){ return (c.charged||0)-(c.used||0); }
+function getBarPct(c){ if(!c.charged) return 0; return Math.min(100,Math.round(getBalance(c)/c.charged*100)); }
 function barClass(p){ return p>30?'bar-ok':p>15?'bar-warn':'bar-low'; }
 function amtClass(p){ return p>30?'amt-ok':p>15?'amt-warn':'amt-low'; }
 function catClass(cat){
-  if(cat==='교통/출장') return 'cat-travel';
-  if(cat==='식비') return 'cat-meal';
-  if(cat==='사무용품') return 'cat-supply';
-  if(cat==='연료') return 'cat-fuel';
-  if(cat==='접대비') return 'cat-enter';
-  if(cat==='야식비') return 'cat-night';
-  return 'cat-other';
+  const m={'식대':'cat-meal','교통/출장':'cat-travel','접대비':'cat-enter','야식비':'cat-night','사무용품':'cat-supply','연료':'cat-fuel'};
+  return m[cat]||'cat-other';
 }
 
 function renderMetrics(){
-  const cards = loadCards();
-  const totalBal = cards.reduce((s,c)=>s+getBalance(c),0);
-  const totalUsed = cards.reduce((s,c)=>s+(c.used||0),0);
-  const lowCount = cards.filter(c=>getBalance(c)<100000).length;
-  document.getElementById('mTotalCards').textContent = cards.length;
-  document.getElementById('mTotalBal').textContent = fmt(totalBal);
-  document.getElementById('mUsed').textContent = fmt(totalUsed);
-  document.getElementById('mLow').textContent = lowCount + '장';
-  const alertBox = document.getElementById('alertBox');
-  if(lowCount>0){
-    alertBox.style.display='flex';
-    document.getElementById('alertMsg').innerHTML = '잔액 부족 카드 <strong>'+lowCount+'장</strong> — 즉시 충전이 필요합니다';
-  } else { alertBox.style.display='none'; }
+  const cards=loadCards();
+  const totalBal=cards.reduce((s,c)=>s+getBalance(c),0);
+  const totalUsed=cards.reduce((s,c)=>s+(c.used||0),0);
+  const lowCount=cards.filter(c=>getBalance(c)<100000).length;
+  document.getElementById('mTotalCards').textContent=cards.length;
+  document.getElementById('mTotalBal').textContent=fmt(totalBal);
+  document.getElementById('mUsed').textContent=fmt(totalUsed);
+  document.getElementById('mLow').textContent=lowCount+'장';
+  const ab=document.getElementById('alertBox');
+  if(lowCount>0){ab.style.display='flex';document.getElementById('alertMsg').innerHTML='잔액 부족 카드 <strong>'+lowCount+'장</strong> — 즉시 충전이 필요합니다';}
+  else ab.style.display='none';
 }
 
 function renderCards(){
-  const cards = loadCards();
-  const list = document.getElementById('cardList');
-  if(!cards.length){ list.innerHTML='<div class="empty-msg">카드를 추가해주세요</div>'; return; }
-  list.innerHTML = cards.map((c,i)=>{
-    const bal = getBalance(c);
-    const pct = getBarPct(c);
-    const av = avColors[i % avColors.length];
-    const init = (c.name||'?')[0];
+  const cards=loadCards();
+  const list=document.getElementById('cardList');
+  if(!cards.length){list.innerHTML='<div class="empty-msg">카드를 추가해주세요</div>';return;}
+  list.innerHTML=cards.map((c,i)=>{
+    const bal=getBalance(c),pct=getBarPct(c),av=avColors[i%avColors.length];
     return `<div class="card-row">
       <div class="card-left">
-        <div class="avatar ${av}">${init}</div>
-        <div>
-          <div class="card-name">${c.name}</div>
-          <div class="card-dept">${c.dept} · *${c.num||'????'}</div>
-        </div>
+        <div class="avatar ${av}">${(c.name||'?')[0]}</div>
+        <div><div class="card-name">${c.name}</div><div class="card-dept">${c.dept} · *${c.num||'????'}</div></div>
       </div>
       <div style="display:flex;align-items:center;gap:6px">
         <div class="bar-wrap"><div class="bar-fill ${barClass(pct)}" style="width:${pct}%"></div></div>
         <div class="amt ${amtClass(pct)}">${fmt(bal)}</div>
-        <div class="card-actions">
-          <button class="icon-btn edit" onclick="showEditCard(${i})" title="수정">✏️</button>
-          <button class="icon-btn del" onclick="deleteCard(${i})" title="삭제">🗑</button>
-        </div>
+        <button class="icon-btn edit" onclick="showEditCard(${i})" title="수정">✏️</button>
+        <button class="icon-btn del" onclick="deleteCard(${i})" title="삭제">🗑</button>
       </div>
     </div>`;
   }).join('');
 }
 
 function renderDept(){
-  const cards = loadCards();
-  const tx = loadTx();
-  const depts = {};
-  cards.forEach(c=>{ if(!depts[c.dept]) depts[c.dept]=0; });
-  tx.forEach(t=>{ if(t.dept) depts[t.dept]=(depts[t.dept]||0)+t.amt; });
-  const entries = Object.entries(depts).filter(([,v])=>v>0);
-  const max = entries.length ? Math.max(...entries.map(([,v])=>v)) : 1;
-  document.getElementById('deptBars').innerHTML = entries.length ? entries.map(([d,v])=>`
+  const cards=loadCards(),tx=loadTx(),depts={};
+  cards.forEach(c=>{if(!depts[c.dept])depts[c.dept]=0;});
+  tx.forEach(t=>{if(t.dept)depts[t.dept]=(depts[t.dept]||0)+t.amt;});
+  const entries=Object.entries(depts).filter(([,v])=>v>0);
+  const max=entries.length?Math.max(...entries.map(([,v])=>v)):1;
+  document.getElementById('deptBars').innerHTML=entries.length?entries.map(([d,v])=>`
     <div class="dept-row">
       <span class="dept-name">${d}</span>
       <div class="dept-bar-wrap"><div class="dept-bar" style="width:${Math.round(v/max*100)}%;background:${getDeptColor(d)}"></div></div>
       <span class="dept-amt">${fmt(v)}</span>
-    </div>`).join('') : '<div class="empty-msg" style="padding:1rem">사용내역이 없습니다</div>';
-
-  if(chartInst) chartInst.destroy();
-  if(!entries.length) return;
-  chartInst = new Chart(document.getElementById('deptChart'),{
+    </div>`).join(''):'<div class="empty-msg" style="padding:1rem">사용내역이 없습니다</div>';
+  if(chartInst)chartInst.destroy();
+  if(!entries.length)return;
+  chartInst=new Chart(document.getElementById('deptChart'),{
     type:'bar',
-    data:{
-      labels: entries.map(([d])=>d),
-      datasets:[{label:'사용액', data:entries.map(([,v])=>v), backgroundColor:entries.map(([d])=>getDeptColor(d)), borderRadius:5, borderSkipped:false}]
-    },
-    options:{
-      responsive:true, maintainAspectRatio:false,
-      plugins:{legend:{display:false}},
-      scales:{
-        x:{grid:{display:false}, ticks:{font:{size:11},color:'#888'}},
-        y:{grid:{color:'rgba(0,0,0,0.05)'}, ticks:{font:{size:10},color:'#888', callback:v=>Math.round(v/10000)+'만'}}
-      }
-    }
+    data:{labels:entries.map(([d])=>d),datasets:[{label:'사용액',data:entries.map(([,v])=>v),backgroundColor:entries.map(([d])=>getDeptColor(d)),borderRadius:5,borderSkipped:false}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{font:{size:11},color:'#888'}},y:{grid:{color:'rgba(0,0,0,0.05)'},ticks:{font:{size:10},color:'#888',callback:v=>Math.round(v/10000)+'만'}}}}
   });
 }
 
 function renderTabs(){
-  const cards = loadCards();
-  const depts = [...new Set(cards.map(c=>c.dept))];
-  document.getElementById('deptTabs').innerHTML = depts.map(d=>
-    `<button class="tab" onclick="filterTx('${d}',this)">${d}</button>`).join('');
+  const cards=loadCards();
+  const depts=[...new Set(cards.map(c=>c.dept))];
+  document.getElementById('deptTabs').innerHTML=depts.map(d=>`<button class="tab" onclick="filterTx('${d}',this)">${d}</button>`).join('');
 }
 
 function renderTx(){
-  const tx = loadTx();
-  const filtered = currentFilter==='전체' ? tx : tx.filter(t=>t.dept===currentFilter);
-  const el = document.getElementById('txList');
-  if(!filtered.length){ el.innerHTML='<div class="empty-msg">사용내역이 없습니다</div>'; return; }
-  el.innerHTML = filtered.slice(0,30).map(t=>`
-    <div class="tx-row">
-      <span style="color:#aaa">${t.date}</span>
-      <span style="font-weight:600">${t.card}</span>
-      <span class="cat-badge ${catClass(t.cat)}">${t.cat}</span>
-      <span style="color:#666;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${t.memo}</span>
-      <span style="font-weight:600;text-align:right">${fmt(t.amt)}</span>
-      <span class="${t.status==='승인'?'s-ok':'s-pend'}">${t.status}</span>
-    </div>`).join('');
+  const tx=loadTx();
+  const filtered=currentFilter==='전체'?tx:tx.filter(t=>t.dept===currentFilter);
+  const el=document.getElementById('txList');
+  if(!filtered.length){el.innerHTML='<tr><td colspan="7" class="empty-msg">사용내역이 없습니다</td></tr>';return;}
+  el.innerHTML=filtered.slice(0,30).map((t,i)=>{
+    const realIdx=tx.indexOf(t);
+    return `<tr>
+      <td style="color:#aaa;white-space:nowrap">${t.date}</td>
+      <td style="font-weight:600">${t.card}</td>
+      <td><span class="cat-badge ${catClass(t.cat)}">${t.cat}</span></td>
+      <td style="color:#666;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${t.memo}</td>
+      <td style="font-weight:600;text-align:right;white-space:nowrap">${fmt(t.amt)}</td>
+      <td><span class="${t.status==='승인'?'s-ok':'s-pend'}">${t.status}</span></td>
+      <td style="white-space:nowrap">
+        <button class="icon-btn edit" onclick="showEditTx(${realIdx})" title="수정">✏️</button>
+        <button class="icon-btn del" onclick="deleteTx(${realIdx})" title="삭제">🗑</button>
+      </td>
+    </tr>`;
+  }).join('');
 }
 
-function filterTx(dept, el){
-  currentFilter = dept;
+function filterTx(dept,el){
+  currentFilter=dept;
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   el.classList.add('active');
   renderTx();
 }
 
-// 카드 추가 모달 열기
+// ── 카드 모달 ──
 function showAddCard(){
-  document.getElementById('cardModalTitle').textContent = '법인카드 추가';
-  document.getElementById('c-edit-idx').value = '-1';
-  document.getElementById('c-name').value = '';
-  document.getElementById('c-dept').value = '';
-  document.getElementById('c-num').value = '';
-  document.getElementById('c-charged').value = '';
-  document.getElementById('c-charged').placeholder = '예: 500000';
-  document.getElementById('chargeNote').style.display = 'none';
+  document.getElementById('cardModalTitle').textContent='법인카드 추가';
+  document.getElementById('c-edit-idx').value='-1';
+  ['c-name','c-dept','c-num','c-charged'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('c-charged').placeholder='예: 500000';
+  document.getElementById('chargeNote').style.display='none';
   document.getElementById('cardModal').classList.add('show');
 }
-
-// 카드 수정 모달 열기
 function showEditCard(i){
-  const cards = loadCards();
-  const c = cards[i];
-  document.getElementById('cardModalTitle').textContent = '카드 정보 수정';
-  document.getElementById('c-edit-idx').value = i;
-  document.getElementById('c-name').value = c.name || '';
-  document.getElementById('c-dept').value = c.dept || '';
-  document.getElementById('c-num').value = c.num || '';
-  document.getElementById('c-charged').value = '';
-  document.getElementById('c-charged').placeholder = '추가 충전 금액 (없으면 0 또는 빈칸)';
-  document.getElementById('chargeNote').style.display = 'block';
+  const c=loadCards()[i];
+  document.getElementById('cardModalTitle').textContent='카드 정보 수정';
+  document.getElementById('c-edit-idx').value=i;
+  document.getElementById('c-name').value=c.name||'';
+  document.getElementById('c-dept').value=c.dept||'';
+  document.getElementById('c-num').value=c.num||'';
+  document.getElementById('c-charged').value='';
+  document.getElementById('c-charged').placeholder='추가 충전 금액 (없으면 빈칸)';
+  document.getElementById('chargeNote').style.display='block';
   document.getElementById('cardModal').classList.add('show');
 }
-
-function closeCardModal(){
-  document.getElementById('cardModal').classList.remove('show');
-}
-
-// 카드 저장 (추가 or 수정)
+function closeCardModal(){ document.getElementById('cardModal').classList.remove('show'); }
 function saveCard(){
-  const name = document.getElementById('c-name').value.trim();
-  const dept = document.getElementById('c-dept').value.trim();
-  const num = document.getElementById('c-num').value.trim();
-  const chargedInput = parseInt(document.getElementById('c-charged').value) || 0;
-  const editIdx = parseInt(document.getElementById('c-edit-idx').value);
-  if(!name||!dept){ alert('담당자 이름과 부서를 입력해주세요'); return; }
-
-  const cards = loadCards();
-
-  if(editIdx >= 0) {
-    // 수정 모드 — 이름/부서/카드번호 업데이트, 충전금액은 추가
-    const old = cards[editIdx];
-    cards[editIdx] = {
-      ...old,
-      name,
-      dept,
-      num: num || old.num,
-      charged: (old.charged || 0) + chargedInput,
-    };
-    // 사용내역에서도 담당자/부서 이름 업데이트
-    const tx = loadTx();
-    tx.forEach(t=>{ if(t.card===old.name){ t.card=name; t.dept=dept; } });
-    saveTx(tx);
+  const name=document.getElementById('c-name').value.trim();
+  const dept=document.getElementById('c-dept').value.trim();
+  const num=document.getElementById('c-num').value.trim();
+  const chargedInput=parseInt(document.getElementById('c-charged').value)||0;
+  const editIdx=parseInt(document.getElementById('c-edit-idx').value);
+  if(!name||!dept){alert('담당자 이름과 부서를 입력해주세요');return;}
+  const cards=loadCards();
+  if(editIdx>=0){
+    const old=cards[editIdx];
+    cards[editIdx]={...old,name,dept,num:num||old.num,charged:(old.charged||0)+chargedInput};
+    const tx=loadTx();
+    tx.forEach(t=>{if(t.card===old.name){t.card=name;t.dept=dept;}});
+    saveTxData(tx);
   } else {
-    // 추가 모드
-    if(!chargedInput){ alert('충전 금액을 입력해주세요'); return; }
-    cards.push({name, dept, num, charged:chargedInput, used:0});
+    if(!chargedInput){alert('충전 금액을 입력해주세요');return;}
+    cards.push({name,dept,num,charged:chargedInput,used:0});
   }
-
   saveCards(cards);
   closeCardModal();
   renderAll();
 }
-
 function deleteCard(i){
-  if(!confirm('이 카드를 삭제하시겠습니까?')) return;
-  const cards = loadCards();
-  cards.splice(i,1);
-  saveCards(cards);
-  renderAll();
+  if(!confirm('이 카드를 삭제하시겠습니까?'))return;
+  const cards=loadCards();cards.splice(i,1);saveCards(cards);renderAll();
+}
+
+// ── 사용내역 모달 ──
+function updateMemoSuggestions(){
+  const cat=document.getElementById('t-cat').value;
+  const chips=MEMO_MAP[cat]||[];
+  const container=document.getElementById('memoChips');
+  container.innerHTML=chips.map(m=>`<span class="memo-chip" onclick="selectMemoChip(this,'${m}')">${m}</span>`).join('');
+}
+function selectMemoChip(el,val){
+  document.querySelectorAll('.memo-chip').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('t-memo').value=val;
 }
 
 function showAddTx(){
-  const cards = loadCards();
-  if(!cards.length){ alert('먼저 카드를 추가해주세요'); return; }
-  const sel = document.getElementById('t-card');
-  sel.innerHTML = cards.map(c=>`<option value="${c.name}|${c.dept}">${c.name} (${c.dept}) *${c.num}</option>`).join('');
+  const cards=loadCards();
+  if(!cards.length){alert('먼저 카드를 추가해주세요');return;}
+  document.getElementById('txModalTitle').textContent='사용내역 추가';
+  document.getElementById('t-edit-idx').value='-1';
+  const sel=document.getElementById('t-card');
+  sel.innerHTML=cards.map(c=>`<option value="${c.name}|${c.dept}">${c.name} (${c.dept}) *${c.num}</option>`).join('');
+  document.getElementById('t-amt').value='';
+  document.getElementById('t-cat').value='식대';
+  document.getElementById('t-memo').value='';
+  document.getElementById('t-status').value='승인';
+  updateMemoSuggestions();
   document.getElementById('txModal').classList.add('show');
 }
 
-function addTx(){
-  const sel = document.getElementById('t-card').value.split('|');
-  const cardName = sel[0], dept = sel[1];
-  const amt = parseInt(document.getElementById('t-amt').value)||0;
-  const cat = document.getElementById('t-cat').value;
-  const memo = document.getElementById('t-memo').value.trim()||'-';
-  if(!amt){ alert('금액을 입력해주세요'); return; }
-  const cards = loadCards();
-  const cardObj = cards.find(c=>c.name===cardName);
-  if(cardObj) cardObj.used = (cardObj.used||0) + amt;
+function showEditTx(i){
+  const cards=loadCards();
+  const tx=loadTx();
+  const t=tx[i];
+  document.getElementById('txModalTitle').textContent='사용내역 수정';
+  document.getElementById('t-edit-idx').value=i;
+  const sel=document.getElementById('t-card');
+  sel.innerHTML=cards.map(c=>`<option value="${c.name}|${c.dept}"${c.name===t.card?' selected':''}>${c.name} (${c.dept}) *${c.num}</option>`).join('');
+  document.getElementById('t-amt').value=t.amt||'';
+  document.getElementById('t-cat').value=t.cat||'식대';
+  document.getElementById('t-memo').value=t.memo||'';
+  document.getElementById('t-status').value=t.status||'승인';
+  updateMemoSuggestions();
+  // 기존 메모 선택 표시
+  setTimeout(()=>{
+    document.querySelectorAll('.memo-chip').forEach(c=>{
+      if(c.textContent===t.memo) c.classList.add('selected');
+    });
+  },50);
+  document.getElementById('txModal').classList.add('show');
+}
+
+function closeTxModal(){ document.getElementById('txModal').classList.remove('show'); }
+
+function saveTx(){
+  const selVal=document.getElementById('t-card').value.split('|');
+  const cardName=selVal[0],dept=selVal[1];
+  const amt=parseInt(document.getElementById('t-amt').value)||0;
+  const cat=document.getElementById('t-cat').value;
+  const memo=document.getElementById('t-memo').value.trim()||cat;
+  const status=document.getElementById('t-status').value;
+  const editIdx=parseInt(document.getElementById('t-edit-idx').value);
+  if(!amt){alert('금액을 입력해주세요');return;}
+
+  const cards=loadCards();
+  const tx=loadTx();
+  const today=new Date();
+  const dateStr=(today.getMonth()+1)+'/'+today.getDate();
+
+  if(editIdx>=0){
+    // 수정: 기존 카드 used 에서 이전 금액 빼고 새 금액 더하기
+    const old=tx[editIdx];
+    const oldCard=cards.find(c=>c.name===old.card);
+    if(oldCard) oldCard.used=Math.max(0,(oldCard.used||0)-old.amt);
+    const newCard=cards.find(c=>c.name===cardName);
+    if(newCard) newCard.used=(newCard.used||0)+amt;
+    tx[editIdx]={...old,card:cardName,dept,amt,cat,memo,status};
+  } else {
+    // 신규 추가
+    const cardObj=cards.find(c=>c.name===cardName);
+    if(cardObj) cardObj.used=(cardObj.used||0)+amt;
+    tx.unshift({date:dateStr,card:cardName,dept,cat,memo,amt,status});
+  }
+
   saveCards(cards);
-  const tx = loadTx();
-  const today = new Date();
-  const dateStr = (today.getMonth()+1) + '/' + today.getDate();
-  tx.unshift({date:dateStr, card:cardName, dept, cat, memo, amt, status:'승인'});
-  saveTx(tx);
+  saveTxData(tx);
   document.getElementById('t-amt').value='';
   document.getElementById('t-memo').value='';
-  document.getElementById('txModal').classList.remove('show');
+  closeTxModal();
   renderAll();
 }
 
+function deleteTx(i){
+  if(!confirm('이 내역을 삭제하시겠습니까?'))return;
+  const tx=loadTx(),cards=loadCards();
+  const t=tx[i];
+  const cardObj=cards.find(c=>c.name===t.card);
+  if(cardObj) cardObj.used=Math.max(0,(cardObj.used||0)-t.amt);
+  tx.splice(i,1);
+  saveCards(cards);saveTxData(tx);renderAll();
+}
+
 function exportCSV(){
-  const tx = loadTx();
-  if(!tx.length){ alert('내보낼 데이터가 없습니다'); return; }
-  const rows = [['날짜','담당자','부서','카테고리','메모','금액','상태']];
-  tx.forEach(t=>rows.push([t.date, t.card, t.dept, t.cat, t.memo, t.amt, t.status]));
-  const csv = '\uFEFF' + rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\n');
-  const a = document.createElement('a');
-  a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
-  a.download = 'DNI_BRIDGE_' + new Date().toISOString().slice(0,10) + '.csv';
+  const tx=loadTx();
+  if(!tx.length){alert('내보낼 데이터가 없습니다');return;}
+  const rows=[['날짜','담당자','부서','카테고리','메모','금액','상태']];
+  tx.forEach(t=>rows.push([t.date,t.card,t.dept,t.cat,t.memo,t.amt,t.status]));
+  const csv='\uFEFF'+rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\n');
+  const a=document.createElement('a');
+  a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
+  a.download='DNI_BRIDGE_'+new Date().toISOString().slice(0,10)+'.csv';
   a.click();
 }
 
-function renderAll(){ renderMetrics(); renderCards(); renderDept(); renderTabs(); renderTx(); }
-
-document.getElementById('todayDate').textContent = new Date().toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric'});
-window.onclick = e => {
+function renderAll(){ renderMetrics();renderCards();renderDept();renderTabs();renderTx(); }
+document.getElementById('todayDate').textContent=new Date().toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric'});
+window.onclick=e=>{
   if(e.target.id==='cardModal') closeCardModal();
-  if(e.target.id==='txModal') document.getElementById('txModal').classList.remove('show');
+  if(e.target.id==='txModal') closeTxModal();
 };
 renderAll();
 </script>
