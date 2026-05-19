@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DNI BRIDGE 법인카드 관리 — 사용 매뉴얼</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f5f3;color:#1a1a1a;line-height:1.7}
+  .wrap{max-width:780px;margin:0 auto;padding:2rem 1.5rem 4rem}
+  /* 표지 */
+  .cover{background:#185FA5;border-radius:16px;padding:2.5rem 2rem;margin-bottom:2rem;color:#fff;text-align:center}
+  .cover-logo{font-size:22px;font-weight:700;letter-spacing:0.06em;margin-bottom:6px}
+  .cover-logo span{color:#B5D4F4}
+  .cover-title{font-size:28px;font-weight:700;margin-bottom:8px}
+  .cover-sub{font-size:14px;color:#B5D4F4;margin-bottom:1.5rem}
+  .cover-url{display:inline-block;background:rgba(255,255,255,0.15);border-radius:8px;padding:8px 20px;font-size:14px;font-family:monospace;color:#fff;word-break:break-all}
+  /* 목차 */
+  .toc{background:#fff;border-radius:12px;padding:1.25rem 1.5rem;margin-bottom:2rem;border:1px solid #e8e8e4}
+  .toc-title{font-size:13px;font-weight:600;color:#888;margin-bottom:10px;text-transform:uppercase;letter-spacing:0.05em}
+  .toc-item{display:flex;align-items:center;gap:10px;padding:5px 0;font-size:14px;color:#185FA5;text-decoration:none;border-bottom:1px dashed #f0f0ec}
+  .toc-item:last-child{border-bottom:none}
+  .toc-num{width:22px;height:22px;border-radius:50%;background:#E6F1FB;color:#185FA5;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  /* 섹션 */
+  .section{background:#fff;border-radius:12px;padding:1.5rem;margin-bottom:1.25rem;border:1px solid #e8e8e4}
+  .sec-header{display:flex;align-items:center;gap:10px;margin-bottom:1rem;padding-bottom:10px;border-bottom:2px solid #E6F1FB}
+  .sec-num{width:32px;height:32px;border-radius:50%;background:#185FA5;color:#fff;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .sec-title{font-size:17px;font-weight:700;color:#1a1a1a}
+  .sec-sub{font-size:13px;color:#888;margin-top:1px}
+  /* 스텝 */
+  .step{display:flex;gap:12px;margin-bottom:14px;align-items:flex-start}
+  .step-num{width:26px;height:26px;border-radius:50%;background:#E6F1FB;color:#185FA5;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+  .step-body{flex:1}
+  .step-title{font-size:14px;font-weight:600;color:#1a1a1a;margin-bottom:3px}
+  .step-desc{font-size:13px;color:#555;line-height:1.65}
+  /* 팁 박스 */
+  .tip{background:#EAF3DE;border-left:3px solid #639922;border-radius:0 8px 8px 0;padding:10px 14px;font-size:13px;color:#27500A;margin:10px 0}
+  .warn{background:#FAEEDA;border-left:3px solid #EF9F27;border-radius:0 8px 8px 0;padding:10px 14px;font-size:13px;color:#633806;margin:10px 0}
+  .info{background:#E6F1FB;border-left:3px solid #185FA5;border-radius:0 8px 8px 0;padding:10px 14px;font-size:13px;color:#0C447C;margin:10px 0}
+  .danger-box{background:#FCEBEB;border-left:3px solid #E24B4A;border-radius:0 8px 8px 0;padding:10px 14px;font-size:13px;color:#791F1F;margin:10px 0}
+  /* 버튼 시뮬레이션 */
+  .btn-sim{display:inline-block;padding:4px 12px;border-radius:7px;font-size:12px;font-weight:600;vertical-align:middle}
+  .btn-blue{background:#185FA5;color:#fff}
+  .btn-white{background:#fff;border:1px solid #ddd;color:#444}
+  .btn-red{background:#A32D2D;color:#fff}
+  /* 화면 모형 */
+  .screen-mock{background:#1e1e2e;border-radius:10px;padding:12px;margin:10px 0}
+  .mock-row{display:flex;align-items:center;justify-content:space-between;background:#2a2a3e;border-radius:6px;padding:8px 12px;margin-bottom:6px;font-size:12px;color:#e0e0e0}
+  .mock-row:last-child{margin-bottom:0}
+  /* 카테고리 배지 */
+  .cat{display:inline-block;padding:2px 8px;border-radius:5px;font-size:11px;font-weight:500}
+  .cat-meal{background:#FAEEDA;color:#854F0B}
+  .cat-travel{background:#E1F5EE;color:#0F6E56}
+  .cat-enter{background:#FBEAF0;color:#993556}
+  .cat-night{background:#EEEDFE;color:#534AB7}
+  .cat-supply{background:#E6F1FB;color:#185FA5}
+  .cat-fuel{background:#EAF3DE;color:#3B6D11}
+  /* 표 */
+  table{width:100%;border-collapse:collapse;margin:10px 0;font-size:13px}
+  th{background:#f5f5f3;padding:8px 10px;text-align:left;font-size:12px;color:#666;border-bottom:2px solid #e8e8e4}
+  td{padding:8px 10px;border-bottom:1px solid #f0f0ec}
+  tr:last-child td{border-bottom:none}
+  /* FAQ */
+  .faq-item{border:1px solid #e8e8e4;border-radius:8px;margin-bottom:8px;overflow:hidden}
+  .faq-q{padding:12px 14px;font-size:13px;font-weight:600;color:#185FA5;background:#f9f9f7}
+  .faq-a{padding:10px 14px;font-size:13px;color:#555;background:#fff;border-top:1px solid #e8e8e4;line-height:1.65}
+  /* 푸터 */
+  .footer{text-align:center;margin-top:2.5rem;font-size:12px;color:#aaa}
+  .footer strong{color:#185FA5}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- 표지 -->
+<div class="cover">
+  <div class="cover-logo">DNI <span>BRIDGE</span></div>
+  <div class="cover-title">법인카드 관리 시스템<br>사용 매뉴얼</div>
+  <div class="cover-sub">처음 사용하는 분도 10분이면 바로 시작할 수 있어요</div>
+  <div class="cover-url">🌐 dni-bridge-card.vercel.app</div>
+</div>
+
+<!-- 목차 -->
+<div class="toc">
+  <div class="toc-title">📋 목차</div>
+  <a class="toc-item" href="#s1"><div class="toc-num">1</div> 시스템 접속 방법</a>
+  <a class="toc-item" href="#s2"><div class="toc-num">2</div> 카드 등록하기</a>
+  <a class="toc-item" href="#s3"><div class="toc-num">3</div> 사용내역 입력하기</a>
+  <a class="toc-item" href="#s4"><div class="toc-num">4</div> 사용내역 수정 / 삭제</a>
+  <a class="toc-item" href="#s5"><div class="toc-num">5</div> 카드 정보 수정 / 추가 충전</a>
+  <a class="toc-item" href="#s6"><div class="toc-num">6</div> 카테고리 안내</a>
+  <a class="toc-item" href="#s7"><div class="toc-num">7</div> CSV 내보내기 (엑셀)</a>
+  <a class="toc-item" href="#s8"><div class="toc-num">8</div> 자주 묻는 질문</a>
+</div>
+
+<!-- 1. 접속 -->
+<div class="section" id="s1">
+  <div class="sec-header">
+    <div class="sec-num">1</div>
+    <div><div class="sec-title">시스템 접속 방법</div><div class="sec-sub">별도 설치 없이 인터넷 브라우저로 바로 사용</div></div>
+  </div>
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-body">
+      <div class="step-title">인터넷 브라우저 열기</div>
+      <div class="step-desc">크롬(Chrome), 사파리(Safari), 엣지(Edge) 모두 사용 가능합니다. 스마트폰에서도 접속 가능해요.</div>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-body">
+      <div class="step-title">주소창에 아래 주소 입력 후 Enter</div>
+      <div style="background:#1e1e2e;border-radius:8px;padding:10px 16px;margin:6px 0;font-family:monospace;font-size:14px;color:#7dd3fc">dni-bridge-card.vercel.app</div>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-body">
+      <div class="step-title">즐겨찾기 저장 추천</div>
+      <div class="step-desc">매번 주소를 입력하기 번거로우니 즐겨찾기(★)에 저장해두세요.</div>
+    </div>
+  </div>
+  <div class="tip">✅ 앱 설치 없이 인터넷만 되면 어디서든 접속 가능합니다. PC, 스마트폰, 태블릿 모두 OK!</div>
+</div>
+
+<!-- 2. 카드 등록 -->
+<div class="section" id="s2">
+  <div class="sec-header">
+    <div class="sec-num">2</div>
+    <div><div class="sec-title">카드 등록하기</div><div class="sec-sub">처음 시작할 때 — 사용 중인 법인카드를 먼저 등록해야 해요</div></div>
+  </div>
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-body">
+      <div class="step-title">화면 오른쪽 상단 <span class="btn-sim btn-white">+ 카드 추가</span> 버튼 클릭</div>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-body">
+      <div class="step-title">팝업창에 아래 정보 입력</div>
+      <table>
+        <tr><th>항목</th><th>입력 내용</th><th>예시</th></tr>
+        <tr><td>담당자 이름</td><td>카드를 사용하는 직원 이름</td><td>홍길동</td></tr>
+        <tr><td>부서</td><td>소속 부서명</td><td>영업팀</td></tr>
+        <tr><td>카드 끝 4자리</td><td>카드 뒷번호 4자리</td><td>1234</td></tr>
+        <tr><td>충전 금액</td><td>현재 카드에 충전된 금액 (원)</td><td>500000</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-body">
+      <div class="step-title"><span class="btn-sim btn-blue">저장</span> 버튼 클릭 → 완료!</div>
+      <div class="step-desc">카드별 잔액 현황에 바로 표시됩니다.</div>
+    </div>
+  </div>
+  <div class="info">💡 카드는 몇 장이든 추가할 수 있어요. 직원 한 명당 카드 한 장씩 등록하면 됩니다.</div>
+  <div class="warn">⚠️ 충전 금액은 현재 카드에 실제로 들어있는 금액을 입력하세요.</div>
+</div>
+
+<!-- 3. 사용내역 입력 -->
+<div class="section" id="s3">
+  <div class="sec-header">
+    <div class="sec-num">3</div>
+    <div><div class="sec-title">사용내역 입력하기</div><div class="sec-sub">카드를 사용할 때마다 기록해요</div></div>
+  </div>
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-body">
+      <div class="step-title">화면 오른쪽 상단 <span class="btn-sim btn-blue">+ 사용내역</span> 버튼 클릭</div>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-body">
+      <div class="step-title">카드 선택</div>
+      <div class="step-desc">목록에서 사용한 직원의 카드를 선택합니다. 현재 잔액이 자동으로 표시됩니다.</div>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-body">
+      <div class="step-title">사용 금액 입력</div>
+      <div class="step-desc">금액을 입력하면 사용 후 남는 잔액이 실시간으로 보입니다. 잔액보다 많은 금액을 입력하면 <span style="color:#A32D2D;font-weight:600">자동으로 오류 알림</span>이 뜹니다.</div>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">4</div>
+    <div class="step-body">
+      <div class="step-title">카테고리 선택 → 메모 자동 추천</div>
+      <div class="step-desc">카테고리를 선택하면 관련 메모가 버튼으로 나타납니다. 클릭하면 자동 입력되고, 직접 타이핑도 가능합니다.</div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px">
+        <span style="padding:4px 10px;border-radius:20px;border:1px solid #185FA5;background:#E6F1FB;font-size:12px;color:#185FA5">팀 점심</span>
+        <span style="padding:4px 10px;border-radius:20px;border:1px solid #ddd;background:#f9f9f7;font-size:12px;color:#444">고객 점심</span>
+        <span style="padding:4px 10px;border-radius:20px;border:1px solid #ddd;background:#f9f9f7;font-size:12px;color:#444">회의 식사</span>
+        <span style="padding:4px 10px;border-radius:20px;border:1px solid #ddd;background:#f9f9f7;font-size:12px;color:#444">회식</span>
+      </div>
+      <div style="font-size:12px;color:#aaa;margin-top:4px">← 식대 선택 시 이런 버튼이 나타나요</div>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">5</div>
+    <div class="step-body">
+      <div class="step-title"><span class="btn-sim btn-blue">저장</span> 클릭 → 잔액 자동 차감 완료!</div>
+    </div>
+  </div>
+  <div class="danger-box">🚫 <strong>잔액 초과 오류</strong> — 카드 잔액보다 많은 금액을 입력하면 저장이 안 되고 오류 팝업이 뜹니다. 카드를 먼저 충전하거나 다른 카드를 선택하세요.</div>
+</div>
+
+<!-- 4. 수정/삭제 -->
+<div class="section" id="s4">
+  <div class="sec-header">
+    <div class="sec-num">4</div>
+    <div><div class="sec-title">사용내역 수정 / 삭제</div><div class="sec-sub">잘못 입력했을 때 수정하는 방법</div></div>
+  </div>
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-body">
+      <div class="step-title">사용내역 목록에서 해당 행 찾기</div>
+      <div class="step-desc">화면 하단 사용내역 표에서 수정할 내역을 찾으세요. 부서별 탭으로 필터링하면 빠르게 찾을 수 있어요.</div>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-body">
+      <div class="step-title">맨 오른쪽 ✏️ 버튼(수정) 또는 🗑 버튼(삭제) 클릭</div>
+      <div class="step-desc">✏️ 수정: 금액, 카테고리, 메모, 상태 모두 변경 가능<br>🗑 삭제: 삭제하면 카드 잔액도 자동으로 복원됩니다</div>
+    </div>
+  </div>
+  <div class="tip">✅ 수정 시 잔액도 자동으로 다시 계산돼요. 따로 잔액을 건드릴 필요 없어요.</div>
+</div>
+
+<!-- 5. 카드 수정 -->
+<div class="section" id="s5">
+  <div class="sec-header">
+    <div class="sec-num">5</div>
+    <div><div class="sec-title">카드 정보 수정 / 추가 충전</div><div class="sec-sub">이름 변경, 카드 재충전 시 사용</div></div>
+  </div>
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-body">
+      <div class="step-title">카드별 잔액 현황에서 해당 카드의 ✏️ 버튼 클릭</div>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-body">
+      <div class="step-title">수정할 내용 변경 후 저장</div>
+      <table>
+        <tr><th>상황</th><th>방법</th></tr>
+        <tr><td>이름/부서 변경</td><td>이름, 부서 칸 수정 후 저장 (금액 빈칸 OK)</td></tr>
+        <tr><td>카드 재충전</td><td>충전 금액 칸에 추가할 금액 입력 → 기존 잔액에 자동 합산</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="info">💡 예: 현재 잔액이 50,000원인데 300,000원을 충전했다면 → 충전 금액 칸에 300,000 입력 → 잔액이 350,000원이 됩니다.</div>
+</div>
+
+<!-- 6. 카테고리 -->
+<div class="section" id="s6">
+  <div class="sec-header">
+    <div class="sec-num">6</div>
+    <div><div class="sec-title">카테고리 안내</div><div class="sec-sub">사용 목적에 맞는 카테고리를 선택하세요</div></div>
+  </div>
+  <table>
+    <tr><th>카테고리</th><th>사용 예시</th></tr>
+    <tr><td><span class="cat cat-meal">식대</span></td><td>팀 점심, 고객 점심, 회의 식사, 회식, 간식</td></tr>
+    <tr><td><span class="cat cat-travel">교통/출장</span></td><td>KTX, 택시, 주차비, 항공권, 렌터카</td></tr>
+    <tr><td><span class="cat cat-enter">접대비</span></td><td>고객 접대, 거래처 식사, 골프 접대, 선물</td></tr>
+    <tr><td><span class="cat cat-night">야식비</span></td><td>야근 야식, 배달 주문, 편의점 구매</td></tr>
+    <tr><td><span class="cat cat-supply">사무용품</span></td><td>복사지, 문구류, 토너, 소모품</td></tr>
+    <tr><td><span class="cat cat-fuel">연료</span></td><td>법인차 주유, 렌터카 주유</td></tr>
+    <tr><td><span style="background:#F1EFE8;color:#5F5E5A" class="cat">기타</span></td><td>위 항목에 해당하지 않는 기타 비용</td></tr>
+  </table>
+</div>
+
+<!-- 7. CSV -->
+<div class="section" id="s7">
+  <div class="sec-header">
+    <div class="sec-num">7</div>
+    <div><div class="sec-title">CSV 내보내기 (엑셀 저장)</div><div class="sec-sub">모든 사용내역을 엑셀 파일로 저장</div></div>
+  </div>
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-body">
+      <div class="step-title">화면 오른쪽 상단 <span class="btn-sim btn-white">⬇ CSV</span> 버튼 클릭</div>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-body">
+      <div class="step-title">파일이 자동으로 다운로드됩니다</div>
+      <div class="step-desc">파일명: DNI_BRIDGE_날짜.csv (예: DNI_BRIDGE_2026-05-19.csv)</div>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-body">
+      <div class="step-title">엑셀로 열기</div>
+      <div class="step-desc">다운로드된 파일을 더블클릭하면 엑셀에서 자동으로 열립니다.</div>
+    </div>
+  </div>
+  <div class="tip">✅ 한글이 깨지면: 엑셀에서 파일 열 때 "인코딩: UTF-8" 선택하세요.</div>
+</div>
+
+<!-- 8. FAQ -->
+<div class="section" id="s8">
+  <div class="sec-header">
+    <div class="sec-num">8</div>
+    <div><div class="sec-title">자주 묻는 질문</div></div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">Q. 잔액 부족 오류가 뜨면 어떻게 하나요?</div>
+    <div class="faq-a">카드 잔액보다 큰 금액을 입력하면 오류 팝업이 뜹니다. ① 금액을 줄이거나 ② 카드 수정(✏️)에서 추가 충전 후 다시 입력하세요.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">Q. 새로고침(F5)하면 데이터가 사라지나요?</div>
+    <div class="faq-a">아니요! 데이터는 브라우저에 자동 저장됩니다. 새로고침하거나 창을 닫아도 데이터가 그대로 남아 있어요.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">Q. 스마트폰에서도 쓸 수 있나요?</div>
+    <div class="faq-a">네! 스마트폰 브라우저에서 주소를 입력하면 바로 사용 가능합니다. 화면이 좁으면 가로 방향으로 돌려서 보세요.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">Q. 다른 컴퓨터에서 데이터를 보려면?</div>
+    <div class="faq-a">현재 버전은 각 기기의 브라우저에 저장되는 방식이라, 다른 기기에서는 별도로 입력해야 합니다. 여러 기기에서 공유하려면 CSV로 저장해서 공유하거나, 관리자에게 공유 기능 추가를 요청하세요.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">Q. 실수로 초기화 버튼을 눌렀어요!</div>
+    <div class="faq-a">초기화 전에 확인 팝업이 뜹니다. "확인"을 누른 경우 데이터가 삭제됩니다. 정기적으로 CSV를 저장해두시면 복구에 도움이 됩니다.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">Q. 카테고리를 추가하고 싶어요</div>
+    <div class="faq-a">카테고리 추가는 시스템 관리자에게 요청해주세요. 현재 제공 카테고리: 식대, 교통/출장, 접대비, 야식비, 사무용품, 연료, 기타</div>
+  </div>
+</div>
+
+<div class="footer">
+  <strong>DNI BRIDGE</strong> 법인카드 관리 시스템<br>
+  문의: 관리자에게 연락해주세요<br><br>
+  버전 1.0 · 2026년 5월
+</div>
+
+</div>
+</body>
+</html>
