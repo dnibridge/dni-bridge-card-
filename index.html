@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -101,6 +102,12 @@
   .err-highlight strong{font-size:15px;display:block;margin-bottom:2px}
   .err-close{width:100%;padding:10px;border:none;border-radius:10px;background:#A32D2D;color:#fff;font-size:14px;font-weight:600;cursor:pointer;margin-top:8px}
   .err-close:hover{background:#791F1F}
+
+  /* 충전내역 탭 */
+  .section-tabs{display:flex;gap:8px;margin-bottom:14px}
+  .section-tab{padding:7px 18px;border-radius:8px;border:1px solid #e0e0dc;cursor:pointer;font-size:13px;font-weight:500;color:#666;background:#fff}
+  .section-tab.active{background:#185FA5;color:#fff;border-color:#185FA5}
+  .ch-badge{display:inline-block;padding:2px 8px;border-radius:6px;font-size:11px;background:#E6F1FB;color:#185FA5}
   @media(max-width:768px){
     .metrics{grid-template-columns:1fr 1fr}
     .two-col{grid-template-columns:1fr}
@@ -116,6 +123,7 @@
   <div class="topbar-right">
     <span id="todayDate" style="font-size:12px;color:#aaa"></span>
     <button class="btn" onclick="showAddCard()">+ 카드 추가</button>
+    <button class="btn btn-primary" style="background:#0F9D58;border-color:#0F9D58" onclick="showAddCharge()">⚡ 충전 등록</button>
     <button class="btn btn-primary" onclick="showAddTx()">+ 사용내역</button>
     <button class="btn" onclick="exportCSV()">⬇ CSV</button>
     <button class="btn btn-danger" onclick="if(confirm('모든 데이터를 초기화하시겠습니까?')){localStorage.clear();location.reload()}">초기화</button>
@@ -141,7 +149,14 @@
       <div class="chart-wrap"><canvas id="deptChart" role="img" aria-label="부서별 사용 금액 차트"></canvas></div>
     </div>
   </div>
-  <div class="full-card">
+  <!-- 섹션 탭 -->
+  <div class="section-tabs">
+    <button class="section-tab active" id="stab-tx" onclick="switchSection('tx')">📋 사용내역</button>
+    <button class="section-tab" id="stab-ch" onclick="switchSection('ch')">⚡ 충전내역</button>
+  </div>
+
+  <!-- 사용내역 섹션 -->
+  <div class="full-card" id="section-tx">
     <div class="card-title" style="margin-bottom:10px">
       사용내역
       <div class="tab-row">
@@ -153,6 +168,20 @@
       <table class="tx-table">
         <thead><tr><th>날짜</th><th>담당자</th><th>카테고리</th><th>메모</th><th style="text-align:right">금액</th><th>상태</th><th>수정/삭제</th></tr></thead>
         <tbody id="txList"><tr><td colspan="7" class="empty-msg">사용내역이 없습니다</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 충전내역 섹션 -->
+  <div class="full-card" id="section-ch" style="display:none">
+    <div class="card-title" style="margin-bottom:10px">
+      충전내역
+      <button class="btn btn-primary" style="background:#0F9D58;border-color:#0F9D58;font-size:11px;padding:4px 10px" onclick="showAddCharge()">⚡ 충전 등록</button>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="tx-table">
+        <thead><tr><th>날짜</th><th>담당자</th><th>부서</th><th>메모</th><th style="text-align:right">충전금액</th><th>수정/삭제</th></tr></thead>
+        <tbody id="chList"><tr><td colspan="6" class="empty-msg">충전내역이 없습니다</td></tr></tbody>
       </table>
     </div>
   </div>
@@ -170,6 +199,27 @@
     </div>
     <div style="font-size:12px;color:#888">카드를 먼저 충전하거나<br>다른 카드를 선택해주세요.</div>
     <button class="err-close" onclick="closeErrPopup()">확인</button>
+  </div>
+</div>
+
+<!-- 충전 등록 모달 -->
+<div class="overlay" id="chargeModal">
+  <div class="modal">
+    <h3 id="chargeModalTitle">충전 등록</h3>
+    <input type="hidden" id="ch-edit-idx" value="-1">
+    <div class="form-group"><label>카드 선택</label><select id="ch-card"></select></div>
+    <div class="form-group">
+      <label>충전 금액 (원)</label>
+      <input type="number" id="ch-amt" placeholder="예: 500000">
+    </div>
+    <div class="form-group">
+      <label>메모 (선택)</label>
+      <input type="text" id="ch-memo" placeholder="예: 5월 충전, 추가 충전">
+    </div>
+    <div class="modal-btns">
+      <button class="btn" onclick="closeChargeModal()">취소</button>
+      <button class="btn btn-primary" style="background:#0F9D58;border-color:#0F9D58" onclick="saveCharge()">충전 등록</button>
+    </div>
   </div>
 </div>
 
@@ -212,7 +262,7 @@
         <option value="접대비">접대비</option>
         <option value="야식비">야식비</option>
         <option value="사무용품">사무용품</option>
-        <option value="연료">연료</option>
+        <option value="주유비">주유비</option>
         <option value="기타">기타</option>
       </select>
     </div>
@@ -234,7 +284,7 @@ const fmt=n=>Number(n).toLocaleString('ko-KR')+'원';
 const avColors=['av-blue','av-teal','av-amber','av-coral','av-purple','av-gray'];
 const deptColors={'영업팀':'#185FA5','관리팀':'#1D9E75','운영팀':'#854F0B','재무팀':'#993556','기획팀':'#534AB7'};
 function getDeptColor(d){return deptColors[d]||'#888780';}
-const MEMO_MAP={'식대':['팀 점심','고객 점심','회의 식사','팀 저녁','간식 구매','회식'],'교통/출장':['KTX 출장','택시비','주차비','버스/지하철','항공권','렌터카'],'접대비':['고객 접대','파트너 식사','거래처 미팅','골프 접대','고객 선물'],'야식비':['야근 야식','팀 야식','배달 주문','편의점 구매'],'사무용품':['복사지 구매','문구류','토너 교체','사무기기','소모품'],'연료':['차량 주유','법인차 주유','렌트카 주유'],'기타':['기타 비용','잡비','소액 지출']};
+const MEMO_MAP={'식대':['팀 점심','고객 점심','회의 식사','팀 저녁','간식 구매','회식'],'교통/출장':['KTX 출장','택시비','주차비','버스/지하철','항공권','렌터카'],'접대비':['고객 접대','파트너 식사','거래처 미팅','골프 접대','고객 선물'],'야식비':['야근 야식','팀 야식','배달 주문','편의점 구매'],'사무용품':['복사지 구매','문구류','토너 교체','사무기기','소모품'],'주유비':['차량 주유','법인차 주유','렌트카 주유'],'기타':['기타 비용','잡비','소액 지출']};
 
 function loadCards(){try{return JSON.parse(localStorage.getItem('dni_cards')||'[]');}catch(e){return[];}}
 function saveCards(c){localStorage.setItem('dni_cards',JSON.stringify(c));}
@@ -246,7 +296,7 @@ function getBalance(c){return(c.charged||0)-(c.used||0);}
 function getBarPct(c){if(!c.charged)return 0;return Math.min(100,Math.round(getBalance(c)/c.charged*100));}
 function barClass(p){return p>30?'bar-ok':p>15?'bar-warn':'bar-low';}
 function amtClass(p){return p>30?'amt-ok':p>15?'amt-warn':'amt-low';}
-function catClass(cat){const m={'식대':'cat-meal','교통/출장':'cat-travel','접대비':'cat-enter','야식비':'cat-night','사무용품':'cat-supply','연료':'cat-fuel'};return m[cat]||'cat-other';}
+function catClass(cat){const m={'식대':'cat-meal','교통/출장':'cat-travel','접대비':'cat-enter','야식비':'cat-night','사무용품':'cat-supply','주유비':'cat-fuel'};return m[cat]||'cat-other';}
 
 // ── 잔액 초과 에러 팝업 ──
 function showErrPopup(cardName, balance, inputAmt){
@@ -526,12 +576,115 @@ function exportCSV(){
   a.click();
 }
 
+
+// ── 충전내역 ──
+function loadCharges(){try{return JSON.parse(localStorage.getItem('dni_charges')||'[]');}catch(e){return[];}}
+function saveCharges(c){localStorage.setItem('dni_charges',JSON.stringify(c));}
+
+function switchSection(sec){
+  document.getElementById('section-tx').style.display = sec==='tx'?'block':'none';
+  document.getElementById('section-ch').style.display = sec==='ch'?'block':'none';
+  document.getElementById('stab-tx').classList.toggle('active', sec==='tx');
+  document.getElementById('stab-ch').classList.toggle('active', sec==='ch');
+  if(sec==='ch') renderCharges();
+}
+
+function showAddCharge(){
+  const cards=loadCards();
+  if(!cards.length){alert('먼저 카드를 추가해주세요');return;}
+  document.getElementById('chargeModalTitle').textContent='충전 등록';
+  document.getElementById('ch-edit-idx').value='-1';
+  const sel=document.getElementById('ch-card');
+  sel.innerHTML=cards.map(c=>`<option value="${c.name}|${c.dept}">${c.name} (${c.dept}) *${c.num}</option>`).join('');
+  document.getElementById('ch-amt').value='';
+  document.getElementById('ch-memo').value='';
+  document.getElementById('chargeModal').classList.add('show');
+}
+
+function showEditCharge(i){
+  const charges=loadCharges(), ch=charges[i];
+  const cards=loadCards();
+  document.getElementById('chargeModalTitle').textContent='충전내역 수정';
+  document.getElementById('ch-edit-idx').value=i;
+  const sel=document.getElementById('ch-card');
+  sel.innerHTML=cards.map(c=>`<option value="${c.name}|${c.dept}"${c.name===ch.card?' selected':''}>${c.name} (${c.dept}) *${c.num}</option>`).join('');
+  document.getElementById('ch-amt').value=ch.amt||'';
+  document.getElementById('ch-memo').value=ch.memo||'';
+  document.getElementById('chargeModal').classList.add('show');
+}
+
+function closeChargeModal(){document.getElementById('chargeModal').classList.remove('show');}
+
+function saveCharge(){
+  const selVal=document.getElementById('ch-card').value.split('|');
+  const cardName=selVal[0], dept=selVal[1];
+  const amt=parseInt(document.getElementById('ch-amt').value)||0;
+  const memo=document.getElementById('ch-memo').value.trim()||'충전';
+  const editIdx=parseInt(document.getElementById('ch-edit-idx').value);
+  if(!amt){alert('충전 금액을 입력해주세요');return;}
+
+  const cards=loadCards();
+  const charges=loadCharges();
+  const today=new Date();
+  const dateStr=(today.getMonth()+1)+'/'+today.getDate();
+  const cardObj=cards.find(c=>c.name===cardName);
+
+  if(editIdx>=0){
+    // 수정: 기존 충전금액 취소 후 새 금액 적용
+    const old=charges[editIdx];
+    const oldCard=cards.find(c=>c.name===old.card);
+    if(oldCard) oldCard.charged=Math.max(0,(oldCard.charged||0)-old.amt);
+    if(cardObj) cardObj.charged=(cardObj.charged||0)+amt;
+    charges[editIdx]={...old,card:cardName,dept,amt,memo};
+  } else {
+    if(cardObj) cardObj.charged=(cardObj.charged||0)+amt;
+    charges.unshift({date:dateStr,card:cardName,dept,amt,memo});
+  }
+  saveCards(cards);
+  saveCharges(charges);
+  closeChargeModal();
+  renderAll();
+  renderCharges();
+  // 충전내역 탭으로 자동 이동
+  switchSection('ch');
+}
+
+function deleteCharge(i){
+  if(!confirm('이 충전내역을 삭제하시겠습니까?\n카드 충전금액도 함께 감소합니다.'))return;
+  const charges=loadCharges(), cards=loadCards();
+  const ch=charges[i];
+  const cardObj=cards.find(c=>c.name===ch.card);
+  if(cardObj) cardObj.charged=Math.max(0,(cardObj.charged||0)-ch.amt);
+  charges.splice(i,1);
+  saveCards(cards); saveCharges(charges);
+  renderAll(); renderCharges();
+}
+
+function renderCharges(){
+  const charges=loadCharges();
+  const el=document.getElementById('chList');
+  if(!charges.length){el.innerHTML='<tr><td colspan="6" class="empty-msg">충전내역이 없습니다</td></tr>';return;}
+  el.innerHTML=charges.map((ch,i)=>`
+    <tr>
+      <td style="color:#aaa;white-space:nowrap">${ch.date}</td>
+      <td style="font-weight:600">${ch.card}</td>
+      <td style="color:#666">${ch.dept}</td>
+      <td style="color:#666">${ch.memo}</td>
+      <td style="font-weight:600;text-align:right;color:#0F9D58;white-space:nowrap">+${fmt(ch.amt)}</td>
+      <td style="white-space:nowrap">
+        <button class="icon-btn edit" onclick="showEditCharge(${i})" title="수정">✏️</button>
+        <button class="icon-btn del" onclick="deleteCharge(${i})" title="삭제">🗑</button>
+      </td>
+    </tr>`).join('');
+}
+
 function renderAll(){renderMetrics();renderCards();renderDept();renderTabs();renderTx();}
 document.getElementById('todayDate').textContent=new Date().toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric'});
 window.onclick=e=>{
   if(e.target.id==='cardModal')closeCardModal();
   if(e.target.id==='txModal')closeTxModal();
   if(e.target.id==='errOverlay')closeErrPopup();
+  if(e.target.id==='chargeModal')closeChargeModal();
 };
 renderAll();
 </script>
