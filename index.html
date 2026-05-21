@@ -231,10 +231,8 @@
     <div class="form-group"><label>담당자 이름</label><input type="text" id="c-name" placeholder="예: 홍길동"></div>
     <div class="form-group"><label>부서</label><input type="text" id="c-dept" placeholder="예: 영업팀"></div>
     <div class="form-group"><label>카드 끝 4자리</label><input type="text" id="c-num" placeholder="예: 1234" maxlength="4"></div>
-    <div class="form-group">
-      <label>충전 금액 (원)</label>
-      <input type="number" id="c-charged" placeholder="예: 500000">
-      <div class="charge-note" id="chargeNote" style="display:none">※ 수정 시 입력하면 기존 충전액에 추가됩니다</div>
+    <div style="background:#E6F1FB;border-radius:8px;padding:10px 12px;font-size:12px;color:#0C447C;margin-bottom:12px">
+      💡 카드 추가 후 <strong>⚡ 충전 등록</strong> 버튼으로 충전하세요
     </div>
     <div class="modal-btns">
       <button class="btn" onclick="closeCardModal()">취소</button>
@@ -425,9 +423,7 @@ function filterTx(dept,el){currentFilter=dept;document.querySelectorAll('.tab').
 function showAddCard(){
   document.getElementById('cardModalTitle').textContent='법인카드 추가';
   document.getElementById('c-edit-idx').value='-1';
-  ['c-name','c-dept','c-num','c-charged'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('c-charged').placeholder='예: 500000';
-  document.getElementById('chargeNote').style.display='none';
+  ['c-name','c-dept','c-num'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('cardModal').classList.add('show');
 }
 function showEditCard(i){
@@ -437,9 +433,6 @@ function showEditCard(i){
   document.getElementById('c-name').value=c.name||'';
   document.getElementById('c-dept').value=c.dept||'';
   document.getElementById('c-num').value=c.num||'';
-  document.getElementById('c-charged').value='';
-  document.getElementById('c-charged').placeholder='추가 충전 금액 (없으면 빈칸)';
-  document.getElementById('chargeNote').style.display='block';
   document.getElementById('cardModal').classList.add('show');
 }
 function closeCardModal(){document.getElementById('cardModal').classList.remove('show');}
@@ -447,17 +440,19 @@ function saveCard(){
   const name=document.getElementById('c-name').value.trim();
   const dept=document.getElementById('c-dept').value.trim();
   const num=document.getElementById('c-num').value.trim();
-  const chargedInput=parseInt(document.getElementById('c-charged').value)||0;
   const editIdx=parseInt(document.getElementById('c-edit-idx').value);
   if(!name||!dept){alert('담당자 이름과 부서를 입력해주세요');return;}
   const cards=loadCards();
   if(editIdx>=0){
+    // 수정: 이름·부서·번호만 변경, 충전금액·사용금액 유지
     const old=cards[editIdx];
-    cards[editIdx]={...old,name,dept,num:num||old.num,charged:(old.charged||0)+chargedInput};
+    cards[editIdx]={...old,name,dept,num:num||old.num};
     const tx=loadTx();tx.forEach(t=>{if(t.card===old.name){t.card=name;t.dept=dept;}});saveTxData(tx);
+    // 충전내역 담당자명도 업데이트
+    const charges=loadCharges();charges.forEach(ch=>{if(ch.card===old.name){ch.card=name;ch.dept=dept;}});saveCharges(charges);
   } else {
-    if(!chargedInput){alert('충전 금액을 입력해주세요');return;}
-    cards.push({name,dept,num,charged:chargedInput,used:0});
+    // 추가: 충전금액 0으로 시작, 충전등록에서 따로 충전
+    cards.push({name,dept,num,charged:0,used:0});
   }
   saveCards(cards);closeCardModal();renderAll();
 }
