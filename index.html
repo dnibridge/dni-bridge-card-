@@ -126,6 +126,7 @@
     <button class="btn btn-primary" style="background:#0F9D58;border-color:#0F9D58" onclick="showAddCharge()">⚡ 충전 등록</button>
     <button class="btn btn-primary" onclick="showAddTx()">+ 사용내역</button>
     <button class="btn" onclick="exportCSV()">⬇ CSV</button>
+    <button class="btn" onclick="showImport()" style="color:#185FA5;border-color:#185FA5">📥 시트 가져오기</button>
     <button class="btn btn-danger" onclick="if(confirm('모든 데이터를 초기화하시겠습니까?')){localStorage.clear();location.reload()}">초기화</button>
   </div>
 </div>
@@ -202,6 +203,40 @@
   </div>
 </div>
 
+<!-- 구글시트 CSV 가져오기 모달 -->
+<div class="overlay" id="importModal">
+  <div class="modal" style="width:420px">
+    <h3>📥 구글 시트에서 가져오기</h3>
+    <div style="background:#E6F1FB;border-radius:8px;padding:10px 12px;font-size:12px;color:#0C447C;margin-bottom:12px;line-height:1.7">
+      <strong>방법:</strong> 구글 시트 → 파일 → 다운로드 → CSV 파일(.csv) 선택<br>
+      다운로드한 CSV 파일을 아래에 끌어다 놓거나 선택하세요.
+    </div>
+    <div class="form-group">
+      <label>CSV 파일 선택</label>
+      <input type="file" id="import-file" accept=".csv" style="padding:6px;font-size:13px">
+    </div>
+    <div id="import-preview" style="display:none;margin-top:8px">
+      <div style="font-size:12px;color:#666;margin-bottom:4px">미리보기 (최대 5행)</div>
+      <div id="import-preview-body" style="background:#f5f5f3;border-radius:6px;padding:8px;font-size:11px;font-family:monospace;max-height:120px;overflow-y:auto"></div>
+      <div id="import-count" style="font-size:12px;color:#185FA5;font-weight:600;margin-top:6px"></div>
+    </div>
+    <div id="import-col-map" style="display:none;margin-top:10px">
+      <div style="font-size:12px;font-weight:600;color:#333;margin-bottom:8px">열 매핑 확인 (자동 감지됨)</div>
+      <div style="font-size:12px;color:#666;line-height:2">
+        <div>📅 날짜열: <span id="map-date" style="color:#185FA5;font-weight:600"></span></div>
+        <div>👤 담당자열: <span id="map-name" style="color:#185FA5;font-weight:600"></span></div>
+        <div>💰 금액열: <span id="map-amt" style="color:#185FA5;font-weight:600"></span></div>
+        <div>🏷 카테고리열: <span id="map-cat" style="color:#185FA5;font-weight:600"></span></div>
+        <div>📝 메모열: <span id="map-memo" style="color:#185FA5;font-weight:600"></span></div>
+      </div>
+    </div>
+    <div class="modal-btns">
+      <button class="btn" onclick="closeImport()">취소</button>
+      <button class="btn btn-primary" id="import-btn" onclick="doImport()" disabled>가져오기</button>
+    </div>
+  </div>
+</div>
+
 <!-- 충전 등록 모달 -->
 <div class="overlay" id="chargeModal">
   <div class="modal">
@@ -249,8 +284,13 @@
     <div class="form-group"><label>카드 선택</label><select id="t-card" onchange="updateBalInfo()"></select></div>
     <div id="balInfo" class="bal-info" style="margin-top:-6px;margin-bottom:10px"></div>
     <div class="form-group">
+      <label>사용 날짜 <span style="color:#aaa;font-weight:400;font-size:11px">— 소급 등록 가능</span></label>
+      <input type="date" id="t-date">
+    </div>
+    <div class="form-group">
       <label>사용 금액 (원)</label>
-      <input type="number" id="t-amt" placeholder="예: 35000" oninput="updateBalInfo()">
+      <input type="number" id="t-amt" placeholder="예: 35000" oninput="updateBalInfo();updateAmtDisplay()">
+      <div id="t-amt-display" style="font-size:12px;color:#185FA5;font-weight:600;margin-top:4px;min-height:18px"></div>
     </div>
     <div class="form-group">
       <label>카테고리</label>
@@ -282,6 +322,25 @@ const fmt=n=>Number(n).toLocaleString('ko-KR')+'원';
 const avColors=['av-blue','av-teal','av-amber','av-coral','av-purple','av-gray'];
 const deptColors={'영업팀':'#185FA5','관리팀':'#1D9E75','운영팀':'#854F0B','재무팀':'#993556','기획팀':'#534AB7'};
 function getDeptColor(d){return deptColors[d]||'#888780';}
+
+// 날짜 유틸
+function todayStr(){
+  const d=new Date();
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+function dateToDisplay(yyyymmdd){
+  if(!yyyymmdd) return '';
+  const [y,m,d]=yyyymmdd.split('-');
+  return m+'/'+Number(d);
+}
+
+// 금액 콤마 실시간 표시
+function updateAmtDisplay(){
+  const v=parseInt(document.getElementById('t-amt').value)||0;
+  const el=document.getElementById('t-amt-display');
+  if(v>0) el.textContent='→ '+Number(v).toLocaleString('ko-KR')+'원';
+  else el.textContent='';
+}
 const MEMO_MAP={'식대':['팀 점심','고객 점심','회의 식사','팀 저녁','간식 구매','회식'],'교통/출장':['KTX 출장','택시비','주차비','버스/지하철','항공권','렌터카'],'접대비':['고객 접대','파트너 식사','거래처 미팅','골프 접대','고객 선물'],'야식비':['야근 야식','팀 야식','배달 주문','편의점 구매'],'사무용품':['복사지 구매','문구류','토너 교체','사무기기','소모품'],'주유비':['차량 주유','법인차 주유','렌트카 주유'],'기타':['기타 비용','잡비','소액 지출']};
 
 function loadCards(){try{return JSON.parse(localStorage.getItem('dni_cards')||'[]');}catch(e){return[];}}
@@ -478,7 +537,9 @@ function showAddTx(){
   document.getElementById('t-edit-idx').value='-1';
   const sel=document.getElementById('t-card');
   sel.innerHTML=cards.map(c=>`<option value="${c.name}|${c.dept}">${c.name} (${c.dept}) *${c.num}</option>`).join('');
+  document.getElementById('t-date').value=todayStr();
   document.getElementById('t-amt').value='';
+  document.getElementById('t-amt-display').textContent='';
   document.getElementById('t-cat').value='식대';
   document.getElementById('t-memo').value='';
   document.getElementById('t-status').value='승인';
@@ -494,7 +555,10 @@ function showEditTx(i){
   document.getElementById('t-edit-idx').value=i;
   const sel=document.getElementById('t-card');
   sel.innerHTML=cards.map(c=>`<option value="${c.name}|${c.dept}"${c.name===t.card?' selected':''}>${c.name} (${c.dept}) *${c.num}</option>`).join('');
+  // 날짜: 저장된 날짜(YYYY-MM-DD) 또는 오늘
+  document.getElementById('t-date').value=t.fullDate||todayStr();
   document.getElementById('t-amt').value=t.amt||'';
+  document.getElementById('t-amt-display').textContent=t.amt?'→ '+Number(t.amt).toLocaleString('ko-KR')+'원':'';
   document.getElementById('t-cat').value=t.cat||'식대';
   document.getElementById('t-memo').value=t.memo||'';
   document.getElementById('t-status').value=t.status||'승인';
@@ -533,17 +597,18 @@ function saveTx(){
   }
   document.getElementById('t-amt').classList.remove('input-error');
 
-  const today=new Date();
-  const dateStr=(today.getMonth()+1)+'/'+today.getDate();
+  const fullDate=document.getElementById('t-date').value||todayStr();
+  const [fy,fm,fd]=fullDate.split('-');
+  const dateStr=Number(fm)+'/'+Number(fd);
   if(editIdx>=0){
     const old=tx[editIdx];
     const oldCard=cards.find(c=>c.name===old.card);
     if(oldCard)oldCard.used=Math.max(0,(oldCard.used||0)-old.amt);
     if(cardObj)cardObj.used=(cardObj.used||0)+amt;
-    tx[editIdx]={...old,card:cardName,dept,amt,cat,memo,status};
+    tx[editIdx]={...old,card:cardName,dept,amt,cat,memo,status,date:dateStr,fullDate};
   } else {
     if(cardObj)cardObj.used=(cardObj.used||0)+amt;
-    tx.unshift({date:dateStr,card:cardName,dept,cat,memo,amt,status});
+    tx.unshift({date:dateStr,fullDate,card:cardName,dept,cat,memo,amt,status});
   }
   saveCards(cards);saveTxData(tx);
   document.getElementById('t-amt').value='';
@@ -571,6 +636,117 @@ function exportCSV(){
   a.click();
 }
 
+
+
+// ── 구글시트 CSV 가져오기 ──
+let importRows = [];
+let importColIdx = {};
+
+function showImport(){
+  importRows=[];importColIdx={};
+  document.getElementById('import-file').value='';
+  document.getElementById('import-preview').style.display='none';
+  document.getElementById('import-col-map').style.display='none';
+  document.getElementById('import-btn').disabled=true;
+  document.getElementById('importModal').classList.add('show');
+}
+function closeImport(){document.getElementById('importModal').classList.remove('show');}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  const fi=document.getElementById('import-file');
+  if(fi) fi.addEventListener('change',e=>{
+    const file=e.target.files[0];
+    if(!file)return;
+    const reader=new FileReader();
+    reader.onload=ev=>{
+      const text=ev.target.result;
+      parseImportCSV(text);
+    };
+    reader.readAsText(file,'UTF-8');
+  });
+});
+
+function parseImportCSV(text){
+  // BOM 제거
+  if(text.charCodeAt(0)===0xFEFF) text=text.slice(1);
+  const lines=text.trim().split('\n').map(l=>l.split(',').map(c=>c.replace(/^"|"$/g,'').trim()));
+  if(lines.length<2){alert('데이터가 없습니다');return;}
+  const headers=lines[0];
+  importRows=lines.slice(1).filter(r=>r.some(c=>c));
+
+  // 열 자동 감지
+  importColIdx={};
+  headers.forEach((h,i)=>{
+    const hh=h.toLowerCase();
+    if(hh.includes('타임스탬프')||hh.includes('날짜')||hh.includes('time')) importColIdx.date=i;
+    else if(hh.includes('담당자')||hh.includes('이름')||hh.includes('name')) importColIdx.name=i;
+    else if(hh.includes('금액')||hh.includes('amount')||hh.includes('사용')) importColIdx.amt=i;
+    else if(hh.includes('카테고리')||hh.includes('category')) importColIdx.cat=i;
+    else if(hh.includes('메모')||hh.includes('memo')||hh.includes('비고')) importColIdx.memo=i;
+  });
+
+  // 미리보기
+  const prev=importRows.slice(0,5).map(r=>'• '+r.filter((_,i)=>Object.values(importColIdx).includes(i)).join(' | ')).join('\n');
+  document.getElementById('import-preview-body').textContent=prev||'(미리보기 없음)';
+  document.getElementById('import-count').textContent='총 '+importRows.length+'건 감지됨';
+  document.getElementById('import-preview').style.display='block';
+
+  // 열 매핑 표시
+  document.getElementById('map-date').textContent=importColIdx.date!=null?headers[importColIdx.date]:'❌ 미감지';
+  document.getElementById('map-name').textContent=importColIdx.name!=null?headers[importColIdx.name]:'❌ 미감지';
+  document.getElementById('map-amt').textContent=importColIdx.amt!=null?headers[importColIdx.amt]:'❌ 미감지';
+  document.getElementById('map-cat').textContent=importColIdx.cat!=null?headers[importColIdx.cat]:'(없음)';
+  document.getElementById('map-memo').textContent=importColIdx.memo!=null?headers[importColIdx.memo]:'(없음)';
+  document.getElementById('import-col-map').style.display='block';
+
+  const ok=importColIdx.name!=null&&importColIdx.amt!=null;
+  document.getElementById('import-btn').disabled=!ok;
+  if(!ok) alert('담당자명 또는 금액 열을 감지하지 못했습니다.\n구글 시트 열 제목을 확인해주세요.');
+}
+
+function doImport(){
+  const cards=loadCards();
+  const tx=loadTx();
+  let added=0, skipped=0;
+  importRows.forEach(r=>{
+    const name=(importColIdx.name!=null?r[importColIdx.name]:'').trim();
+    const amtRaw=(importColIdx.amt!=null?r[importColIdx.amt]:'').replace(/[^0-9]/g,'');
+    const amt=parseInt(amtRaw)||0;
+    if(!name||!amt){skipped++;return;}
+
+    // 날짜 파싱
+    let dateStr='', fullDate='';
+    if(importColIdx.date!=null){
+      const raw=r[importColIdx.date].trim();
+      // "2026. 5. 21 오후 2:04:59" 또는 "2026-05-21" 형식 처리
+      const m1=raw.match(/(\d{4})[.\-/](\s*\d{1,2})[.\-/](\s*\d{1,2})/);
+      if(m1){
+        const mo=m1[2].trim(), dy=m1[3].trim();
+        dateStr=Number(mo)+'/'+Number(dy);
+        fullDate=m1[1]+'-'+mo.padStart(2,'0')+'-'+dy.padStart(2,'0');
+      } else { dateStr=raw.slice(0,10); fullDate=todayStr(); }
+    } else { dateStr=todayStr().slice(5).replace('-','/'); fullDate=todayStr(); }
+
+    const cat=(importColIdx.cat!=null?r[importColIdx.cat]:'기타').trim()||'기타';
+    const memo=(importColIdx.memo!=null?r[importColIdx.memo]:'').trim()||cat;
+    const cardObj=cards.find(c=>c.name===name);
+    const dept=cardObj?cardObj.dept:'미지정';
+
+    // 잔액 체크 (카드 있을 때만)
+    if(cardObj){
+      if(amt>getBalance(cardObj)){skipped++;return;}
+      cardObj.used=(cardObj.used||0)+amt;
+    }
+    tx.push({date:dateStr,fullDate,card:name,dept,cat,memo,amt,status:'승인'});
+    added++;
+  });
+
+  // 날짜 최신순 정렬
+  tx.sort((a,b)=>(b.fullDate||'').localeCompare(a.fullDate||''));
+  saveCards(cards); saveTxData(tx);
+  closeImport(); renderAll();
+  alert('✅ '+added+'건 가져오기 완료!'+(skipped?' ('+skipped+'건 건너뜀: 카드 없음 또는 잔액 부족)':''));
+}
 
 // ── 충전내역 ──
 function loadCharges(){try{return JSON.parse(localStorage.getItem('dni_charges')||'[]');}catch(e){return[];}}
@@ -680,6 +856,7 @@ window.onclick=e=>{
   if(e.target.id==='txModal')closeTxModal();
   if(e.target.id==='errOverlay')closeErrPopup();
   if(e.target.id==='chargeModal')closeChargeModal();
+  if(e.target.id==='importModal')closeImport();
 };
 renderAll();
 </script>
