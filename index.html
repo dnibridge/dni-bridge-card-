@@ -205,32 +205,60 @@
 
 <!-- 구글시트 CSV 가져오기 모달 -->
 <div class="overlay" id="importModal">
-  <div class="modal" style="width:420px">
-    <h3>📥 구글 시트에서 가져오기</h3>
-    <div style="background:#E6F1FB;border-radius:8px;padding:10px 12px;font-size:12px;color:#0C447C;margin-bottom:12px;line-height:1.7">
-      <strong>방법:</strong> 구글 시트 → 파일 → 다운로드 → CSV 파일(.csv) 선택<br>
-      다운로드한 CSV 파일을 아래에 끌어다 놓거나 선택하세요.
+  <div class="modal" style="width:460px;max-height:90vh;overflow-y:auto">
+    <h3>📥 사용내역 가져오기</h3>
+    <!-- 방법 탭 -->
+    <div style="display:flex;gap:6px;margin-bottom:14px">
+      <button id="itab-file" class="tab active" onclick="switchImportTab('file')" style="flex:1;padding:7px;border-radius:8px;border:1px solid #ddd;font-size:12px;font-weight:600;cursor:pointer;background:#185FA5;color:#fff">📁 CSV 파일 전체</button>
+      <button id="itab-paste" class="tab" onclick="switchImportTab('paste')" style="flex:1;padding:7px;border-radius:8px;border:1px solid #ddd;font-size:12px;font-weight:600;cursor:pointer;background:#fff;color:#666">📋 붙여넣기 (1건)</button>
     </div>
-    <div class="form-group">
-      <label>CSV 파일 선택</label>
-      <input type="file" id="import-file" accept=".csv" style="padding:6px;font-size:13px">
+
+    <!-- CSV 파일 방법 -->
+    <div id="import-file-sec">
+      <div style="background:#E6F1FB;border-radius:8px;padding:10px 12px;font-size:12px;color:#0C447C;margin-bottom:12px;line-height:1.7">
+        <strong>방법:</strong> 구글 시트 → 파일 → 다운로드 → CSV 파일(.csv)<br>
+        다운로드한 파일을 아래에서 선택하세요.
+      </div>
+      <div class="form-group">
+        <label>CSV 파일 선택</label>
+        <input type="file" id="import-file" accept=".csv" style="padding:6px;font-size:13px;width:100%">
+      </div>
+      <div id="import-preview" style="display:none;margin-top:8px">
+        <div style="font-size:12px;color:#666;margin-bottom:4px">미리보기 (최대 5행)</div>
+        <div id="import-preview-body" style="background:#f5f5f3;border-radius:6px;padding:8px;font-size:11px;font-family:monospace;max-height:100px;overflow-y:auto;white-space:pre-wrap"></div>
+        <div id="import-count" style="font-size:12px;color:#185FA5;font-weight:600;margin-top:6px"></div>
+      </div>
+      <div id="import-col-map" style="display:none;margin-top:10px;background:#f9f9f7;border-radius:8px;padding:10px 12px">
+        <div style="font-size:12px;font-weight:600;color:#333;margin-bottom:6px">열 자동 감지 결과</div>
+        <div style="font-size:12px;color:#666;line-height:2">
+          <div>📅 날짜: <span id="map-date" style="color:#185FA5;font-weight:600"></span></div>
+          <div>👤 담당자: <span id="map-name" style="color:#185FA5;font-weight:600"></span></div>
+          <div>💰 금액: <span id="map-amt" style="color:#185FA5;font-weight:600"></span></div>
+          <div>🏷 카테고리: <span id="map-cat" style="color:#185FA5;font-weight:600"></span></div>
+          <div>📝 메모: <span id="map-memo" style="color:#185FA5;font-weight:600"></span></div>
+        </div>
+      </div>
+      <div id="import-dup-info" style="display:none;margin-top:8px;background:#FAEEDA;border-radius:8px;padding:8px 12px;font-size:12px;color:#633806"></div>
     </div>
-    <div id="import-preview" style="display:none;margin-top:8px">
-      <div style="font-size:12px;color:#666;margin-bottom:4px">미리보기 (최대 5행)</div>
-      <div id="import-preview-body" style="background:#f5f5f3;border-radius:6px;padding:8px;font-size:11px;font-family:monospace;max-height:120px;overflow-y:auto"></div>
-      <div id="import-count" style="font-size:12px;color:#185FA5;font-weight:600;margin-top:6px"></div>
-    </div>
-    <div id="import-col-map" style="display:none;margin-top:10px">
-      <div style="font-size:12px;font-weight:600;color:#333;margin-bottom:8px">열 매핑 확인 (자동 감지됨)</div>
-      <div style="font-size:12px;color:#666;line-height:2">
-        <div>📅 날짜열: <span id="map-date" style="color:#185FA5;font-weight:600"></span></div>
-        <div>👤 담당자열: <span id="map-name" style="color:#185FA5;font-weight:600"></span></div>
-        <div>💰 금액열: <span id="map-amt" style="color:#185FA5;font-weight:600"></span></div>
-        <div>🏷 카테고리열: <span id="map-cat" style="color:#185FA5;font-weight:600"></span></div>
-        <div>📝 메모열: <span id="map-memo" style="color:#185FA5;font-weight:600"></span></div>
+
+    <!-- 붙여넣기 방법 -->
+    <div id="import-paste-sec" style="display:none">
+      <div style="background:#EAF3DE;border-radius:8px;padding:10px 12px;font-size:12px;color:#27500A;margin-bottom:12px;line-height:1.7">
+        <strong>방법:</strong> 구글 시트에서 행 1개 선택 → Ctrl+C 복사<br>
+        아래 입력창에 Ctrl+V 붙여넣기 → 자동 분석
+      </div>
+      <div class="form-group">
+        <label>구글 시트 행 붙여넣기</label>
+        <textarea id="paste-input" rows="3" placeholder="구글 시트에서 복사한 내용을 여기에 붙여넣으세요&#10;예: 2026. 5. 21 오후 2:04:59	강지원	42000	식대	하나카드" style="width:100%;padding:8px;border:1px solid #ddd;border-radius:8px;font-size:12px;font-family:monospace;resize:vertical" oninput="parsePasteInput()"></textarea>
+      </div>
+      <div id="paste-preview" style="display:none;background:#f9f9f7;border-radius:8px;padding:10px 12px;font-size:12px;margin-top:6px">
+        <div style="font-weight:600;color:#333;margin-bottom:6px">감지된 내용</div>
+        <div id="paste-preview-body" style="line-height:2;color:#555"></div>
+        <div id="paste-dup-warn" style="display:none;background:#FCEBEB;border-radius:6px;padding:6px 10px;color:#791F1F;margin-top:6px;font-size:11px"></div>
       </div>
     </div>
-    <div class="modal-btns">
+
+    <div class="modal-btns" style="margin-top:14px">
       <button class="btn" onclick="closeImport()">취소</button>
       <button class="btn btn-primary" id="import-btn" onclick="doImport()" disabled>가져오기</button>
     </div>
@@ -638,57 +666,98 @@ function exportCSV(){
 
 
 
-// ── 구글시트 CSV 가져오기 ──
-let importRows = [];
-let importColIdx = {};
+// ── 구글시트 가져오기 ──
+let importRows=[], importColIdx={}, importMode='file', pasteRow=null;
+
+// ── CSV 올바른 파싱 (따옴표 안 쉼표 처리) ──
+function parseCSVLine(line){
+  const result=[]; let cur='', inQ=false;
+  for(let i=0;i<line.length;i++){
+    const ch=line[i];
+    if(ch==='"'){ if(inQ&&line[i+1]==='"'){cur+='"';i++;}else inQ=!inQ; }
+    else if(ch===','&&!inQ){result.push(cur.trim());cur='';}
+    else cur+=ch;
+  }
+  result.push(cur.trim());
+  return result;
+}
+
+// ── 날짜 파싱 공통 ──
+function parseDateRaw(raw){
+  raw=(raw||'').trim();
+  const m=raw.match(/(\d{4})[.\-\/]\s*(\d{1,2})[.\-\/]\s*(\d{1,2})/);
+  if(m){
+    const mo=m[2].padStart(2,'0'), dy=m[3].padStart(2,'0');
+    return {dateStr:Number(m[2])+'/'+Number(m[3]), fullDate:m[1]+'-'+mo+'-'+dy};
+  }
+  const t=todayStr();
+  return {dateStr:t.slice(5).replace('-','/'), fullDate:t};
+}
+
+// ── 중복 체크 키 생성 ──
+function dupKey(t){return [t.fullDate||t.date, t.card, String(t.amt), t.memo].join('|');}
+
+// ── 탭 전환 ──
+function switchImportTab(tab){
+  importMode=tab;
+  document.getElementById('import-file-sec').style.display=tab==='file'?'block':'none';
+  document.getElementById('import-paste-sec').style.display=tab==='paste'?'block':'none';
+  document.getElementById('itab-file').style.cssText='flex:1;padding:7px;border-radius:8px;border:1px solid #ddd;font-size:12px;font-weight:600;cursor:pointer;background:'+(tab==='file'?'#185FA5;color:#fff':'#fff;color:#666');
+  document.getElementById('itab-paste').style.cssText='flex:1;padding:7px;border-radius:8px;border:1px solid #ddd;font-size:12px;font-weight:600;cursor:pointer;background:'+(tab==='paste'?'#185FA5;color:#fff':'#fff;color:#666');
+  document.getElementById('import-btn').disabled=true;
+  pasteRow=null;
+}
 
 function showImport(){
-  importRows=[];importColIdx={};
+  importRows=[];importColIdx={};pasteRow=null;importMode='file';
   document.getElementById('import-file').value='';
   document.getElementById('import-preview').style.display='none';
   document.getElementById('import-col-map').style.display='none';
+  document.getElementById('import-dup-info').style.display='none';
+  document.getElementById('paste-input').value='';
+  document.getElementById('paste-preview').style.display='none';
   document.getElementById('import-btn').disabled=true;
+  switchImportTab('file');
   document.getElementById('importModal').classList.add('show');
 }
 function closeImport(){document.getElementById('importModal').classList.remove('show');}
 
+// ── 파일 읽기 ──
 document.addEventListener('DOMContentLoaded',()=>{
   const fi=document.getElementById('import-file');
   if(fi) fi.addEventListener('change',e=>{
-    const file=e.target.files[0];
-    if(!file)return;
+    const file=e.target.files[0]; if(!file)return;
     const reader=new FileReader();
-    reader.onload=ev=>{
-      const text=ev.target.result;
-      parseImportCSV(text);
-    };
+    reader.onload=ev=>{ parseImportCSV(ev.target.result); };
+    // 구글 시트 CSV는 UTF-8 BOM 포함
     reader.readAsText(file,'UTF-8');
   });
 });
 
-function parseImportCSV(text){
+function parseImportCSV(raw){
   // BOM 제거
-  if(text.charCodeAt(0)===0xFEFF) text=text.slice(1);
-  const lines=text.trim().split('\n').map(l=>l.split(',').map(c=>c.replace(/^"|"$/g,'').trim()));
-  if(lines.length<2){alert('데이터가 없습니다');return;}
-  const headers=lines[0];
-  importRows=lines.slice(1).filter(r=>r.some(c=>c));
+  let text=raw; if(text.charCodeAt(0)===0xFEFF) text=text.slice(1);
+  // 줄 분리 (\r\n / \n 모두 처리)
+  const lines=text.trim().split(/\r?\n/);
+  if(lines.length<2){alert('데이터가 없습니다. 파일을 확인해주세요.');return;}
+  const headers=parseCSVLine(lines[0]);
+  importRows=lines.slice(1).map(l=>parseCSVLine(l)).filter(r=>r.some(c=>c));
 
   // 열 자동 감지
   importColIdx={};
   headers.forEach((h,i)=>{
-    const hh=h.toLowerCase();
-    if(hh.includes('타임스탬프')||hh.includes('날짜')||hh.includes('time')) importColIdx.date=i;
+    const hh=h.toLowerCase().replace(/\s/g,'');
+    if(hh.includes('타임스탬프')||hh.includes('날짜')||hh.includes('timestamp')||hh.includes('time')) importColIdx.date=i;
     else if(hh.includes('담당자')||hh.includes('이름')||hh.includes('name')) importColIdx.name=i;
-    else if(hh.includes('금액')||hh.includes('amount')||hh.includes('사용')) importColIdx.amt=i;
+    else if(hh.includes('금액')||hh.includes('amount')||hh.includes('사용금액')) importColIdx.amt=i;
     else if(hh.includes('카테고리')||hh.includes('category')) importColIdx.cat=i;
     else if(hh.includes('메모')||hh.includes('memo')||hh.includes('비고')) importColIdx.memo=i;
   });
 
   // 미리보기
-  const prev=importRows.slice(0,5).map(r=>'• '+r.filter((_,i)=>Object.values(importColIdx).includes(i)).join(' | ')).join('\n');
-  document.getElementById('import-preview-body').textContent=prev||'(미리보기 없음)';
-  document.getElementById('import-count').textContent='총 '+importRows.length+'건 감지됨';
+  const cols=Object.values(importColIdx).filter(v=>v!=null);
+  const prev=importRows.slice(0,5).map(r=>'• '+cols.map(i=>r[i]||'').join(' | ')).join('\n');
+  document.getElementById('import-preview-body').textContent=prev||'(내용 없음)';
   document.getElementById('import-preview').style.display='block';
 
   // 열 매핑 표시
@@ -699,53 +768,132 @@ function parseImportCSV(text){
   document.getElementById('map-memo').textContent=importColIdx.memo!=null?headers[importColIdx.memo]:'(없음)';
   document.getElementById('import-col-map').style.display='block';
 
+  // 중복 미리 체크
+  const existKeys=new Set(loadTx().map(dupKey));
+  const dupCount=importRows.filter(r=>{
+    const name=(importColIdx.name!=null?r[importColIdx.name]:'').trim();
+    const amt=parseInt((importColIdx.amt!=null?r[importColIdx.amt]:'').replace(/[^0-9]/g,''))||0;
+    const memo=(importColIdx.memo!=null?r[importColIdx.memo]:'').trim()||'';
+    const {fullDate}=parseDateRaw(importColIdx.date!=null?r[importColIdx.date]:'');
+    return existKeys.has([fullDate,name,String(amt),memo].join('|'));
+  }).length;
+
+  const dupEl=document.getElementById('import-dup-info');
+  if(dupCount>0){
+    dupEl.textContent='⚠️ 이미 등록된 중복 건 '+dupCount+'개 감지됨 — 가져오기 시 자동으로 건너뜁니다';
+    dupEl.style.display='block';
+  } else { dupEl.style.display='none'; }
+  document.getElementById('import-count').textContent='총 '+importRows.length+'건 감지됨 (중복 '+dupCount+'건 제외 후 '+(importRows.length-dupCount)+'건 등록 예정)';
+
   const ok=importColIdx.name!=null&&importColIdx.amt!=null;
   document.getElementById('import-btn').disabled=!ok;
-  if(!ok) alert('담당자명 또는 금액 열을 감지하지 못했습니다.\n구글 시트 열 제목을 확인해주세요.');
+  if(!ok) alert('담당자 또는 금액 열을 감지하지 못했습니다.\n구글 시트 열 제목을 확인해주세요.');
+}
+
+// ── 붙여넣기 파싱 (탭 구분) ──
+function parsePasteInput(){
+  const raw=document.getElementById('paste-input').value.trim();
+  if(!raw){document.getElementById('paste-preview').style.display='none';document.getElementById('import-btn').disabled=true;pasteRow=null;return;}
+  // 탭으로 분리
+  const cols=raw.split('\t').map(c=>c.trim());
+  if(cols.length<2){document.getElementById('paste-preview-body').innerHTML='<span style="color:#A32D2D">열이 부족합니다. 구글 시트에서 행 전체를 복사해주세요.</span>';document.getElementById('paste-preview').style.display='block';document.getElementById('import-btn').disabled=true;pasteRow=null;return;}
+
+  // 자동 감지: 날짜/이름/금액/카테고리/메모
+  let dateRaw='', name='', amtRaw='', cat='기타', memo='';
+  cols.forEach(c=>{
+    if(!dateRaw&&/\d{4}.*\d{1,2}.*\d{1,2}/.test(c)) dateRaw=c;
+    else if(!amtRaw&&/^\d{4,7}$/.test(c.replace(/[,원]/g,''))) amtRaw=c;
+    else if(!name&&/^[가-힣]{2,5}$/.test(c)) name=c;
+    else if(!cat&&['식대','교통/출장','접대비','야식비','사무용품','주유비','기타'].includes(c)) cat=c;
+    else if(cat&&!memo&&c&&!/\d{4}/.test(c)) memo=c;
+  });
+  // 카테고리 재탐색
+  cols.forEach(c=>{if(['식대','교통/출장','접대비','야식비','사무용품','주유비','기타'].includes(c)) cat=c;});
+  // 메모: 카테고리 다음 문자열
+  const catIdx=cols.findIndex(c=>['식대','교통/출장','접대비','야식비','사무용품','주유비','기타'].includes(c));
+  if(catIdx>=0&&cols[catIdx+1]) memo=cols[catIdx+1];
+
+  const amt=parseInt(amtRaw.replace(/[^0-9]/g,''))||0;
+  const {dateStr,fullDate}=parseDateRaw(dateRaw);
+
+  if(!name||!amt){
+    document.getElementById('paste-preview-body').innerHTML='<span style="color:#A32D2D">담당자 또는 금액을 인식하지 못했습니다.<br>구글 시트에서 행 전체를 Ctrl+C 후 붙여넣기 해주세요.</span>';
+    document.getElementById('paste-preview').style.display='block';
+    document.getElementById('import-btn').disabled=true; pasteRow=null; return;
+  }
+
+  pasteRow={dateStr,fullDate,name,amt,cat,memo};
+
+  // 중복 체크
+  const existKeys=new Set(loadTx().map(dupKey));
+  const isDup=existKeys.has([fullDate,name,String(amt),memo].join('|'));
+  document.getElementById('paste-dup-warn').style.display=isDup?'block':'none';
+  document.getElementById('paste-dup-warn').textContent='⚠️ 동일한 내역이 이미 등록되어 있습니다! 중복 등록됩니다.';
+
+  document.getElementById('paste-preview-body').innerHTML=
+    '<div>📅 날짜: <strong>'+dateStr+'</strong></div>'+
+    '<div>👤 담당자: <strong>'+name+'</strong></div>'+
+    '<div>💰 금액: <strong>'+amt.toLocaleString('ko-KR')+'원</strong></div>'+
+    '<div>🏷 카테고리: <strong>'+cat+'</strong></div>'+
+    '<div>📝 메모: <strong>'+(memo||'(없음)')+'</strong></div>';
+  document.getElementById('paste-preview').style.display='block';
+  document.getElementById('import-btn').disabled=false;
 }
 
 function doImport(){
-  const cards=loadCards();
-  const tx=loadTx();
-  let added=0, skipped=0;
+  if(importMode==='paste'){ doPasteImport(); return; }
+  // ── CSV 파일 가져오기 ──
+  const cards=loadCards(), tx=loadTx();
+  const existKeys=new Set(tx.map(dupKey));
+  let added=0, skipped=0, dupSkip=0;
+
   importRows.forEach(r=>{
     const name=(importColIdx.name!=null?r[importColIdx.name]:'').trim();
     const amtRaw=(importColIdx.amt!=null?r[importColIdx.amt]:'').replace(/[^0-9]/g,'');
     const amt=parseInt(amtRaw)||0;
     if(!name||!amt){skipped++;return;}
-
-    // 날짜 파싱
-    let dateStr='', fullDate='';
-    if(importColIdx.date!=null){
-      const raw=r[importColIdx.date].trim();
-      // "2026. 5. 21 오후 2:04:59" 또는 "2026-05-21" 형식 처리
-      const m1=raw.match(/(\d{4})[.\-/](\s*\d{1,2})[.\-/](\s*\d{1,2})/);
-      if(m1){
-        const mo=m1[2].trim(), dy=m1[3].trim();
-        dateStr=Number(mo)+'/'+Number(dy);
-        fullDate=m1[1]+'-'+mo.padStart(2,'0')+'-'+dy.padStart(2,'0');
-      } else { dateStr=raw.slice(0,10); fullDate=todayStr(); }
-    } else { dateStr=todayStr().slice(5).replace('-','/'); fullDate=todayStr(); }
-
     const cat=(importColIdx.cat!=null?r[importColIdx.cat]:'기타').trim()||'기타';
     const memo=(importColIdx.memo!=null?r[importColIdx.memo]:'').trim()||cat;
+    const {dateStr,fullDate}=parseDateRaw(importColIdx.date!=null?r[importColIdx.date]:'');
     const cardObj=cards.find(c=>c.name===name);
     const dept=cardObj?cardObj.dept:'미지정';
 
-    // 잔액 체크 (카드 있을 때만)
-    if(cardObj){
-      if(amt>getBalance(cardObj)){skipped++;return;}
-      cardObj.used=(cardObj.used||0)+amt;
-    }
-    tx.push({date:dateStr,fullDate,card:name,dept,cat,memo,amt,status:'승인'});
+    // 중복 체크
+    const key=[fullDate,name,String(amt),memo].join('|');
+    if(existKeys.has(key)){dupSkip++;return;}
+
+    // 잔액 체크
+    if(cardObj&&amt>getBalance(cardObj)){skipped++;return;}
+    if(cardObj) cardObj.used=(cardObj.used||0)+amt;
+    const newTx={date:dateStr,fullDate,card:name,dept,cat,memo,amt,status:'승인'};
+    tx.push(newTx);
+    existKeys.add(key);
     added++;
   });
 
-  // 날짜 최신순 정렬
-  tx.sort((a,b)=>(b.fullDate||'').localeCompare(a.fullDate||''));
+  tx.sort((a,b)=>(b.fullDate||b.date||'').localeCompare(a.fullDate||a.date||''));
   saveCards(cards); saveTxData(tx);
   closeImport(); renderAll();
-  alert('✅ '+added+'건 가져오기 완료!'+(skipped?' ('+skipped+'건 건너뜀: 카드 없음 또는 잔액 부족)':''));
+  let msg='✅ '+added+'건 가져오기 완료!';
+  if(dupSkip) msg+='\n🔄 중복 '+dupSkip+'건 건너뜀';
+  if(skipped) msg+='\n⚠️ 잔액 부족/오류 '+skipped+'건 건너뜀';
+  alert(msg);
+}
+
+function doPasteImport(){
+  if(!pasteRow){alert('분석된 데이터가 없습니다');return;}
+  const {dateStr,fullDate,name,amt,cat,memo}=pasteRow;
+  const cards=loadCards(), tx=loadTx();
+  const cardObj=cards.find(c=>c.name===name);
+  const dept=cardObj?cardObj.dept:'미지정';
+  if(cardObj&&amt>getBalance(cardObj)){
+    showErrPopup(name,getBalance(cardObj),amt); return;
+  }
+  if(cardObj) cardObj.used=(cardObj.used||0)+amt;
+  tx.unshift({date:dateStr,fullDate,card:name,dept,cat,memo,amt,status:'승인'});
+  saveCards(cards); saveTxData(tx);
+  closeImport(); renderAll();
+  alert('✅ 1건 등록 완료!\n'+name+' '+amt.toLocaleString('ko-KR')+'원');
 }
 
 // ── 충전내역 ──
