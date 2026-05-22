@@ -124,7 +124,7 @@
     <span id="todayDate" style="font-size:12px;color:#aaa"></span>
     <button class="btn" onclick="showAddCard()">+ 카드 추가</button>
     <button class="btn btn-primary" style="background:#0F9D58;border-color:#0F9D58" onclick="showAddCharge()">⚡ 충전 등록</button>
-    <button class="btn btn-primary" onclick="showAddTx()">+ 사용내역</button>
+    <button class="btn btn-primary" onclick="showAddTx()">+ 사용내역 등록</button>
     <button class="btn" onclick="exportCSV()">⬇ CSV</button>
     <button class="btn" onclick="showImport()" style="color:#185FA5;border-color:#185FA5">📥 시트 가져오기</button>
     <button class="btn btn-danger" onclick="if(confirm('모든 데이터를 초기화하시겠습니까?')){localStorage.clear();location.reload()}">초기화</button>
@@ -282,6 +282,24 @@
     <div class="modal-btns">
       <button class="btn" onclick="closeChargeModal()">취소</button>
       <button class="btn btn-primary" style="background:#0F9D58;border-color:#0F9D58" onclick="saveCharge()">충전 등록</button>
+    </div>
+  </div>
+</div>
+
+<!-- 중복 확인 팝업 -->
+<div class="err-overlay" id="dupOverlay">
+  <div class="err-modal">
+    <div class="err-icon">⚠️</div>
+    <div class="err-title" style="color:#854F0B">중복 내역 감지</div>
+    <div class="err-highlight" style="background:#FAEEDA;border-radius:8px;padding:12px 14px;margin:12px 0;font-size:13px;color:#633806;text-align:left;line-height:1.7">
+      동일한 날짜·담당자·금액·메모의<br>
+      내역이 이미 등록되어 있습니다.<br><br>
+      <strong>그래도 등록하시겠습니까?</strong>
+    </div>
+    <div style="font-size:12px;color:#888;margin-bottom:12px">소급 등록 등 의도적인 경우에만 확인을 눌러주세요</div>
+    <div style="display:flex;gap:8px">
+      <button onclick="closeDupConfirm()" style="flex:1;padding:10px;border:1px solid #ddd;border-radius:10px;background:#fff;font-size:14px;font-weight:500;cursor:pointer;color:#666">취소</button>
+      <button id="dupConfirmOk" style="flex:1;padding:10px;border:none;border-radius:10px;background:#854F0B;color:#fff;font-size:14px;font-weight:600;cursor:pointer">등록</button>
     </div>
   </div>
 </div>
@@ -598,7 +616,7 @@ function showEditTx(i){
 }
 function closeTxModal(){document.getElementById('txModal').classList.remove('show');}
 
-function saveTx(){
+function saveTx(forceRegister){
   const selVal=document.getElementById('t-card').value.split('|');
   const cardName=selVal[0],dept=selVal[1];
   const amt=parseInt(document.getElementById('t-amt').value)||0;
@@ -616,7 +634,7 @@ function saveTx(){
   let availableBal=cardObj?getBalance(cardObj):0;
   if(editIdx>=0){
     const old=tx[editIdx];
-    if(old&&old.card===cardName) availableBal+=old.amt; // 수정이면 기존 금액 복원
+    if(old&&old.card===cardName) availableBal+=old.amt;
   }
   if(amt>availableBal){
     document.getElementById('t-amt').classList.add('input-error');
@@ -628,6 +646,18 @@ function saveTx(){
   const fullDate=document.getElementById('t-date').value||todayStr();
   const [fy,fm,fd]=fullDate.split('-');
   const dateStr=Number(fm)+'/'+Number(fd);
+
+  // ── 중복 체크 (신규 등록 시만) ──
+  if(editIdx<0 && !forceRegister){
+    const existKeys=new Set(tx.map(dupKey));
+    const key=[fullDate,cardName,String(amt),memo].join('|');
+    if(existKeys.has(key)){
+      // 중복 확인 팝업
+      showDupConfirm(()=>saveTx(true));
+      return;
+    }
+  }
+
   if(editIdx>=0){
     const old=tx[editIdx];
     const oldCard=cards.find(c=>c.name===old.card);
@@ -827,8 +857,20 @@ function parsePasteInput(){
   // 중복 체크
   const existKeys=new Set(loadTx().map(dupKey));
   const isDup=existKeys.has([fullDate,name,String(amt),memo].join('|'));
-  document.getElementById('paste-dup-warn').style.display=isDup?'block':'none';
-  document.getElementById('paste-dup-warn').textContent='⚠️ 동일한 내역이 이미 등록되어 있습니다! 중복 등록됩니다.';
+  const dupWarnEl=document.getElementById('paste-dup-warn');
+  if(isDup){
+    dupWarnEl.innerHTML=
+      '<div style="font-size:14px;font-weight:700;color:#A32D2D;margin-bottom:6px">🚫 중복 내역 — 가져오기 불가</div>'+
+      '<div style="font-size:12px;color:#791F1F;line-height:1.7">이미 동일한 내역이 등록되어 있습니다.<br>'+
+      '중복 등록은 가져오기로 처리할 수 없습니다.<br>'+
+      '<strong>수기로 직접 등록이 필요한 경우 "+ 사용내역 등록" 버튼을 이용해주세요.</strong></div>';
+    dupWarnEl.style.display='block';
+    dupWarnEl.style.cssText='display:block;background:#FCEBEB;border:1.5px solid #F09595;border-radius:8px;padding:10px 14px;margin-top:8px';
+    document.getElementById('import-btn').disabled=true;
+  } else {
+    dupWarnEl.style.display='none';
+    document.getElementById('import-btn').disabled=false;
+  }
 
   document.getElementById('paste-preview-body').innerHTML=
     '<div>📅 날짜: <strong>'+dateStr+'</strong></div>'+
@@ -837,7 +879,6 @@ function parsePasteInput(){
     '<div>🏷 카테고리: <strong>'+cat+'</strong></div>'+
     '<div>📝 메모: <strong>'+(memo||'(없음)')+'</strong></div>';
   document.getElementById('paste-preview').style.display='block';
-  document.getElementById('import-btn').disabled=false;
 }
 
 function doImport(){
@@ -997,6 +1038,25 @@ function renderCharges(){
     </tr>`).join('');
 }
 
+// ── 중복 확인 팝업 ──
+let _dupCallback=null;
+function showDupConfirm(cb){
+  _dupCallback=cb;
+  document.getElementById('dupOverlay').classList.add('show');
+}
+function closeDupConfirm(){
+  _dupCallback=null;
+  document.getElementById('dupOverlay').classList.remove('show');
+}
+document.addEventListener('DOMContentLoaded',()=>{
+  const btn=document.getElementById('dupConfirmOk');
+  if(btn) btn.onclick=()=>{
+    document.getElementById('dupOverlay').classList.remove('show');
+    if(_dupCallback) _dupCallback();
+    _dupCallback=null;
+  };
+});
+
 function renderAll(){renderMetrics();renderCards();renderDept();renderTabs();renderTx();}
 document.getElementById('todayDate').textContent=new Date().toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric'});
 window.onclick=e=>{
@@ -1005,6 +1065,7 @@ window.onclick=e=>{
   if(e.target.id==='errOverlay')closeErrPopup();
   if(e.target.id==='chargeModal')closeChargeModal();
   if(e.target.id==='importModal')closeImport();
+  if(e.target.id==='dupOverlay')closeDupConfirm();
 };
 renderAll();
 </script>
