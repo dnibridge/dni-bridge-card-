@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>하나법인 충전카드 관리시스템 — 사용 매뉴얼</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f5f3;color:#1a1a1a;line-height:1.7}
+.wrap{max-width:800px;margin:0 auto;padding:2rem 1.5rem 5rem}
+
+/* 표지 */
+.cover{background:linear-gradient(135deg,#0C447C 0%,#185FA5 60%,#1D9E75 100%);border-radius:16px;padding:3rem 2rem;margin-bottom:2rem;color:#fff;text-align:center}
+.cover-brand{font-size:13px;letter-spacing:.15em;color:rgba(255,255,255,.7);margin-bottom:8px;text-transform:uppercase}
+.cover-title{font-size:30px;font-weight:700;margin-bottom:8px}
+.cover-sub{font-size:15px;color:rgba(255,255,255,.8);margin-bottom:2rem}
+.cover-url{display:inline-block;background:rgba(255,255,255,.18);border-radius:8px;padding:8px 20px;font-size:14px;font-family:monospace;color:#fff}
+.cover-badges{display:flex;justify-content:center;gap:10px;margin-top:1.5rem;flex-wrap:wrap}
+.cbadge{background:rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:12px;color:rgba(255,255,255,.9)}
+
+/* 목차 */
+.toc{background:#fff;border-radius:12px;padding:1.5rem;margin-bottom:2rem;border:1px solid #e8e8e4}
+.toc-title{font-size:12px;font-weight:700;color:#aaa;letter-spacing:.08em;text-transform:uppercase;margin-bottom:12px}
+.toc-item{display:flex;align-items:center;gap:10px;padding:6px 0;font-size:14px;color:#185FA5;text-decoration:none;border-bottom:1px dashed #f0f0ec}
+.toc-item:last-child{border-bottom:none}
+.toc-num{width:24px;height:24px;border-radius:50%;background:#E6F1FB;color:#185FA5;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+
+/* 섹션 */
+.section{background:#fff;border-radius:12px;padding:1.75rem;margin-bottom:1.5rem;border:1px solid #e8e8e4}
+.sec-head{display:flex;align-items:center;gap:12px;margin-bottom:1.25rem;padding-bottom:12px;border-bottom:2px solid #E6F1FB}
+.sec-num{width:36px;height:36px;border-radius:50%;background:#185FA5;color:#fff;font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sec-num.g{background:#0F9D58}
+.sec-num.o{background:#854F0B}
+.sec-num.p{background:#534AB7}
+.sec-title{font-size:18px;font-weight:700;color:#1a1a1a}
+.sec-sub{font-size:13px;color:#888;margin-top:2px}
+
+/* 스텝 */
+.step{display:flex;gap:12px;margin-bottom:14px;align-items:flex-start}
+.sn{width:26px;height:26px;border-radius:50%;background:#E6F1FB;color:#185FA5;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.sn.g{background:#EAF3DE;color:#0F9D58}
+.sn.o{background:#FAEEDA;color:#854F0B}
+.sb{flex:1;font-size:14px;color:#1a1a1a;line-height:1.7}
+
+/* 팁·경고 박스 */
+.tip{background:#EAF3DE;border-left:3px solid #3B6D11;border-radius:0 8px 8px 0;padding:10px 14px;font-size:13px;color:#27500A;margin:10px 0;line-height:1.6}
+.warn{background:#FAEEDA;border-left:3px solid #854F0B;border-radius:0 8px 8px 0;padding:10px 14px;font-size:13px;color:#633806;margin:10px 0;line-height:1.6}
+.info{background:#E6F1FB;border-left:3px solid #185FA5;border-radius:0 8px 8px 0;padding:10px 14px;font-size:13px;color:#0C447C;margin:10px 0;line-height:1.6}
+.danger{background:#FCEBEB;border-left:3px solid #E24B4A;border-radius:0 8px 8px 0;padding:10px 14px;font-size:13px;color:#791F1F;margin:10px 0;line-height:1.6}
+
+/* 버튼 시뮬 */
+.btn-sim{display:inline-block;padding:4px 12px;border-radius:7px;font-size:12px;font-weight:700;vertical-align:middle;margin:0 2px}
+.btn-b{background:#185FA5;color:#fff}
+.btn-g{background:#0F9D58;color:#fff}
+.btn-w{background:#fff;border:1px solid #ddd;color:#444}
+.btn-r{background:#A32D2D;color:#fff}
+
+/* 화면 미리보기 */
+.screen{background:#1e1e2e;border-radius:10px;overflow:hidden;margin:10px 0}
+.sbar{display:flex;gap:5px;padding:7px 12px;background:#2a2a3e;align-items:center}
+.dot{width:8px;height:8px;border-radius:50%}
+.sbody{padding:12px 16px;font-size:12px;color:#e0e0e0}
+
+/* 표 */
+table{width:100%;border-collapse:collapse;font-size:13px;margin:10px 0}
+th{background:#f5f5f3;padding:8px 10px;text-align:left;font-size:12px;color:#666;border-bottom:2px solid #e8e8e4;font-weight:600}
+td{padding:8px 10px;border-bottom:1px solid #f0f0ec}
+tr:last-child td{border-bottom:none}
+
+/* 카드 그리드 */
+.card-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0}
+.mini-card{border-radius:10px;padding:14px;border:1px solid #e8e8e4}
+.mc-title{font-size:13px;font-weight:700;margin-bottom:4px}
+.mc-body{font-size:12px;color:#666;line-height:1.6}
+
+/* FAQ */
+.faq{border:1px solid #e8e8e4;border-radius:8px;margin-bottom:8px;overflow:hidden}
+.faq-q{padding:12px 16px;font-size:13px;font-weight:700;color:#185FA5;background:#f9f9f7}
+.faq-a{padding:10px 16px;font-size:13px;color:#555;border-top:1px solid #e8e8e4;line-height:1.65}
+
+/* 푸터 */
+.footer{text-align:center;margin-top:3rem;font-size:12px;color:#aaa;line-height:2}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- 표지 -->
+<div class="cover">
+  <div class="cover-brand">DNI BRIDGE</div>
+  <div class="cover-title">하나법인 충전카드<br>관리시스템</div>
+  <div class="cover-sub">초등학생도 바로 쓸 수 있는 사용 매뉴얼</div>
+  <div class="cover-url">🌐 dni-bridge-card.vercel.app</div>
+  <div class="cover-badges">
+    <span class="cbadge">💳 카드 관리</span>
+    <span class="cbadge">⚡ 충전 등록</span>
+    <span class="cbadge">📋 사용내역</span>
+    <span class="cbadge">📊 부서 통계</span>
+    <span class="cbadge">📥 시트 연동</span>
+  </div>
+</div>
+
+<!-- 목차 -->
+<div class="toc">
+  <div class="toc-title">목차</div>
+  <a class="toc-item" href="#s0"><div class="toc-num">0</div> 이 시스템이 하는 일</a>
+  <a class="toc-item" href="#s1"><div class="toc-num">1</div> 처음 시작하기 — 접속 방법</a>
+  <a class="toc-item" href="#s2"><div class="toc-num">2</div> 방법 A — 직접 등록해서 관리하기</a>
+  <a class="toc-item" href="#s3"><div class="toc-num">3</div> 방법 B — 구글폼으로 직원이 등록하기</a>
+  <a class="toc-item" href="#s4"><div class="toc-num">4</div> 대시보드 화면 설명</a>
+  <a class="toc-item" href="#s5"><div class="toc-num">5</div> 충전내역 관리</a>
+  <a class="toc-item" href="#s6"><div class="toc-num">6</div> 엑셀(CSV)로 내보내기</a>
+  <a class="toc-item" href="#s7"><div class="toc-num">7</div> 자주 묻는 질문</a>
+</div>
+
+<!-- 0. 이 시스템이 하는 일 -->
+<div class="section" id="s0">
+  <div class="sec-head">
+    <div class="sec-num p">0</div>
+    <div><div class="sec-title">이 시스템이 하는 일</div><div class="sec-sub">쉽게 말하면 이렇습니다</div></div>
+  </div>
+  <p style="font-size:14px;color:#555;margin-bottom:16px;line-height:1.8">
+    법인에서 직원들에게 충전식 카드(B카드)를 줄 때, 누가 얼마를 썼는지, 얼마가 남았는지를 한눈에 볼 수 있게 해주는 시스템이에요.<br>
+    마치 통장 잔액처럼, 카드에 돈을 넣고 — 쓸 때마다 기록하고 — 잔액이 줄어드는 걸 실시간으로 확인할 수 있어요.
+  </p>
+  <div class="card-grid">
+    <div class="mini-card" style="background:#E6F1FB;border-color:#B5D4F4">
+      <div class="mc-title" style="color:#0C447C">💳 카드 잔액 관리</div>
+      <div class="mc-body" style="color:#185FA5">누구 카드에 얼마가 남았는지 색깔로 바로 확인. 빨간색이면 충전 필요!</div>
+    </div>
+    <div class="mini-card" style="background:#EAF3DE;border-color:#C0DD97">
+      <div class="mc-title" style="color:#27500A">📋 사용내역 기록</div>
+      <div class="mc-body" style="color:#3B6D11">언제·누가·얼마를·어디에 썼는지 카테고리별로 깔끔하게 기록</div>
+    </div>
+    <div class="mini-card" style="background:#FAEEDA;border-color:#FAC775">
+      <div class="mc-title" style="color:#633806">📊 부서별 통계</div>
+      <div class="mc-body" style="color:#854F0B">영업부·관리팀 등 부서별로 얼마나 썼는지 자동 집계·차트</div>
+    </div>
+    <div class="mini-card" style="background:#EEEDFE;border-color:#AFA9EC">
+      <div class="mc-title" style="color:#3C3489">📥 구글시트 연동</div>
+      <div class="mc-body" style="color:#534AB7">직원이 폼으로 입력 → 시트 자동저장 → 대시보드로 가져오기</div>
+    </div>
+  </div>
+</div>
+
+<!-- 1. 접속 -->
+<div class="section" id="s1">
+  <div class="sec-head">
+    <div class="sec-num">1</div>
+    <div><div class="sec-title">처음 시작하기 — 접속 방법</div><div class="sec-sub">앱 설치 없이 인터넷 브라우저로 바로!</div></div>
+  </div>
+  <div class="step"><div class="sn">1</div><div class="sb">인터넷 브라우저를 열어요 (크롬, 사파리, 엣지 모두 가능해요)</div></div>
+  <div class="step"><div class="sn">2</div><div class="sb">주소창에 아래 주소를 입력하고 Enter를 눌러요
+    <div class="screen">
+      <div class="sbar"><div class="dot" style="background:#ff5f57"></div><div class="dot" style="background:#febc2e"></div><div class="dot" style="background:#28c840"></div></div>
+      <div class="sbody" style="font-family:monospace;font-size:14px;color:#7dd3fc">dni-bridge-card.vercel.app</div>
+    </div>
+  </div></div>
+  <div class="step"><div class="sn">3</div><div class="sb">즐겨찾기(★)에 저장해두면 다음부터 바로 열 수 있어요!</div></div>
+  <div class="tip">✅ 스마트폰에서도 똑같이 접속할 수 있어요. 홈 화면에 아이콘으로 저장하면 앱처럼 쓸 수 있어요!</div>
+</div>
+
+<!-- 2. 방법 A: 직접 등록 -->
+<div class="section" id="s2">
+  <div class="sec-head">
+    <div class="sec-num g">2</div>
+    <div><div class="sec-title">방법 A — 직접 등록해서 관리하기</div><div class="sec-sub">관리자가 직접 카드 추가·충전·사용내역을 입력하는 방법</div></div>
+  </div>
+
+  <p style="font-size:13px;font-weight:700;color:#0F9D58;margin-bottom:10px">A-1. 카드 추가하기</p>
+  <div class="step"><div class="sn g">1</div><div class="sb">오른쪽 상단 <span class="btn-sim btn-w">+ 카드 추가</span> 버튼을 클릭해요</div></div>
+  <div class="step"><div class="sn g">2</div><div class="sb">아래 내용을 입력해요
+    <table style="margin-top:8px">
+      <tr><th>입력 항목</th><th>설명</th><th>예시</th></tr>
+      <tr><td>담당자 이름</td><td>카드를 사용하는 직원 이름</td><td>강지원</td></tr>
+      <tr><td>부서</td><td>소속 부서명</td><td>영업부</td></tr>
+      <tr><td>카드 끝 4자리</td><td>카드 뒷면 번호 마지막 4자리</td><td>1234</td></tr>
+    </table>
+  </div></div>
+  <div class="step"><div class="sn g">3</div><div class="sb"><span class="btn-sim btn-b">저장</span> 버튼 클릭 → 카드 목록에 바로 나타나요!</div></div>
+  <div class="info">💡 카드 추가 시 충전금액은 입력하지 않아요. 충전은 아래 A-2 에서 따로 해요!</div>
+
+  <hr style="border:none;border-top:1px dashed #e8e8e4;margin:20px 0">
+
+  <p style="font-size:13px;font-weight:700;color:#0F9D58;margin-bottom:10px">A-2. 충전 등록하기</p>
+  <div class="step"><div class="sn g">1</div><div class="sb">오른쪽 상단 <span class="btn-sim btn-g">⚡ 충전 등록</span> 버튼 클릭</div></div>
+  <div class="step"><div class="sn g">2</div><div class="sb">충전할 카드 선택 → 충전 금액 입력 → 메모 입력 (예: 5월 충전)</div></div>
+  <div class="step"><div class="sn g">3</div><div class="sb"><span class="btn-sim btn-g">충전 등록</span> 버튼 클릭 → 카드 잔액이 바로 올라가요!</div></div>
+  <div class="tip">✅ 충전 등록하면 카드 잔액이 자동으로 증가해요. 추가 충전도 같은 방법으로 하면 합산돼요!</div>
+
+  <hr style="border:none;border-top:1px dashed #e8e8e4;margin:20px 0">
+
+  <p style="font-size:13px;font-weight:700;color:#0F9D58;margin-bottom:10px">A-3. 사용내역 등록하기</p>
+  <div class="step"><div class="sn g">1</div><div class="sb">오른쪽 상단 <span class="btn-sim btn-b">+ 사용내역 등록</span> 버튼 클릭</div></div>
+  <div class="step"><div class="sn g">2</div><div class="sb">아래 내용 입력
+    <table style="margin-top:8px">
+      <tr><th>입력 항목</th><th>설명</th></tr>
+      <tr><td>카드 선택</td><td>사용한 직원의 카드 선택 (잔액이 자동 표시돼요)</td></tr>
+      <tr><td>날짜</td><td>오늘 날짜 자동 입력 — 이전 날짜 소급 등록도 가능</td></tr>
+      <tr><td>금액</td><td>사용 금액 입력 (입력하면 아래에 34,000원 식으로 표시)</td></tr>
+      <tr><td>카테고리</td><td>식대/교통·출장/접대비/야식비/사무용품/주유비/기타</td></tr>
+      <tr><td>메모</td><td>카테고리 선택 시 추천 버튼 자동 표시 — 클릭하면 자동 입력!</td></tr>
+    </table>
+  </div></div>
+  <div class="step"><div class="sn g">3</div><div class="sb"><span class="btn-sim btn-b">저장</span> 클릭 → 잔액 자동 차감!</div></div>
+  <div class="danger">🚫 잔액보다 많은 금액을 입력하면 "잔액 초과" 팝업이 뜨고 저장이 안 돼요. 먼저 충전해주세요!</div>
+  <div class="warn">⚠️ 이미 등록된 내역과 동일하면 "중복 감지" 팝업이 뜨고 그래도 등록할지 물어봐요.</div>
+
+  <hr style="border:none;border-top:1px dashed #e8e8e4;margin:20px 0">
+
+  <p style="font-size:13px;font-weight:700;color:#0F9D58;margin-bottom:10px">A-4. 등록된 내역 수정·삭제</p>
+  <div class="step"><div class="sn g">1</div><div class="sb">사용내역 표에서 수정할 행을 찾아요</div></div>
+  <div class="step"><div class="sn g">2</div><div class="sb">맨 오른쪽 ✏️ 버튼 → 수정 / 🗑 버튼 → 삭제</div></div>
+  <div class="tip">✅ 수정하거나 삭제하면 카드 잔액도 자동으로 다시 계산돼요!</div>
+</div>
+
+<!-- 3. 방법 B: 구글폼 -->
+<div class="section" id="s3">
+  <div class="sec-head">
+    <div class="sec-num o">3</div>
+    <div><div class="sec-title">방법 B — 구글폼으로 직원이 등록하기</div><div class="sec-sub">직원이 직접 폼으로 입력 → 시트에 자동 저장 → 대시보드로 가져오기</div></div>
+  </div>
+
+  <p style="font-size:13px;font-weight:700;color:#854F0B;margin-bottom:10px">B-1. 구글폼 만들기 (처음 1번만)</p>
+  <div class="step"><div class="sn o">1</div><div class="sb">forms.google.com 접속 → <span class="btn-sim btn-w">+ 새 양식</span> 클릭</div></div>
+  <div class="step"><div class="sn o">2</div><div class="sb">제목: <strong>법인카드 사용내역 등록</strong></div></div>
+  <div class="step"><div class="sn o">3</div><div class="sb">아래 4개 질문 추가 (+ 버튼으로 추가)
+    <table style="margin-top:8px">
+      <tr><th>질문</th><th>유형</th></tr>
+      <tr><td>담당자 이름을 입력하세요</td><td>단답형 (필수)</td></tr>
+      <tr><td>사용 금액 (원, 숫자만)</td><td>단답형 (필수)</td></tr>
+      <tr><td>카테고리 선택</td><td>객관식: 식대/교통·출장/접대비/야식비/사무용품/주유비/기타</td></tr>
+      <tr><td>메모 (예: 고객 점심)</td><td>단답형</td></tr>
+    </table>
+  </div></div>
+  <div class="step"><div class="sn o">4</div><div class="sb"><strong>응답</strong> 탭 → 초록 스프레드시트 아이콘 클릭 → 구글 시트 연결</div></div>
+  <div class="tip">✅ 이제 폼에 응답이 들어올 때마다 구글 시트에 자동으로 기록돼요!</div>
+
+  <hr style="border:none;border-top:1px dashed #e8e8e4;margin:20px 0">
+
+  <p style="font-size:13px;font-weight:700;color:#854F0B;margin-bottom:10px">B-2. 직원에게 폼 링크 공유하기</p>
+  <div class="step"><div class="sn o">1</div><div class="sb">구글 폼 오른쪽 상단 <strong>보내기</strong> 버튼 클릭</div></div>
+  <div class="step"><div class="sn o">2</div><div class="sb">링크 탭 → URL 단축 체크 → 링크 복사</div></div>
+  <div class="step"><div class="sn o">3</div><div class="sb">직원들에게 카카오톡·문자·이메일로 전송!</div></div>
+  <div class="info">💡 직원은 구글 계정이 없어도 돼요. 링크만 열면 바로 입력 가능!</div>
+
+  <hr style="border:none;border-top:1px dashed #e8e8e4;margin:20px 0">
+
+  <p style="font-size:13px;font-weight:700;color:#854F0B;margin-bottom:10px">B-3. 시트 데이터를 대시보드로 가져오기</p>
+  <div class="step"><div class="sn o">1</div><div class="sb">구글 시트 열기 → <strong>파일 → 다운로드 → CSV 파일(.csv)</strong> 클릭</div></div>
+  <div class="step"><div class="sn o">2</div><div class="sb">대시보드에서 오른쪽 상단 <span class="btn-sim btn-w">📥 시트 가져오기</span> 버튼 클릭</div></div>
+  <div class="step"><div class="sn o">3</div><div class="sb"><strong>📁 CSV 파일 전체</strong> 탭 → 파일 선택 → 열 자동 감지 확인 → <span class="btn-sim btn-b">가져오기</span> 클릭</div></div>
+  <div class="step"><div class="sn o">4</div><div class="sb">또는 <strong>📋 붙여넣기(1건)</strong> 탭 → 구글 시트에서 행 Ctrl+C → 입력창에 Ctrl+V → <span class="btn-sim btn-b">가져오기</span></div></div>
+  <div class="tip">✅ 중복 내역은 자동으로 건너뛰어요. 이미 등록된 건은 다시 들어오지 않아요!</div>
+  <div class="warn">⚠️ 붙여넣기 방법에서 중복 감지되면 가져오기 버튼이 비활성화돼요. 수기 등록 버튼을 사용해주세요.</div>
+</div>
+
+<!-- 4. 대시보드 화면 -->
+<div class="section" id="s4">
+  <div class="sec-head">
+    <div class="sec-num">4</div>
+    <div><div class="sec-title">대시보드 화면 설명</div><div class="sec-sub">각 영역이 무엇을 보여주는지</div></div>
+  </div>
+  <table>
+    <tr><th>화면 영역</th><th>설명</th></tr>
+    <tr><td>💳 총 카드 수</td><td>현재 등록된 법인카드 총 개수</td></tr>
+    <tr><td>💰 총 잔액</td><td>모든 카드의 충전 잔액 합계</td></tr>
+    <tr><td>📊 이번 달 사용</td><td>이번 달 누적 사용금액</td></tr>
+    <tr><td>🚨 부족 카드</td><td>잔액 10만원 미만 카드 수 — 빨간색으로 표시</td></tr>
+    <tr><td>카드별 잔액 현황</td><td>담당자별 잔액을 막대와 색깔로 표시 (초록: 정상, 노랑: 주의, 빨강: 부족)</td></tr>
+    <tr><td>부서별 사용 현황</td><td>부서별 사용금액 합계 막대 차트</td></tr>
+    <tr><td>📋 사용내역 탭</td><td>전체 사용내역 목록. 부서 탭으로 필터링 가능</td></tr>
+    <tr><td>⚡ 충전내역 탭</td><td>언제 얼마씩 충전했는지 전체 이력</td></tr>
+  </table>
+  <div class="info">💡 상단 ⚠️ 노란 경고 박스가 뜨면 잔액 부족 카드가 있다는 신호예요. 즉시 충전해주세요!</div>
+</div>
+
+<!-- 5. 충전내역 -->
+<div class="section" id="s5">
+  <div class="sec-head">
+    <div class="sec-num g">5</div>
+    <div><div class="sec-title">충전내역 관리</div><div class="sec-sub">언제 얼마를 충전했는지 기록·확인</div></div>
+  </div>
+  <div class="step"><div class="sn g">1</div><div class="sb">하단 탭에서 <strong>⚡ 충전내역</strong> 탭 클릭</div></div>
+  <div class="step"><div class="sn g">2</div><div class="sb">날짜·담당자·충전금액·메모 전체 이력 확인 가능</div></div>
+  <div class="step"><div class="sn g">3</div><div class="sb">잘못 입력한 경우 ✏️ 수정 / 🗑 삭제 — 삭제 시 카드 잔액도 자동 조정</div></div>
+  <div class="tip">✅ 충전 등록 버튼은 상단 ⚡ 버튼과 충전내역 탭 안쪽 버튼 두 곳 모두 사용 가능해요!</div>
+</div>
+
+<!-- 6. CSV -->
+<div class="section" id="s6">
+  <div class="sec-head">
+    <div class="sec-num">6</div>
+    <div><div class="sec-title">엑셀(CSV)로 내보내기</div><div class="sec-sub">정산·보고서 작성에 활용</div></div>
+  </div>
+  <div class="step"><div class="sn">1</div><div class="sb">오른쪽 상단 <span class="btn-sim btn-w">⬇ CSV</span> 버튼 클릭</div></div>
+  <div class="step"><div class="sn">2</div><div class="sb">파일이 자동으로 다운로드돼요 (파일명: DNI_BRIDGE_날짜.csv)</div></div>
+  <div class="step"><div class="sn">3</div><div class="sb">다운로드된 파일을 더블클릭 → 엑셀에서 자동으로 열려요</div></div>
+  <div class="warn">⚠️ 한글이 깨지면: 엑셀에서 파일 열 때 인코딩을 UTF-8로 선택해주세요.</div>
+</div>
+
+<!-- 7. FAQ -->
+<div class="section" id="s7">
+  <div class="sec-head">
+    <div class="sec-num p">7</div>
+    <div><div class="sec-title">자주 묻는 질문</div></div>
+  </div>
+  <div class="faq">
+    <div class="faq-q">Q. 새로고침(F5)하면 데이터가 사라지나요?</div>
+    <div class="faq-a">아니요! 데이터는 브라우저에 자동 저장돼요. 창을 닫아도 그대로 남아 있어요.</div>
+  </div>
+  <div class="faq">
+    <div class="faq-q">Q. 잔액 초과 오류가 뜨면?</div>
+    <div class="faq-a">카드 잔액보다 큰 금액을 입력하면 저장이 안 돼요. ⚡ 충전 등록으로 먼저 충전한 뒤 다시 입력해주세요.</div>
+  </div>
+  <div class="faq">
+    <div class="faq-q">Q. 구글폼 데이터 가져올 때 중복이 걱정돼요</div>
+    <div class="faq-a">CSV 파일 전체 가져오기는 동일한 날짜+담당자+금액+메모 조합이면 자동으로 건너뛰어요. 붙여넣기 방법은 중복이면 가져오기 버튼이 비활성화되고, 수기 등록을 안내해줘요.</div>
+  </div>
+  <div class="faq">
+    <div class="faq-q">Q. 이전 날짜로 소급 등록할 수 있나요?</div>
+    <div class="faq-a">네! 사용내역 등록 시 날짜 선택창에서 이전 날짜를 선택하면 돼요. 기본값은 오늘 날짜예요.</div>
+  </div>
+  <div class="faq">
+    <div class="faq-q">Q. 다른 직원도 같이 쓸 수 있나요?</div>
+    <div class="faq-a">현재 버전은 각 기기별로 데이터가 저장돼요. 여러 명이 공유하려면 구글폼으로 데이터를 모은 뒤 관리자가 CSV로 가져오는 방법 B를 쓰세요.</div>
+  </div>
+  <div class="faq">
+    <div class="faq-q">Q. 실수로 초기화 버튼을 눌렀어요!</div>
+    <div class="faq-a">초기화 전에 확인 팝업이 뜨고 확인을 눌러야 지워져요. 평소에 CSV 내보내기로 백업해두는 걸 추천해요.</div>
+  </div>
+</div>
+
+<div class="footer">
+  <strong style="color:#185FA5">하나법인 충전카드 관리시스템</strong><br>
+  powered by DNI BRIDGE<br>
+  버전 1.0 · 2026년 5월
+</div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>하나법인 충전카드 관리시스템 — 소개</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#fff;color:#1a1a1a;line-height:1.7}
+
+/* 히어로 */
+.hero{background:linear-gradient(135deg,#042C53 0%,#185FA5 50%,#0F9D58 100%);padding:5rem 2rem 4rem;text-align:center;color:#fff}
+.hero-badge{display:inline-block;background:rgba(255,255,255,.2);border-radius:20px;padding:5px 16px;font-size:12px;letter-spacing:.1em;margin-bottom:16px}
+.hero-title{font-size:36px;font-weight:700;line-height:1.25;margin-bottom:16px}
+.hero-title span{color:#A8D97F}
+.hero-sub{font-size:16px;color:rgba(255,255,255,.8);max-width:540px;margin:0 auto 2rem;line-height:1.7}
+.hero-btn{display:inline-block;background:#fff;color:#185FA5;padding:14px 32px;border-radius:10px;font-size:15px;font-weight:700;text-decoration:none;margin:6px}
+.hero-btn.sec{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3)}
+
+/* 수치 */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:0;background:#0C447C}
+.stat{padding:2rem 1rem;text-align:center;border-right:1px solid rgba(255,255,255,.1)}
+.stat:last-child{border-right:none}
+.stat-val{font-size:32px;font-weight:700;color:#A8D97F;margin-bottom:4px}
+.stat-label{font-size:13px;color:rgba(255,255,255,.7)}
+
+/* 섹션 공통 */
+.section{max-width:900px;margin:0 auto;padding:4rem 2rem}
+.sec-tag{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#185FA5;margin-bottom:8px}
+.sec-title{font-size:28px;font-weight:700;margin-bottom:12px;line-height:1.3}
+.sec-sub{font-size:15px;color:#666;max-width:580px;line-height:1.7}
+
+/* 문제→해결 */
+.prob-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:2rem}
+.prob-card{border-radius:12px;padding:1.5rem}
+.prob-card.before{background:#FCEBEB;border:1px solid #F7C1C1}
+.prob-card.after{background:#EAF3DE;border:1px solid #C0DD97}
+.pc-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px}
+.pc-label.r{color:#A32D2D}
+.pc-label.g{color:#3B6D11}
+.pc-item{display:flex;align-items:flex-start;gap:8px;margin-bottom:8px;font-size:13px;line-height:1.6}
+.pc-item.r{color:#791F1F}
+.pc-item.g{color:#27500A}
+
+/* 기능 카드 */
+.feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:2rem}
+.feat-card{border:1px solid #e8e8e4;border-radius:12px;padding:1.5rem;transition:box-shadow .2s}
+.feat-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.08)}
+.feat-icon{font-size:28px;margin-bottom:12px}
+.feat-title{font-size:15px;font-weight:700;margin-bottom:6px;color:#1a1a1a}
+.feat-body{font-size:13px;color:#666;line-height:1.65}
+
+/* 사용 흐름 */
+.flow-wrap{display:flex;align-items:center;gap:8px;margin-top:2rem;flex-wrap:wrap;justify-content:center}
+.flow-step{background:#E6F1FB;border-radius:10px;padding:14px 18px;text-align:center;min-width:130px}
+.flow-step-num{font-size:11px;font-weight:700;color:#185FA5;margin-bottom:4px}
+.flow-step-title{font-size:13px;font-weight:700;color:#0C447C}
+.flow-step-body{font-size:11px;color:#185FA5;margin-top:2px}
+.flow-arrow{font-size:20px;color:#B5D4F4}
+
+/* 비교표 */
+.compare-table{width:100%;border-collapse:collapse;margin-top:2rem;font-size:13px}
+.compare-table th{background:#185FA5;color:#fff;padding:12px 14px;text-align:center;font-weight:600}
+.compare-table th:first-child{text-align:left;background:#0C447C}
+.compare-table td{padding:10px 14px;border-bottom:1px solid #f0f0ec;text-align:center}
+.compare-table td:first-child{text-align:left;font-weight:500;color:#333}
+.compare-table tr:nth-child(even) td{background:#f9f9f7}
+.ok{color:#0F9D58;font-weight:700}
+.no{color:#E24B4A}
+
+/* CTA */
+.cta{background:linear-gradient(135deg,#185FA5,#0F9D58);padding:4rem 2rem;text-align:center;color:#fff}
+.cta-title{font-size:28px;font-weight:700;margin-bottom:12px}
+.cta-sub{font-size:15px;color:rgba(255,255,255,.8);margin-bottom:2rem}
+.cta-btn{display:inline-block;background:#fff;color:#185FA5;padding:14px 36px;border-radius:10px;font-size:15px;font-weight:700;text-decoration:none}
+
+/* 반응형 */
+@media(max-width:640px){
+  .stats{grid-template-columns:1fr 1fr}
+  .prob-grid,.feat-grid{grid-template-columns:1fr}
+  .hero-title{font-size:26px}
+  .flow-wrap{flex-direction:column;align-items:stretch}
+  .flow-arrow{transform:rotate(90deg)}
+}
+</style>
+</head>
+<body>
+
+<!-- 히어로 -->
+<div class="hero">
+  <div class="hero-badge">DNI BRIDGE 제공</div>
+  <div class="hero-title">법인 충전카드 관리,<br>이제 <span>10분</span>이면 됩니다</div>
+  <div class="hero-sub">엑셀도, 전문 ERP도 필요 없어요. 인터넷 브라우저만 있으면 카드 발급부터 잔액 관리·사용내역 정산까지 한 번에!</div>
+  <a href="https://dni-bridge-card.vercel.app" class="hero-btn">지금 바로 시작하기</a>
+  <a href="manual_v2.html" class="hero-btn sec">사용 매뉴얼 보기</a>
+</div>
+
+<!-- 수치 -->
+<div class="stats">
+  <div class="stat"><div class="stat-val">0원</div><div class="stat-label">도입 비용</div></div>
+  <div class="stat"><div class="stat-val">10분</div><div class="stat-label">초기 세팅 시간</div></div>
+  <div class="stat"><div class="stat-val">100%</div><div class="stat-label">자동 잔액 계산</div></div>
+  <div class="stat"><div class="stat-val">24/7</div><div class="stat-label">언제 어디서나 접속</div></div>
+</div>
+
+<!-- 문제 → 해결 -->
+<div class="section">
+  <div class="sec-tag">이런 불편함 있으셨나요?</div>
+  <div class="sec-title">기존 방식의 문제점,<br>한 번에 해결합니다</div>
+  <div class="prob-grid">
+    <div class="prob-card before">
+      <div class="pc-label r">❌ 기존 방식 — 불편했던 점</div>
+      <div class="pc-item r"><span>😩</span><span>카드 잔액을 엑셀로 수동 관리 — 계산 실수 잦음</span></div>
+      <div class="pc-item r"><span>😩</span><span>담당자별 사용 현황을 한눈에 파악하기 어려움</span></div>
+      <div class="pc-item r"><span>😩</span><span>사용내역 취합에 시간이 오래 걸림</span></div>
+      <div class="pc-item r"><span>😩</span><span>잔액 부족인지 충전할 때가 됐는지 놓치기 쉬움</span></div>
+      <div class="pc-item r"><span>😩</span><span>부서별 경비 집계에 별도 작업 필요</span></div>
+    </div>
+    <div class="prob-card after">
+      <div class="pc-label g">✅ 하나법인 충전카드 관리시스템</div>
+      <div class="pc-item g"><span>😊</span><span>잔액 자동 계산 — 사용 등록하면 즉시 차감</span></div>
+      <div class="pc-item g"><span>😊</span><span>대시보드 한 화면에서 전체 현황 파악</span></div>
+      <div class="pc-item g"><span>😊</span><span>구글폼으로 직원이 직접 입력 → 자동 취합</span></div>
+      <div class="pc-item g"><span>😊</span><span>10만원 미만 자동 경고 — 빨간색으로 즉시 표시</span></div>
+      <div class="pc-item g"><span>😊</span><span>부서별 통계 자동 집계 + 차트 시각화</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- 주요 기능 -->
+<div style="background:#f9f9f7">
+<div class="section">
+  <div class="sec-tag">주요 기능</div>
+  <div class="sec-title">이런 기능들이 있어요</div>
+  <div class="feat-grid">
+    <div class="feat-card">
+      <div class="feat-icon">💳</div>
+      <div class="feat-title">카드별 잔액 실시간 관리</div>
+      <div class="feat-body">담당자별 충전 잔액을 색상 막대로 한눈에. 초록(정상)→노랑(주의)→빨강(부족) 자동 표시.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">⚡</div>
+      <div class="feat-title">충전 등록 & 이력 관리</div>
+      <div class="feat-body">충전할 때마다 기록. 언제 얼마를 충전했는지 전체 이력 조회 가능. 수정·삭제 시 잔액 자동 반영.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">📋</div>
+      <div class="feat-title">사용내역 상세 기록</div>
+      <div class="feat-body">날짜·담당자·금액·카테고리·메모 기록. 소급 등록 가능. 카테고리 선택 시 메모 자동 추천.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">📊</div>
+      <div class="feat-title">부서별 자동 통계</div>
+      <div class="feat-body">영업부·관리팀 등 부서별 사용금액 자동 집계. 막대 차트로 한눈에 비교.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">📥</div>
+      <div class="feat-title">구글시트 연동</div>
+      <div class="feat-body">구글폼 응답을 CSV로 받아 한 번에 업로드. 중복 자동 감지·제외로 이중 등록 방지.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">📤</div>
+      <div class="feat-title">엑셀 내보내기</div>
+      <div class="feat-body">전체 사용내역을 CSV 파일로 다운로드. 엑셀에서 바로 열어 정산·보고서 작성에 활용.</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- 사용 흐름 -->
+<div class="section">
+  <div class="sec-tag">사용 흐름</div>
+  <div class="sec-title">이렇게 쓰면 됩니다</div>
+  <div class="flow-wrap">
+    <div class="flow-step">
+      <div class="flow-step-num">STEP 1</div>
+      <div class="flow-step-title">카드 추가</div>
+      <div class="flow-step-body">담당자·부서·번호 등록</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">
+      <div class="flow-step-num">STEP 2</div>
+      <div class="flow-step-title">충전 등록</div>
+      <div class="flow-step-body">⚡ 충전 금액 입력</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">
+      <div class="flow-step-num">STEP 3</div>
+      <div class="flow-step-title">사용내역 등록</div>
+      <div class="flow-step-body">직접 or 구글폼 연동</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">
+      <div class="flow-step-num">STEP 4</div>
+      <div class="flow-step-title">대시보드 확인</div>
+      <div class="flow-step-body">잔액·통계 한눈에</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">
+      <div class="flow-step-num">STEP 5</div>
+      <div class="flow-step-title">엑셀 내보내기</div>
+      <div class="flow-step-body">정산 보고서 완성</div>
+    </div>
+  </div>
+</div>
+
+<!-- 비교표 -->
+<div style="background:#f9f9f7">
+<div class="section">
+  <div class="sec-tag">비교</div>
+  <div class="sec-title">왜 이 시스템인가요?</div>
+  <table class="compare-table">
+    <tr>
+      <th>항목</th>
+      <th>엑셀 수동 관리</th>
+      <th>일반 경비 앱</th>
+      <th>하나법인 충전카드<br>관리시스템</th>
+    </tr>
+    <tr><td>도입 비용</td><td class="ok">무료</td><td class="no">월정액 발생</td><td class="ok">완전 무료</td></tr>
+    <tr><td>잔액 자동 계산</td><td class="no">직접 계산</td><td class="ok">자동</td><td class="ok">자동</td></tr>
+    <tr><td>잔액 경고 알림</td><td class="no">없음</td><td class="ok">있음</td><td class="ok">자동 빨간색 경고</td></tr>
+    <tr><td>구글폼 연동</td><td class="no">없음</td><td class="no">없음</td><td class="ok">지원</td></tr>
+    <tr><td>중복 등록 방지</td><td class="no">없음</td><td>일부</td><td class="ok">자동 감지·차단</td></tr>
+    <tr><td>설치 필요</td><td>엑셀 필요</td><td class="no">앱 설치 필요</td><td class="ok">브라우저만 있으면 OK</td></tr>
+    <tr><td>소급 등록</td><td class="ok">가능</td><td class="no">불가</td><td class="ok">날짜 선택 가능</td></tr>
+    <tr><td>엑셀 내보내기</td><td class="ok">가능</td><td>유료</td><td class="ok">무료</td></tr>
+  </table>
+</div>
+</div>
+
+<!-- CTA -->
+<div class="cta">
+  <div class="cta-title">지금 바로 시작해보세요</div>
+  <div class="cta-sub">설치 없이, 비용 없이 — 브라우저만 열면 10분 안에 세팅 완료!</div>
+  <a href="https://dni-bridge-card.vercel.app" class="cta-btn">무료로 시작하기 →</a>
+</div>
+
+</body>
+</html>
