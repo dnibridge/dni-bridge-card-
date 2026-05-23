@@ -228,154 +228,103 @@
   <!-- 한도관리 섹션 -->
   <div id="section-lm" style="display:none">
 
-    <!-- ① 전체 카드 잔액 현황 (색깔 표시) -->
-    <div class="low-card-section" style="margin-bottom:14px">
+    <!-- 잔액 부족 카드 -->
+    <div class="low-card-section">
       <div class="low-card-header">
-        <div style="font-size:14px;font-weight:600">💳 전체 카드 잔액 현황</div>
-        <div style="display:flex;gap:8px;align-items:center;font-size:12px">
-          <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;background:#0F9D58;border-radius:50%;display:inline-block"></span>정상 (30% 이상)</span>
-          <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;background:#EF9F27;border-radius:50%;display:inline-block"></span>주의 (10~30%)</span>
-          <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;background:#E24B4A;border-radius:50%;display:inline-block"></span>부족 (10% 미만)</span>
+        <div style="font-size:14px;font-weight:600;display:flex;align-items:center;gap:6px">
+          ⚠️ 잔액 부족 카드 <span id="lm-low-count" style="background:#FCEBEB;color:#A32D2D;border-radius:20px;padding:2px 8px;font-size:12px;font-weight:700">0</span>
         </div>
+        <button class="btn" style="font-size:12px;background:#0C447C;color:#fff;border-color:#0C447C" onclick="openHanaCharge()">🔗 일괄 충전 요청 (하나카드)</button>
       </div>
-      <div id="lm-all-cards" style="margin-top:8px">
-        <div class="empty-msg" style="padding:1rem">카드를 추가해주세요</div>
+      <div id="lm-low-list">
+        <div class="empty-msg" style="padding:1rem">잔액 부족 카드가 없습니다 ✅</div>
       </div>
     </div>
 
-    <!-- ② 이 시스템에서 할 수 있는 것 / 없는 것 안내 -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
-      <div style="background:#EAF3DE;border:1px solid #C0DD97;border-radius:12px;padding:1.25rem">
-        <div style="font-size:14px;font-weight:600;color:#27500A;margin-bottom:10px">✅ 이 시스템에서 할 수 있는 것</div>
-        <div style="font-size:13px;color:#3B6D11;line-height:2">
-          <div>• 카드별 충전 금액 기록 및 관리</div>
-          <div>• 사용내역 등록 시 잔액 자동 차감</div>
-          <div>• 잔액 현황 실시간 조회</div>
-          <div>• 충전/감액 이력 기록 보관</div>
-          <div>• 잔액 부족 카드 자동 경고</div>
-          <div>• 부서별·카테고리별 통계 집계</div>
-        </div>
-      </div>
-      <div style="background:#FCEBEB;border:1px solid #F7C1C1;border-radius:12px;padding:1.25rem">
-        <div style="font-size:14px;font-weight:600;color:#791F1F;margin-bottom:10px">⚠️ 이 시스템에서 할 수 없는 것</div>
-        <div style="font-size:13px;color:#A32D2D;line-height:2">
-          <div>• 실제 카드 충전 (하나카드 홈페이지에서 처리)</div>
-          <div>• 실제 카드 감액 (하나카드 홈페이지에서 처리)</div>
-          <div>• 카드사 실시간 데이터 연동</div>
-          <div>• 카드 승인 자동 수신</div>
-        </div>
-        <div style="background:#fff;border-radius:8px;padding:8px 12px;margin-top:10px;font-size:12px;color:#666;line-height:1.6">
-          💡 실제 충전·감액은 하나카드 기업홈페이지에서 처리하고,<br>
-          처리 후 이 시스템에 금액을 직접 등록해주세요.
-        </div>
-      </div>
-    </div>
+    <!-- 충전 / 감액 폼 -->
+    <div class="limit-grid">
 
-    <!-- ③ 업무 흐름 안내 -->
-    <div style="background:#E6F1FB;border:1px solid #B5D4F4;border-radius:12px;padding:1.25rem;margin-bottom:14px">
-      <div style="font-size:14px;font-weight:600;color:#0C447C;margin-bottom:12px">📋 충전·감액 업무 처리 순서</div>
-      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-        <div style="background:#fff;border-radius:8px;padding:10px 14px;text-align:center;min-width:130px;border:1px solid #B5D4F4">
-          <div style="font-size:11px;color:#888;margin-bottom:4px">STEP 1</div>
-          <div style="font-size:13px;font-weight:600;color:#185FA5">잔액 확인</div>
-          <div style="font-size:11px;color:#666;margin-top:2px">이 화면에서 확인</div>
+      <!-- 한도 충전 -->
+      <div class="limit-box charge">
+        <div class="limit-title" style="color:#0F9D58">📈 한도 충전</div>
+        <div class="limit-warn">
+          ⚠️ 충전 실행은 하나카드 기업홈페이지에서 법인공인인증서 인증 후 처리됩니다. 아래 버튼은 홈페이지로 이동합니다.
         </div>
-        <div style="color:#B5D4F4;font-size:18px">→</div>
-        <div style="background:#fff;border-radius:8px;padding:10px 14px;text-align:center;min-width:130px;border:1px solid #B5D4F4">
-          <div style="font-size:11px;color:#888;margin-bottom:4px">STEP 2</div>
-          <div style="font-size:13px;font-weight:600;color:#185FA5">하나카드 접속</div>
-          <div style="font-size:11px;color:#666;margin-top:2px">아래 버튼으로 이동</div>
-        </div>
-        <div style="color:#B5D4F4;font-size:18px">→</div>
-        <div style="background:#fff;border-radius:8px;padding:10px 14px;text-align:center;min-width:130px;border:1px solid #B5D4F4">
-          <div style="font-size:11px;color:#888;margin-bottom:4px">STEP 3</div>
-          <div style="font-size:13px;font-weight:600;color:#185FA5">실제 처리</div>
-          <div style="font-size:11px;color:#666;margin-top:2px">카드사에서 충전/감액</div>
-        </div>
-        <div style="color:#B5D4F4;font-size:18px">→</div>
-        <div style="background:#fff;border-radius:8px;padding:10px 14px;text-align:center;min-width:130px;border:1px solid #B5D4F4">
-          <div style="font-size:11px;color:#888;margin-bottom:4px">STEP 4</div>
-          <div style="font-size:13px;font-weight:600;color:#185FA5">시스템 등록</div>
-          <div style="font-size:11px;color:#666;margin-top:2px">아래 버튼으로 기록</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ④ 하나카드 바로가기 + 시스템 등록 -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
-
-      <!-- 하나카드 홈페이지 바로가기 -->
-      <div style="background:#fff;border:1px solid #e8e8e4;border-radius:12px;padding:1.25rem;border-top:3px solid #185FA5">
-        <div style="font-size:14px;font-weight:600;color:#185FA5;margin-bottom:6px">🏦 하나카드 기업홈페이지</div>
-        <div style="font-size:12px;color:#666;line-height:1.7;margin-bottom:14px">
-          실제 충전·감액은 하나카드 기업홈페이지에서<br>
-          <strong>법인공인인증서 인증 후</strong> 처리됩니다.
-        </div>
-        <a href="https://www.hanacard.co.kr/OCH30000000N.web?_frame=no&schID=ccd&mID=OCH30000000C" target="_blank"
-          style="display:flex;align-items:center;justify-content:center;gap:6px;width:100%;padding:11px;background:#185FA5;color:#fff;border-radius:8px;font-size:13px;font-weight:600;text-decoration:none;margin-bottom:8px">
-          🔗 하나카드 B카드 충전·감액 바로가기
-        </a>
-        <div style="font-size:11px;color:#aaa;text-align:center">새 창으로 열립니다 · 법인공인인증서 필요</div>
-        <!-- 충전 가능 시간 -->
-        <div style="margin-top:14px;padding-top:12px;border-top:1px solid #f0f0ec">
-          <div style="font-size:12px;font-weight:600;color:#333;margin-bottom:8px">⏰ 충전 가능 시간</div>
-          <div style="font-size:12px;color:#0F9D58;margin-bottom:4px;font-weight:500">당행(하나은행): 매일 24시간</div>
-          <div style="font-size:12px;color:#333;margin-bottom:2px">타행: 월~금 06:00 ~ 23:45</div>
-          <div style="font-size:11px;color:#A32D2D">※ BC망(국민은행): 08:00~22:00만 가능</div>
-          <div style="font-size:11px;color:#A32D2D">※ 공휴일·대체공휴일 충전 불가</div>
-        </div>
-      </div>
-
-      <!-- 시스템 충전/감액 등록 -->
-      <div style="background:#fff;border:1px solid #e8e8e4;border-radius:12px;padding:1.25rem;border-top:3px solid #0F9D58">
-        <div style="font-size:14px;font-weight:600;color:#0F9D58;margin-bottom:6px">📝 시스템에 충전·감액 기록하기</div>
-        <div style="font-size:12px;color:#666;line-height:1.7;margin-bottom:12px">
-          하나카드에서 처리 완료 후<br>
-          아래 버튼으로 이 시스템에 금액을 기록하세요.
-        </div>
-
-        <div style="margin-bottom:10px">
-          <div style="font-size:12px;color:#666;margin-bottom:4px;font-weight:500">대상 카드 선택</div>
-          <select id="lm-sys-card" onchange="updateLimitBal2()" style="width:100%;padding:8px 10px;border:1px solid #ddd;border-radius:8px;font-size:13px;background:#fff">
+        <div class="limit-form-group">
+          <label>대상 카드 선택</label>
+          <select id="lm-charge-card" onchange="updateLimitBal('charge')">
             <option value="">카드를 선택하세요</option>
           </select>
         </div>
-        <div id="lm-sys-bal-display" style="background:#f5f5f3;border-radius:6px;padding:7px 10px;font-size:12px;color:#666;margin-bottom:10px">
-          카드 선택 시 잔액 자동 표시
+        <div class="limit-form-group">
+          <label>현재 잔여 한도</label>
+          <div class="limit-bal-display" id="lm-charge-bal">카드 선택 시 자동 표시</div>
         </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-          <button onclick="doSysCharge()" style="padding:10px;border:none;border-radius:8px;background:#0F9D58;color:#fff;font-size:13px;font-weight:600;cursor:pointer">
-            ⚡ 충전 금액 등록
-          </button>
-          <button onclick="doSysReduce()" style="padding:10px;border:none;border-radius:8px;background:#A32D2D;color:#fff;font-size:13px;font-weight:600;cursor:pointer">
-            📉 감액 기록
-          </button>
+        <div class="limit-form-group">
+          <label>충전 금액 (원)</label>
+          <input type="number" id="lm-charge-amt" placeholder="충전할 금액 입력" oninput="updateLimitPreview('charge')">
+          <div id="lm-charge-preview" style="font-size:12px;color:#0F9D58;margin-top:4px;display:none"></div>
         </div>
-        <div style="font-size:11px;color:#aaa;margin-top:8px;text-align:center;line-height:1.6">
-          하나카드에서 처리 완료 후 클릭해주세요<br>잔액이 즉시 반영됩니다
+        <a id="lm-charge-link" href="https://www.hanacard.co.kr/OCH30000000N.web?_frame=no&schID=ccd&mID=OCH30000000C" target="_blank" class="limit-btn limit-btn-charge" onclick="recordChargeNote('charge')">
+          🔗 하나카드 홈페이지에서 충전 실행
+        </a>
+        <div style="font-size:11px;color:#aaa;margin-top:6px;text-align:center">클릭 시 하나카드 기업홈페이지로 이동합니다</div>
+      </div>
+
+      <!-- 한도 감액 -->
+      <div class="limit-box reduce">
+        <div class="limit-title" style="color:#A32D2D">📉 한도 감액</div>
+        <div class="limit-warn" style="background:#FCEBEB;border-color:#F7C1C1;color:#791F1F">
+          ⚠️ 감액 처리한 금액은 카드 결제계좌에 즉시 입금됩니다. 하나카드 홈페이지로 이동합니다.
         </div>
+        <div class="limit-form-group">
+          <label>대상 카드 선택</label>
+          <select id="lm-reduce-card" onchange="updateLimitBal('reduce')">
+            <option value="">카드를 선택하세요</option>
+          </select>
+        </div>
+        <div class="limit-form-group">
+          <label>현재 잔여 한도</label>
+          <div class="limit-bal-display" id="lm-reduce-bal">카드 선택 시 자동 표시</div>
+        </div>
+        <div class="limit-form-group">
+          <label>감액 금액 (원)</label>
+          <input type="number" id="lm-reduce-amt" placeholder="감액할 금액 입력" oninput="updateLimitPreview('reduce')">
+          <div id="lm-reduce-preview" style="font-size:12px;color:#A32D2D;margin-top:4px;display:none"></div>
+        </div>
+        <a id="lm-reduce-link" href="https://www.hanacard.co.kr/OCH30000000N.web?_frame=no&schID=ccd&mID=OCH30000000C" target="_blank" class="limit-btn limit-btn-reduce" onclick="recordChargeNote('reduce')">
+          🔗 하나카드 홈페이지에서 감액 실행
+        </a>
+        <div style="font-size:11px;color:#aaa;margin-top:6px;text-align:center">클릭 시 하나카드 기업홈페이지로 이동합니다</div>
       </div>
     </div>
 
-    <!-- ⑤ 충전 가능 시간 상세 -->
+    <!-- 충전 가능 시간 안내 -->
     <div class="time-box">
-      <div style="font-size:14px;font-weight:600;display:flex;align-items:center;gap:6px;margin-bottom:4px">⏰ 충전 가능 시간 상세 안내</div>
-      <div style="font-size:12px;color:#888;margin-bottom:10px">하나카드 B카드(충전식 법인카드) 기준 — 실제 충전 전 반드시 확인하세요</div>
+      <div style="font-size:14px;font-weight:600;display:flex;align-items:center;gap:6px;margin-bottom:4px">⏰ 충전 가능 시간 안내</div>
+      <div style="font-size:12px;color:#888;margin-bottom:10px">하나카드 B카드(충전식 법인카드) 기준</div>
       <div class="time-grid">
         <div class="time-item hana">
           <div class="time-bank hana">당행 (하나은행)</div>
-          <div class="time-hours" style="font-weight:600">매일 / 24시간 가능</div>
+          <div class="time-hours">매일 / 24시간 가능</div>
           <div class="time-note">365일 언제나 충전 가능</div>
         </div>
         <div class="time-item other">
-          <div class="time-bank" style="color:#333;font-weight:600">타행</div>
+          <div class="time-bank" style="color:#333">타행</div>
           <div class="time-hours">월~금 / 06:00 ~ 23:45</div>
           <div class="time-note" style="color:#A32D2D">※ BC망 이용 (국민은행): 08:00~22:00만 가능<br>※ 공휴일·대체공휴일 충전 불가</div>
         </div>
       </div>
     </div>
 
+    <!-- 안내 -->
+    <div style="background:#E6F1FB;border-radius:10px;padding:14px 16px;font-size:13px;color:#0C447C;line-height:1.7">
+      <strong>💡 이용 안내</strong><br>
+      실제 충전·감액은 하나카드 기업홈페이지(법인공인인증서 필요)에서 처리됩니다.<br>
+      처리 완료 후 이 대시보드에서 <strong>⚡ 충전 등록</strong> 버튼으로 충전 금액을 업데이트해주세요.
+    </div>
   </div>
+
 <!-- 잔액 초과 에러 팝업 -->
 <div class="err-overlay" id="errOverlay">
   <div class="err-modal">
@@ -1157,123 +1106,35 @@ function openHanaCharge(){
 
 function renderLimitSection(){
   const cards=loadCards();
-  const avColors=['av-blue','av-teal','av-amber','av-coral','av-purple','av-gray'];
-
-  // 시스템 카드 셀렉트
-  const sysSel=document.getElementById('lm-sys-card');
-  if(sysSel){
-    sysSel.innerHTML='<option value="">카드를 선택하세요</option>'+
-      cards.map(c=>`<option value="${c.name}">${c.name} (${c.dept}) *${c.num||'????'}</option>`).join('');
+  // 카드 셀렉트 채우기
+  ['lm-charge-card','lm-reduce-card'].forEach(id=>{
+    const sel=document.getElementById(id);
+    if(!sel) return;
+    sel.innerHTML='<option value="">카드를 선택하세요</option>'+
+      cards.map(c=>`<option value="${c.name}">${c.name} (${c.dept}) *${c.num||'????'} — 잔액 ${fmt(getBalance(c))}</option>`).join('');
+  });
+  // 잔액 부족 카드 목록
+  const lowCards=cards.filter(c=>getBalance(c)<100000);
+  document.getElementById('lm-low-count').textContent=lowCards.length;
+  const listEl=document.getElementById('lm-low-list');
+  if(!lowCards.length){
+    listEl.innerHTML='<div class="empty-msg" style="padding:1rem">잔액 부족 카드가 없습니다 ✅</div>';
+    return;
   }
-
-  // 전체 카드 잔액 색깔 표 (상단)
-  const allEl=document.getElementById('lm-all-cards');
-  if(allEl){
-    if(!cards.length){allEl.innerHTML='<div class="empty-msg" style="padding:1rem">카드를 추가해주세요</div>';return;}
-    allEl.innerHTML=`<table class="low-card-table">
-      <thead><tr>
-        <th>담당자</th><th>부서</th><th>카드번호</th>
-        <th style="text-align:right">충전금액</th>
-        <th style="text-align:right">사용금액</th>
-        <th style="text-align:right">잔액</th>
-        <th>사용률</th><th>상태</th><th>바로가기</th>
-      </tr></thead>
-      <tbody>${cards.map((c,i)=>{
-        const bal=getBalance(c), pct=getBarPct(c);
-        const usePct=c.charged?Math.round((c.used||0)/c.charged*100):0;
-        const av=avColors[i%avColors.length];
-        let statusBadge,barColor,balColor;
-        if(bal<100000){statusBadge='<span style="background:#FCEBEB;color:#A32D2D;padding:3px 9px;border-radius:6px;font-size:11px;font-weight:700">🚨 잔액부족</span>';barColor='#E24B4A';balColor='#A32D2D';}
-        else if(pct<30){statusBadge='<span style="background:#FAEEDA;color:#854F0B;padding:3px 9px;border-radius:6px;font-size:11px;font-weight:700">⚠️ 주의</span>';barColor='#EF9F27';balColor='#854F0B';}
-        else{statusBadge='<span style="background:#EAF3DE;color:#3B6D11;padding:3px 9px;border-radius:6px;font-size:11px;font-weight:700">✅ 정상</span>';barColor='#0F9D58';balColor='#3B6D11';}
-        return`<tr>
-          <td><div style="display:flex;align-items:center;gap:6px"><div class="avatar ${av}" style="width:26px;height:26px;font-size:11px;flex-shrink:0">${(c.name||'?')[0]}</div><strong>${c.name}</strong></div></td>
-          <td style="color:#666">${c.dept}</td>
-          <td style="color:#888;font-size:11px">*${c.num||'????'}</td>
-          <td style="text-align:right">${fmt(c.charged||0)}</td>
-          <td style="text-align:right;color:#666">${fmt(c.used||0)}</td>
-          <td style="text-align:right;font-weight:700;color:${balColor}">${fmt(bal)}</td>
-          <td style="min-width:100px">
-            <div style="display:flex;align-items:center;gap:6px">
-              <div style="flex:1;background:#f0f0ec;border-radius:4px;height:7px;overflow:hidden">
-                <div style="width:${usePct}%;height:7px;background:${barColor};border-radius:4px"></div>
-              </div>
-              <span style="font-size:11px;color:${barColor};font-weight:600;min-width:28px">${usePct}%</span>
-            </div>
-          </td>
-          <td>${statusBadge}</td>
-          <td><button class="btn-charge-sm" onclick="quickCharge2('${c.name}')">충전 등록</button></td>
-        </tr>`;
-      }).join('')}</tbody>
-    </table>`;
-  }
+  listEl.innerHTML=`<table class="low-card-table">
+    <thead><tr><th>담당자</th><th>부서</th><th>카드번호</th><th style="text-align:right">잔액</th><th>상태</th><th>충전</th></tr></thead>
+    <tbody>${lowCards.map((c,i)=>`<tr>
+      <td style="font-weight:600">${c.name}</td>
+      <td style="color:#666">${c.dept}</td>
+      <td style="color:#888;font-size:11px">*${c.num||'????'}</td>
+      <td style="text-align:right;color:#A32D2D;font-weight:600">${fmt(getBalance(c))}</td>
+      <td><span style="background:#FCEBEB;color:#A32D2D;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:600">잔액부족</span></td>
+      <td><button class="btn-charge-sm" onclick="quickCharge('${c.name}')">충전</button></td>
+    </tr>`).join('')}</tbody>
+  </table>`;
 }
 
-function updateLimitBal2(){
-  const name=document.getElementById('lm-sys-card').value;
-  const el=document.getElementById('lm-sys-bal-display');
-  if(!name){el.textContent='카드 선택 시 잔액 자동 표시';el.style.background='#f5f5f3';return;}
-  const c=loadCards().find(c=>c.name===name);
-  if(!c){return;}
-  const bal=getBalance(c),pct=getBarPct(c);
-  let color='#3B6D11',bg='#EAF3DE';
-  if(bal<100000){color='#A32D2D';bg='#FCEBEB';}
-  else if(pct<30){color='#854F0B';bg='#FAEEDA';}
-  el.style.background=bg;
-  el.innerHTML='<strong style="color:'+color+'">현재 잔액: '+fmt(bal)+'</strong> &nbsp;|&nbsp; 충전: '+fmt(c.charged||0)+' / 사용: '+fmt(c.used||0);
-}
-
-function doSysCharge(){
-  const name=document.getElementById('lm-sys-card').value;
-  if(!name){alert('카드를 선택해주세요');return;}
-  const cards=loadCards();
-  const c=cards.find(c=>c.name===name);
-  // 충전 등록 모달 열기
-  showAddCharge();
-  setTimeout(()=>{
-    const sel=document.getElementById('ch-card');
-    if(sel) sel.value=name+'|'+c.dept;
-  },100);
-}
-
-function doSysReduce(){
-  const name=document.getElementById('lm-sys-card').value;
-  if(!name){alert('카드를 선택해주세요');return;}
-  const cards=loadCards();
-  const c=cards.find(cc=>cc.name===name);
-  if(!c){return;}
-  const bal=getBalance(c);
-  const amtStr=prompt('감액 금액을 입력하세요 (현재 잔액: '+fmt(bal)+')');
-  if(!amtStr)return;
-  const amt=parseInt(amtStr.replace(/[^0-9]/g,''))||0;
-  if(!amt){alert('올바른 금액을 입력해주세요');return;}
-  if(amt>bal){alert('감액 금액이 현재 잔액('+fmt(bal)+')을 초과합니다.');return;}
-  if(!confirm('감액 처리하시겠습니까?
-'+name+' : '+fmt(amt)+' 감액
-감액 후 잔액: '+fmt(bal-amt))){return;}
-  c.charged=Math.max(0,(c.charged||0)-amt);
-  saveCards(cards);
-  // 충전내역에 감액 기록
-  const charges=loadCharges();
-  const today=new Date();
-  const dateStr=(today.getMonth()+1)+'/'+today.getDate();
-  charges.unshift({date:dateStr,fullDate:todayStr(),card:name,dept:c.dept,amt:-amt,memo:'감액 처리'});
-  saveCharges(charges);
-  renderAll();
-  renderLimitSection();
-  alert('✅ 감액 처리 완료!
-'+name+' '+fmt(amt)+' 감액
-잔액: '+fmt(getBalance(c)));
-}
-
-function quickCharge2(name){
-  const sel=document.getElementById('lm-sys-card');
-  if(sel){sel.value=name;updateLimitBal2();}
-  document.getElementById('lm-sys-card').scrollIntoView({behavior:'smooth',block:'center'});
-}
-
-function quickCharge(name){ quickCharge2(name); }
-function _quickCharge_old(name){
+function quickCharge(name){
   // 선택한 카드를 충전 폼에 자동 세팅 후 한도관리 충전 섹션 포커스
   const sel=document.getElementById('lm-charge-card');
   if(sel){
