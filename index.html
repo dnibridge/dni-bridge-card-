@@ -228,103 +228,154 @@
   <!-- 한도관리 섹션 -->
   <div id="section-lm" style="display:none">
 
-    <!-- 잔액 부족 카드 -->
-    <div class="low-card-section">
+    <!-- ① 전체 카드 잔액 현황 (색깔 표시) -->
+    <div class="low-card-section" style="margin-bottom:14px">
       <div class="low-card-header">
-        <div style="font-size:14px;font-weight:600;display:flex;align-items:center;gap:6px">
-          ⚠️ 잔액 부족 카드 <span id="lm-low-count" style="background:#FCEBEB;color:#A32D2D;border-radius:20px;padding:2px 8px;font-size:12px;font-weight:700">0</span>
+        <div style="font-size:14px;font-weight:600">💳 전체 카드 잔액 현황</div>
+        <div style="display:flex;gap:8px;align-items:center;font-size:12px">
+          <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;background:#0F9D58;border-radius:50%;display:inline-block"></span>정상 (30% 이상)</span>
+          <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;background:#EF9F27;border-radius:50%;display:inline-block"></span>주의 (10~30%)</span>
+          <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;background:#E24B4A;border-radius:50%;display:inline-block"></span>부족 (10% 미만)</span>
         </div>
-        <button class="btn" style="font-size:12px;background:#0C447C;color:#fff;border-color:#0C447C" onclick="openHanaCharge()">🔗 일괄 충전 요청 (하나카드)</button>
       </div>
-      <div id="lm-low-list">
-        <div class="empty-msg" style="padding:1rem">잔액 부족 카드가 없습니다 ✅</div>
-      </div>
-    </div>
-
-    <!-- 충전 / 감액 폼 -->
-    <div class="limit-grid">
-
-      <!-- 한도 충전 -->
-      <div class="limit-box charge">
-        <div class="limit-title" style="color:#0F9D58">📈 한도 충전</div>
-        <div class="limit-warn">
-          ⚠️ 충전 실행은 하나카드 기업홈페이지에서 법인공인인증서 인증 후 처리됩니다. 아래 버튼은 홈페이지로 이동합니다.
-        </div>
-        <div class="limit-form-group">
-          <label>대상 카드 선택</label>
-          <select id="lm-charge-card" onchange="updateLimitBal('charge')">
-            <option value="">카드를 선택하세요</option>
-          </select>
-        </div>
-        <div class="limit-form-group">
-          <label>현재 잔여 한도</label>
-          <div class="limit-bal-display" id="lm-charge-bal">카드 선택 시 자동 표시</div>
-        </div>
-        <div class="limit-form-group">
-          <label>충전 금액 (원)</label>
-          <input type="number" id="lm-charge-amt" placeholder="충전할 금액 입력" oninput="updateLimitPreview('charge')">
-          <div id="lm-charge-preview" style="font-size:12px;color:#0F9D58;margin-top:4px;display:none"></div>
-        </div>
-        <a id="lm-charge-link" href="https://www.hanacard.co.kr/OCH30000000N.web?_frame=no&schID=ccd&mID=OCH30000000C" target="_blank" class="limit-btn limit-btn-charge" onclick="recordChargeNote('charge')">
-          🔗 하나카드 홈페이지에서 충전 실행
-        </a>
-        <div style="font-size:11px;color:#aaa;margin-top:6px;text-align:center">클릭 시 하나카드 기업홈페이지로 이동합니다</div>
-      </div>
-
-      <!-- 한도 감액 -->
-      <div class="limit-box reduce">
-        <div class="limit-title" style="color:#A32D2D">📉 한도 감액</div>
-        <div class="limit-warn" style="background:#FCEBEB;border-color:#F7C1C1;color:#791F1F">
-          ⚠️ 감액 처리한 금액은 카드 결제계좌에 즉시 입금됩니다. 하나카드 홈페이지로 이동합니다.
-        </div>
-        <div class="limit-form-group">
-          <label>대상 카드 선택</label>
-          <select id="lm-reduce-card" onchange="updateLimitBal('reduce')">
-            <option value="">카드를 선택하세요</option>
-          </select>
-        </div>
-        <div class="limit-form-group">
-          <label>현재 잔여 한도</label>
-          <div class="limit-bal-display" id="lm-reduce-bal">카드 선택 시 자동 표시</div>
-        </div>
-        <div class="limit-form-group">
-          <label>감액 금액 (원)</label>
-          <input type="number" id="lm-reduce-amt" placeholder="감액할 금액 입력" oninput="updateLimitPreview('reduce')">
-          <div id="lm-reduce-preview" style="font-size:12px;color:#A32D2D;margin-top:4px;display:none"></div>
-        </div>
-        <a id="lm-reduce-link" href="https://www.hanacard.co.kr/OCH30000000N.web?_frame=no&schID=ccd&mID=OCH30000000C" target="_blank" class="limit-btn limit-btn-reduce" onclick="recordChargeNote('reduce')">
-          🔗 하나카드 홈페이지에서 감액 실행
-        </a>
-        <div style="font-size:11px;color:#aaa;margin-top:6px;text-align:center">클릭 시 하나카드 기업홈페이지로 이동합니다</div>
+      <div id="lm-all-cards" style="margin-top:8px">
+        <div class="empty-msg" style="padding:1rem">카드를 추가해주세요</div>
       </div>
     </div>
 
-    <!-- 충전 가능 시간 안내 -->
+    <!-- ② 이 시스템에서 할 수 있는 것 / 없는 것 안내 -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
+      <div style="background:#EAF3DE;border:1px solid #C0DD97;border-radius:12px;padding:1.25rem">
+        <div style="font-size:14px;font-weight:600;color:#27500A;margin-bottom:10px">✅ 이 시스템에서 할 수 있는 것</div>
+        <div style="font-size:13px;color:#3B6D11;line-height:2">
+          <div>• 카드별 충전 금액 기록 및 관리</div>
+          <div>• 사용내역 등록 시 잔액 자동 차감</div>
+          <div>• 잔액 현황 실시간 조회</div>
+          <div>• 충전/감액 이력 기록 보관</div>
+          <div>• 잔액 부족 카드 자동 경고</div>
+          <div>• 부서별·카테고리별 통계 집계</div>
+        </div>
+      </div>
+      <div style="background:#FCEBEB;border:1px solid #F7C1C1;border-radius:12px;padding:1.25rem">
+        <div style="font-size:14px;font-weight:600;color:#791F1F;margin-bottom:10px">⚠️ 이 시스템에서 할 수 없는 것</div>
+        <div style="font-size:13px;color:#A32D2D;line-height:2">
+          <div>• 실제 카드 충전 (하나카드 홈페이지에서 처리)</div>
+          <div>• 실제 카드 감액 (하나카드 홈페이지에서 처리)</div>
+          <div>• 카드사 실시간 데이터 연동</div>
+          <div>• 카드 승인 자동 수신</div>
+        </div>
+        <div style="background:#fff;border-radius:8px;padding:8px 12px;margin-top:10px;font-size:12px;color:#666;line-height:1.6">
+          💡 실제 충전·감액은 하나카드 기업홈페이지에서 처리하고,<br>
+          처리 후 이 시스템에 금액을 직접 등록해주세요.
+        </div>
+      </div>
+    </div>
+
+    <!-- ③ 업무 흐름 안내 -->
+    <div style="background:#E6F1FB;border:1px solid #B5D4F4;border-radius:12px;padding:1.25rem;margin-bottom:14px">
+      <div style="font-size:14px;font-weight:600;color:#0C447C;margin-bottom:12px">📋 충전·감액 업무 처리 순서</div>
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+        <div style="background:#fff;border-radius:8px;padding:10px 14px;text-align:center;min-width:130px;border:1px solid #B5D4F4">
+          <div style="font-size:11px;color:#888;margin-bottom:4px">STEP 1</div>
+          <div style="font-size:13px;font-weight:600;color:#185FA5">잔액 확인</div>
+          <div style="font-size:11px;color:#666;margin-top:2px">이 화면에서 확인</div>
+        </div>
+        <div style="color:#B5D4F4;font-size:18px">→</div>
+        <div style="background:#fff;border-radius:8px;padding:10px 14px;text-align:center;min-width:130px;border:1px solid #B5D4F4">
+          <div style="font-size:11px;color:#888;margin-bottom:4px">STEP 2</div>
+          <div style="font-size:13px;font-weight:600;color:#185FA5">하나카드 접속</div>
+          <div style="font-size:11px;color:#666;margin-top:2px">아래 버튼으로 이동</div>
+        </div>
+        <div style="color:#B5D4F4;font-size:18px">→</div>
+        <div style="background:#fff;border-radius:8px;padding:10px 14px;text-align:center;min-width:130px;border:1px solid #B5D4F4">
+          <div style="font-size:11px;color:#888;margin-bottom:4px">STEP 3</div>
+          <div style="font-size:13px;font-weight:600;color:#185FA5">실제 처리</div>
+          <div style="font-size:11px;color:#666;margin-top:2px">카드사에서 충전/감액</div>
+        </div>
+        <div style="color:#B5D4F4;font-size:18px">→</div>
+        <div style="background:#fff;border-radius:8px;padding:10px 14px;text-align:center;min-width:130px;border:1px solid #B5D4F4">
+          <div style="font-size:11px;color:#888;margin-bottom:4px">STEP 4</div>
+          <div style="font-size:13px;font-weight:600;color:#185FA5">시스템 등록</div>
+          <div style="font-size:11px;color:#666;margin-top:2px">아래 버튼으로 기록</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ④ 하나카드 바로가기 + 시스템 등록 -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
+
+      <!-- 하나카드 홈페이지 바로가기 -->
+      <div style="background:#fff;border:1px solid #e8e8e4;border-radius:12px;padding:1.25rem;border-top:3px solid #185FA5">
+        <div style="font-size:14px;font-weight:600;color:#185FA5;margin-bottom:6px">🏦 하나카드 기업홈페이지</div>
+        <div style="font-size:12px;color:#666;line-height:1.7;margin-bottom:14px">
+          실제 충전·감액은 하나카드 기업홈페이지에서<br>
+          <strong>법인공인인증서 인증 후</strong> 처리됩니다.
+        </div>
+        <a href="https://www.hanacard.co.kr/OCH30000000N.web?_frame=no&schID=ccd&mID=OCH30000000C" target="_blank"
+          style="display:flex;align-items:center;justify-content:center;gap:6px;width:100%;padding:11px;background:#185FA5;color:#fff;border-radius:8px;font-size:13px;font-weight:600;text-decoration:none;margin-bottom:8px">
+          🔗 하나카드 B카드 충전·감액 바로가기
+        </a>
+        <div style="font-size:11px;color:#aaa;text-align:center">새 창으로 열립니다 · 법인공인인증서 필요</div>
+        <!-- 충전 가능 시간 -->
+        <div style="margin-top:14px;padding-top:12px;border-top:1px solid #f0f0ec">
+          <div style="font-size:12px;font-weight:600;color:#333;margin-bottom:8px">⏰ 충전 가능 시간</div>
+          <div style="font-size:12px;color:#0F9D58;margin-bottom:4px;font-weight:500">당행(하나은행): 매일 24시간</div>
+          <div style="font-size:12px;color:#333;margin-bottom:2px">타행: 월~금 06:00 ~ 23:45</div>
+          <div style="font-size:11px;color:#A32D2D">※ BC망(국민은행): 08:00~22:00만 가능</div>
+          <div style="font-size:11px;color:#A32D2D">※ 공휴일·대체공휴일 충전 불가</div>
+        </div>
+      </div>
+
+      <!-- 시스템 충전/감액 등록 -->
+      <div style="background:#fff;border:1px solid #e8e8e4;border-radius:12px;padding:1.25rem;border-top:3px solid #0F9D58">
+        <div style="font-size:14px;font-weight:600;color:#0F9D58;margin-bottom:6px">📝 시스템에 충전·감액 기록하기</div>
+        <div style="font-size:12px;color:#666;line-height:1.7;margin-bottom:12px">
+          하나카드에서 처리 완료 후<br>
+          아래 버튼으로 이 시스템에 금액을 기록하세요.
+        </div>
+
+        <div style="margin-bottom:10px">
+          <div style="font-size:12px;color:#666;margin-bottom:4px;font-weight:500">대상 카드 선택</div>
+          <select id="lm-sys-card" onchange="updateLimitBal2()" style="width:100%;padding:8px 10px;border:1px solid #ddd;border-radius:8px;font-size:13px;background:#fff">
+            <option value="">카드를 선택하세요</option>
+          </select>
+        </div>
+        <div id="lm-sys-bal-display" style="background:#f5f5f3;border-radius:6px;padding:7px 10px;font-size:12px;color:#666;margin-bottom:10px">
+          카드 선택 시 잔액 자동 표시
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <button onclick="doSysCharge()" style="padding:10px;border:none;border-radius:8px;background:#0F9D58;color:#fff;font-size:13px;font-weight:600;cursor:pointer">
+            ⚡ 충전 금액 등록
+          </button>
+          <button onclick="doSysReduce()" style="padding:10px;border:none;border-radius:8px;background:#A32D2D;color:#fff;font-size:13px;font-weight:600;cursor:pointer">
+            📉 감액 기록
+          </button>
+        </div>
+        <div style="font-size:11px;color:#aaa;margin-top:8px;text-align:center;line-height:1.6">
+          하나카드에서 처리 완료 후 클릭해주세요<br>잔액이 즉시 반영됩니다
+        </div>
+      </div>
+    </div>
+
+    <!-- ⑤ 충전 가능 시간 상세 -->
     <div class="time-box">
-      <div style="font-size:14px;font-weight:600;display:flex;align-items:center;gap:6px;margin-bottom:4px">⏰ 충전 가능 시간 안내</div>
-      <div style="font-size:12px;color:#888;margin-bottom:10px">하나카드 B카드(충전식 법인카드) 기준</div>
+      <div style="font-size:14px;font-weight:600;display:flex;align-items:center;gap:6px;margin-bottom:4px">⏰ 충전 가능 시간 상세 안내</div>
+      <div style="font-size:12px;color:#888;margin-bottom:10px">하나카드 B카드(충전식 법인카드) 기준 — 실제 충전 전 반드시 확인하세요</div>
       <div class="time-grid">
         <div class="time-item hana">
           <div class="time-bank hana">당행 (하나은행)</div>
-          <div class="time-hours">매일 / 24시간 가능</div>
+          <div class="time-hours" style="font-weight:600">매일 / 24시간 가능</div>
           <div class="time-note">365일 언제나 충전 가능</div>
         </div>
         <div class="time-item other">
-          <div class="time-bank" style="color:#333">타행</div>
+          <div class="time-bank" style="color:#333;font-weight:600">타행</div>
           <div class="time-hours">월~금 / 06:00 ~ 23:45</div>
           <div class="time-note" style="color:#A32D2D">※ BC망 이용 (국민은행): 08:00~22:00만 가능<br>※ 공휴일·대체공휴일 충전 불가</div>
         </div>
       </div>
     </div>
 
-    <!-- 안내 -->
-    <div style="background:#E6F1FB;border-radius:10px;padding:14px 16px;font-size:13px;color:#0C447C;line-height:1.7">
-      <strong>💡 이용 안내</strong><br>
-      실제 충전·감액은 하나카드 기업홈페이지(법인공인인증서 필요)에서 처리됩니다.<br>
-      처리 완료 후 이 대시보드에서 <strong>⚡ 충전 등록</strong> 버튼으로 충전 금액을 업데이트해주세요.
-    </div>
   </div>
-
 <!-- 잔액 초과 에러 팝업 -->
 <div class="err-overlay" id="errOverlay">
   <div class="err-modal">
@@ -825,500 +876,6 @@ function exportCSV(){
   if(!tx.length){alert('내보낼 데이터가 없습니다');return;}
   const rows=[['날짜','담당자','부서','카테고리','메모','금액','상태']];
   tx.forEach(t=>rows.push([t.date,t.card,t.dept,t.cat,t.memo,t.amt,t.status]));
-  const csv='\uFEFF'+rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\n');
-  const a=document.createElement('a');
-  a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
-  a.download='DNI_BRIDGE_'+new Date().toISOString().slice(0,10)+'.csv';
-  a.click();
-}
-
-
-
-// ── 구글시트 가져오기 ──
-let importRows=[], importColIdx={}, importMode='file', pasteRow=null;
-
-// ── CSV 올바른 파싱 (따옴표 안 쉼표 처리) ──
-function parseCSVLine(line){
-  const result=[]; let cur='', inQ=false;
-  for(let i=0;i<line.length;i++){
-    const ch=line[i];
-    if(ch==='"'){ if(inQ&&line[i+1]==='"'){cur+='"';i++;}else inQ=!inQ; }
-    else if(ch===','&&!inQ){result.push(cur.trim());cur='';}
-    else cur+=ch;
-  }
-  result.push(cur.trim());
-  return result;
-}
-
-// ── 날짜 파싱 공통 ──
-function parseDateRaw(raw){
-  raw=(raw||'').trim();
-  const m=raw.match(/(\d{4})[.\-\/]\s*(\d{1,2})[.\-\/]\s*(\d{1,2})/);
-  if(m){
-    const mo=m[2].padStart(2,'0'), dy=m[3].padStart(2,'0');
-    return {dateStr:Number(m[2])+'/'+Number(m[3]), fullDate:m[1]+'-'+mo+'-'+dy};
-  }
-  const t=todayStr();
-  return {dateStr:t.slice(5).replace('-','/'), fullDate:t};
-}
-
-// ── 중복 체크 키 생성 ──
-function dupKey(t){return [t.fullDate||t.date, t.card, String(t.amt), t.memo].join('|');}
-
-// ── 탭 전환 ──
-function switchImportTab(tab){
-  importMode=tab;
-  document.getElementById('import-file-sec').style.display=tab==='file'?'block':'none';
-  document.getElementById('import-paste-sec').style.display=tab==='paste'?'block':'none';
-  document.getElementById('itab-file').style.cssText='flex:1;padding:7px;border-radius:8px;border:1px solid #ddd;font-size:12px;font-weight:600;cursor:pointer;background:'+(tab==='file'?'#185FA5;color:#fff':'#fff;color:#666');
-  document.getElementById('itab-paste').style.cssText='flex:1;padding:7px;border-radius:8px;border:1px solid #ddd;font-size:12px;font-weight:600;cursor:pointer;background:'+(tab==='paste'?'#185FA5;color:#fff':'#fff;color:#666');
-  document.getElementById('import-btn').disabled=true;
-  pasteRow=null;
-}
-
-function showImport(){
-  importRows=[];importColIdx={};pasteRow=null;importMode='file';
-  document.getElementById('import-file').value='';
-  document.getElementById('import-preview').style.display='none';
-  document.getElementById('import-col-map').style.display='none';
-  document.getElementById('import-dup-info').style.display='none';
-  document.getElementById('paste-input').value='';
-  document.getElementById('paste-preview').style.display='none';
-  document.getElementById('import-btn').disabled=true;
-  switchImportTab('file');
-  document.getElementById('importModal').classList.add('show');
-}
-function closeImport(){document.getElementById('importModal').classList.remove('show');}
-
-// ── 파일 읽기 ──
-document.addEventListener('DOMContentLoaded',()=>{
-  const fi=document.getElementById('import-file');
-  if(fi) fi.addEventListener('change',e=>{
-    const file=e.target.files[0]; if(!file)return;
-    const reader=new FileReader();
-    reader.onload=ev=>{ parseImportCSV(ev.target.result); };
-    // 구글 시트 CSV는 UTF-8 BOM 포함
-    reader.readAsText(file,'UTF-8');
-  });
-});
-
-function parseImportCSV(raw){
-  // BOM 제거
-  let text=raw; if(text.charCodeAt(0)===0xFEFF) text=text.slice(1);
-  // 줄 분리 (\r\n / \n 모두 처리)
-  const lines=text.trim().split(/\r?\n/);
-  if(lines.length<2){alert('데이터가 없습니다. 파일을 확인해주세요.');return;}
-  const headers=parseCSVLine(lines[0]);
-  importRows=lines.slice(1).map(l=>parseCSVLine(l)).filter(r=>r.some(c=>c));
-
-  // 열 자동 감지
-  importColIdx={};
-  headers.forEach((h,i)=>{
-    const hh=h.toLowerCase().replace(/\s/g,'');
-    if(hh.includes('타임스탬프')||hh.includes('날짜')||hh.includes('timestamp')||hh.includes('time')) importColIdx.date=i;
-    else if(hh.includes('담당자')||hh.includes('이름')||hh.includes('name')) importColIdx.name=i;
-    else if(hh.includes('금액')||hh.includes('amount')||hh.includes('사용금액')) importColIdx.amt=i;
-    else if(hh.includes('카테고리')||hh.includes('category')) importColIdx.cat=i;
-    else if(hh.includes('메모')||hh.includes('memo')||hh.includes('비고')) importColIdx.memo=i;
-  });
-
-  // 미리보기
-  const cols=Object.values(importColIdx).filter(v=>v!=null);
-  const prev=importRows.slice(0,5).map(r=>'• '+cols.map(i=>r[i]||'').join(' | ')).join('\n');
-  document.getElementById('import-preview-body').textContent=prev||'(내용 없음)';
-  document.getElementById('import-preview').style.display='block';
-
-  // 열 매핑 표시
-  document.getElementById('map-date').textContent=importColIdx.date!=null?headers[importColIdx.date]:'❌ 미감지';
-  document.getElementById('map-name').textContent=importColIdx.name!=null?headers[importColIdx.name]:'❌ 미감지';
-  document.getElementById('map-amt').textContent=importColIdx.amt!=null?headers[importColIdx.amt]:'❌ 미감지';
-  document.getElementById('map-cat').textContent=importColIdx.cat!=null?headers[importColIdx.cat]:'(없음)';
-  document.getElementById('map-memo').textContent=importColIdx.memo!=null?headers[importColIdx.memo]:'(없음)';
-  document.getElementById('import-col-map').style.display='block';
-
-  // 중복 미리 체크
-  const existKeys=new Set(loadTx().map(dupKey));
-  const dupCount=importRows.filter(r=>{
-    const name=(importColIdx.name!=null?r[importColIdx.name]:'').trim();
-    const amt=parseInt((importColIdx.amt!=null?r[importColIdx.amt]:'').replace(/[^0-9]/g,''))||0;
-    const memo=(importColIdx.memo!=null?r[importColIdx.memo]:'').trim()||'';
-    const {fullDate}=parseDateRaw(importColIdx.date!=null?r[importColIdx.date]:'');
-    return existKeys.has([fullDate,name,String(amt),memo].join('|'));
-  }).length;
-
-  const dupEl=document.getElementById('import-dup-info');
-  if(dupCount>0){
-    dupEl.textContent='⚠️ 이미 등록된 중복 건 '+dupCount+'개 감지됨 — 가져오기 시 자동으로 건너뜁니다';
-    dupEl.style.display='block';
-  } else { dupEl.style.display='none'; }
-  document.getElementById('import-count').textContent='총 '+importRows.length+'건 감지됨 (중복 '+dupCount+'건 제외 후 '+(importRows.length-dupCount)+'건 등록 예정)';
-
-  const ok=importColIdx.name!=null&&importColIdx.amt!=null;
-  document.getElementById('import-btn').disabled=!ok;
-  if(!ok) alert('담당자 또는 금액 열을 감지하지 못했습니다.\n구글 시트 열 제목을 확인해주세요.');
-}
-
-// ── 붙여넣기 파싱 (탭 구분) ──
-function parsePasteInput(){
-  const raw=document.getElementById('paste-input').value.trim();
-  if(!raw){document.getElementById('paste-preview').style.display='none';document.getElementById('import-btn').disabled=true;pasteRow=null;return;}
-  // 탭으로 분리
-  const cols=raw.split('\t').map(c=>c.trim());
-  if(cols.length<2){document.getElementById('paste-preview-body').innerHTML='<span style="color:#A32D2D">열이 부족합니다. 구글 시트에서 행 전체를 복사해주세요.</span>';document.getElementById('paste-preview').style.display='block';document.getElementById('import-btn').disabled=true;pasteRow=null;return;}
-
-  // 자동 감지: 날짜/이름/금액/카테고리/메모
-  let dateRaw='', name='', amtRaw='', cat='기타', memo='';
-  cols.forEach(c=>{
-    if(!dateRaw&&/\d{4}.*\d{1,2}.*\d{1,2}/.test(c)) dateRaw=c;
-    else if(!amtRaw&&/^\d{4,7}$/.test(c.replace(/[,원]/g,''))) amtRaw=c;
-    else if(!name&&/^[가-힣]{2,5}$/.test(c)) name=c;
-    else if(!cat&&['식대','교통/출장','접대비','야식비','사무용품','주유비','기타'].includes(c)) cat=c;
-    else if(cat&&!memo&&c&&!/\d{4}/.test(c)) memo=c;
-  });
-  // 카테고리 재탐색
-  cols.forEach(c=>{if(['식대','교통/출장','접대비','야식비','사무용품','주유비','기타'].includes(c)) cat=c;});
-  // 메모: 카테고리 다음 문자열
-  const catIdx=cols.findIndex(c=>['식대','교통/출장','접대비','야식비','사무용품','주유비','기타'].includes(c));
-  if(catIdx>=0&&cols[catIdx+1]) memo=cols[catIdx+1];
-
-  const amt=parseInt(amtRaw.replace(/[^0-9]/g,''))||0;
-  const {dateStr,fullDate}=parseDateRaw(dateRaw);
-
-  if(!name||!amt){
-    document.getElementById('paste-preview-body').innerHTML='<span style="color:#A32D2D">담당자 또는 금액을 인식하지 못했습니다.<br>구글 시트에서 행 전체를 Ctrl+C 후 붙여넣기 해주세요.</span>';
-    document.getElementById('paste-preview').style.display='block';
-    document.getElementById('import-btn').disabled=true; pasteRow=null; return;
-  }
-
-  pasteRow={dateStr,fullDate,name,amt,cat,memo};
-
-  // 중복 체크
-  const existKeys=new Set(loadTx().map(dupKey));
-  const isDup=existKeys.has([fullDate,name,String(amt),memo].join('|'));
-  const dupWarnEl=document.getElementById('paste-dup-warn');
-  if(isDup){
-    dupWarnEl.innerHTML=
-      '<div style="font-size:14px;font-weight:700;color:#A32D2D;margin-bottom:6px">🚫 중복 내역 — 가져오기 불가</div>'+
-      '<div style="font-size:12px;color:#791F1F;line-height:1.7">이미 동일한 내역이 등록되어 있습니다.<br>'+
-      '중복 등록은 가져오기로 처리할 수 없습니다.<br>'+
-      '<strong>수기로 직접 등록이 필요한 경우 "+ 사용내역 등록" 버튼을 이용해주세요.</strong></div>';
-    dupWarnEl.style.display='block';
-    dupWarnEl.style.cssText='display:block;background:#FCEBEB;border:1.5px solid #F09595;border-radius:8px;padding:10px 14px;margin-top:8px';
-    document.getElementById('import-btn').disabled=true;
-  } else {
-    dupWarnEl.style.display='none';
-    document.getElementById('import-btn').disabled=false;
-  }
-
-  document.getElementById('paste-preview-body').innerHTML=
-    '<div>📅 날짜: <strong>'+dateStr+'</strong></div>'+
-    '<div>👤 담당자: <strong>'+name+'</strong></div>'+
-    '<div>💰 금액: <strong>'+amt.toLocaleString('ko-KR')+'원</strong></div>'+
-    '<div>🏷 카테고리: <strong>'+cat+'</strong></div>'+
-    '<div>📝 메모: <strong>'+(memo||'(없음)')+'</strong></div>';
-  document.getElementById('paste-preview').style.display='block';
-}
-
-function doImport(){
-  if(importMode==='paste'){ doPasteImport(); return; }
-  // ── CSV 파일 가져오기 ──
-  const cards=loadCards(), tx=loadTx();
-  const existKeys=new Set(tx.map(dupKey));
-  let added=0, skipped=0, dupSkip=0;
-
-  importRows.forEach(r=>{
-    const name=(importColIdx.name!=null?r[importColIdx.name]:'').trim();
-    const amtRaw=(importColIdx.amt!=null?r[importColIdx.amt]:'').replace(/[^0-9]/g,'');
-    const amt=parseInt(amtRaw)||0;
-    if(!name||!amt){skipped++;return;}
-    const cat=(importColIdx.cat!=null?r[importColIdx.cat]:'기타').trim()||'기타';
-    const memo=(importColIdx.memo!=null?r[importColIdx.memo]:'').trim()||cat;
-    const {dateStr,fullDate}=parseDateRaw(importColIdx.date!=null?r[importColIdx.date]:'');
-    const cardObj=cards.find(c=>c.name===name);
-    const dept=cardObj?cardObj.dept:'미지정';
-
-    // 중복 체크
-    const key=[fullDate,name,String(amt),memo].join('|');
-    if(existKeys.has(key)){dupSkip++;return;}
-
-    // 잔액 체크
-    if(cardObj&&amt>getBalance(cardObj)){skipped++;return;}
-    if(cardObj) cardObj.used=(cardObj.used||0)+amt;
-    const newTx={date:dateStr,fullDate,card:name,dept,cat,memo,amt,status:'승인'};
-    tx.push(newTx);
-    existKeys.add(key);
-    added++;
-  });
-
-  tx.sort((a,b)=>(b.fullDate||b.date||'').localeCompare(a.fullDate||a.date||''));
-  saveCards(cards); saveTxData(tx);
-  closeImport(); renderAll();
-  let msg='✅ '+added+'건 가져오기 완료!';
-  if(dupSkip) msg+='\n🔄 중복 '+dupSkip+'건 건너뜀';
-  if(skipped) msg+='\n⚠️ 잔액 부족/오류 '+skipped+'건 건너뜀';
-  alert(msg);
-}
-
-function doPasteImport(){
-  if(!pasteRow){alert('분석된 데이터가 없습니다');return;}
-  const {dateStr,fullDate,name,amt,cat,memo}=pasteRow;
-  const cards=loadCards(), tx=loadTx();
-  const cardObj=cards.find(c=>c.name===name);
-  const dept=cardObj?cardObj.dept:'미지정';
-  if(cardObj&&amt>getBalance(cardObj)){
-    showErrPopup(name,getBalance(cardObj),amt); return;
-  }
-  if(cardObj) cardObj.used=(cardObj.used||0)+amt;
-  tx.unshift({date:dateStr,fullDate,card:name,dept,cat,memo,amt,status:'승인'});
-  saveCards(cards); saveTxData(tx);
-  closeImport(); renderAll();
-  alert('✅ 1건 등록 완료!\n'+name+' '+amt.toLocaleString('ko-KR')+'원');
-}
-
-// ── 충전내역 ──
-function loadCharges(){try{return JSON.parse(localStorage.getItem('dni_charges')||'[]');}catch(e){return[];}}
-function saveCharges(c){localStorage.setItem('dni_charges',JSON.stringify(c));}
-
-function switchSection(sec){
-  ['tx','ch','lm'].forEach(s=>{
-    const el=document.getElementById('section-'+s);
-    if(el) el.style.display=s===sec?'block':'none';
-    const tab=document.getElementById('stab-'+s);
-    if(tab) tab.classList.toggle('active',s===sec);
-  });
-  if(sec==='ch') renderCharges();
-  if(sec==='lm') renderLimitSection();
-}
-
-
-function goChargeCard(name){
-  switchSection('lm');
-  setTimeout(()=>{
-    const sel=document.getElementById('lm-charge-card');
-    if(sel){sel.value=name;updateLimitBal('charge');}
-    const amtEl=document.getElementById('lm-charge-amt');
-    if(amtEl) amtEl.scrollIntoView({behavior:'smooth',block:'center'});
-  },100);
-}
-function openHanaCharge(){
-  window.open('https://www.hanacard.co.kr/OCH30000000N.web?_frame=no&schID=ccd&mID=OCH30000000C','_blank');
-}
-
-function renderLimitSection(){
-  const cards=loadCards();
-  // 카드 셀렉트 채우기
-  ['lm-charge-card','lm-reduce-card'].forEach(id=>{
-    const sel=document.getElementById(id);
-    if(!sel) return;
-    sel.innerHTML='<option value="">카드를 선택하세요</option>'+
-      cards.map(c=>`<option value="${c.name}">${c.name} (${c.dept}) *${c.num||'????'} — 잔액 ${fmt(getBalance(c))}</option>`).join('');
-  });
-  // 잔액 부족 카드 목록
-  const lowCards=cards.filter(c=>getBalance(c)<100000);
-  document.getElementById('lm-low-count').textContent=lowCards.length;
-  const listEl=document.getElementById('lm-low-list');
-  if(!lowCards.length){
-    listEl.innerHTML='<div class="empty-msg" style="padding:1rem">잔액 부족 카드가 없습니다 ✅</div>';
-    return;
-  }
-  listEl.innerHTML=`<table class="low-card-table">
-    <thead><tr><th>담당자</th><th>부서</th><th>카드번호</th><th style="text-align:right">잔액</th><th>상태</th><th>충전</th></tr></thead>
-    <tbody>${lowCards.map((c,i)=>`<tr>
-      <td style="font-weight:600">${c.name}</td>
-      <td style="color:#666">${c.dept}</td>
-      <td style="color:#888;font-size:11px">*${c.num||'????'}</td>
-      <td style="text-align:right;color:#A32D2D;font-weight:600">${fmt(getBalance(c))}</td>
-      <td><span style="background:#FCEBEB;color:#A32D2D;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:600">잔액부족</span></td>
-      <td><button class="btn-charge-sm" onclick="quickCharge('${c.name}')">충전</button></td>
-    </tr>`).join('')}</tbody>
-  </table>`;
-}
-
-function quickCharge(name){
-  // 선택한 카드를 충전 폼에 자동 세팅 후 한도관리 충전 섹션 포커스
-  const sel=document.getElementById('lm-charge-card');
-  if(sel){
-    sel.value=name;
-    updateLimitBal('charge');
-  }
-  document.getElementById('lm-charge-amt').focus();
-  window.scrollTo({top:document.getElementById('lm-charge-amt').getBoundingClientRect().top+window.scrollY-100,behavior:'smooth'});
-}
-
-function updateLimitBal(type){
-  const selId='lm-'+type+'-card';
-  const balId='lm-'+type+'-bal';
-  const name=document.getElementById(selId).value;
-  const cards=loadCards();
-  const c=cards.find(c=>c.name===name);
-  const balEl=document.getElementById(balId);
-  if(!c){balEl.textContent='카드 선택 시 자동 표시';return;}
-  const bal=getBalance(c);
-  balEl.innerHTML='<strong style="color:'+(bal<100000?'#A32D2D':'#0F9D58')+'">'+fmt(bal)+'</strong> (충전: '+fmt(c.charged||0)+' / 사용: '+fmt(c.used||0)+')';
-  updateLimitPreview(type);
-}
-
-function updateLimitPreview(type){
-  const selId='lm-'+type+'-card';
-  const amtId='lm-'+type+'-amt';
-  const prevId='lm-'+type+'-preview';
-  const name=document.getElementById(selId).value;
-  const amt=parseInt(document.getElementById(amtId).value)||0;
-  const prevEl=document.getElementById(prevId);
-  if(!name||!amt){prevEl.style.display='none';return;}
-  const cards=loadCards();
-  const c=cards.find(c=>c.name===name);
-  if(!c){prevEl.style.display='none';return;}
-  const bal=getBalance(c);
-  if(type==='charge'){
-    prevEl.textContent='충전 후 예상 잔액: '+fmt(bal+amt);
-    prevEl.style.display='block';
-  } else {
-    if(amt>bal){
-      prevEl.textContent='⚠️ 감액 금액이 잔액을 초과합니다!';
-      prevEl.style.color='#A32D2D';
-    } else {
-      prevEl.textContent='감액 후 예상 잔액: '+fmt(bal-amt);
-      prevEl.style.color='#854F0B';
-    }
-    prevEl.style.display='block';
-  }
-}
-
-function recordChargeNote(type){
-  const selId='lm-'+type+'-card';
-  const amtId='lm-'+type+'-amt';
-  const name=document.getElementById(selId).value;
-  const amt=parseInt(document.getElementById(amtId).value)||0;
-  if(name&&amt){
-    const action=type==='charge'?'충전':'감액';
-    setTimeout(()=>{
-      if(confirm(action+' 처리 후 대시보드에 반영하시겠습니까?\n'+name+' '+fmt(amt)+' '+action+'\n\n확인: 충전 등록 화면 열기\n취소: 나중에 수동 등록')){
-        if(type==='charge') showAddCharge();
-      }
-    }, 500);
-  }
-}
-
-function showAddCharge(){
-  const cards=loadCards();
-  if(!cards.length){alert('먼저 카드를 추가해주세요');return;}
-  document.getElementById('chargeModalTitle').textContent='충전 등록';
-  document.getElementById('ch-edit-idx').value='-1';
-  const sel=document.getElementById('ch-card');
-  sel.innerHTML=cards.map(c=>`<option value="${c.name}|${c.dept}">${c.name} (${c.dept}) *${c.num}</option>`).join('');
-  document.getElementById('ch-amt').value='';
-  document.getElementById('ch-memo').value='';
-  document.getElementById('chargeModal').classList.add('show');
-}
-
-function showEditCharge(i){
-  const charges=loadCharges(), ch=charges[i];
-  const cards=loadCards();
-  document.getElementById('chargeModalTitle').textContent='충전내역 수정';
-  document.getElementById('ch-edit-idx').value=i;
-  const sel=document.getElementById('ch-card');
-  sel.innerHTML=cards.map(c=>`<option value="${c.name}|${c.dept}"${c.name===ch.card?' selected':''}>${c.name} (${c.dept}) *${c.num}</option>`).join('');
-  document.getElementById('ch-amt').value=ch.amt||'';
-  document.getElementById('ch-memo').value=ch.memo||'';
-  document.getElementById('chargeModal').classList.add('show');
-}
-
-function closeChargeModal(){document.getElementById('chargeModal').classList.remove('show');}
-
-function saveCharge(){
-  const selVal=document.getElementById('ch-card').value.split('|');
-  const cardName=selVal[0], dept=selVal[1];
-  const amt=parseInt(document.getElementById('ch-amt').value)||0;
-  const memo=document.getElementById('ch-memo').value.trim()||'충전';
-  const editIdx=parseInt(document.getElementById('ch-edit-idx').value);
-  if(!amt){alert('충전 금액을 입력해주세요');return;}
-
-  const cards=loadCards();
-  const charges=loadCharges();
-  const today=new Date();
-  const dateStr=(today.getMonth()+1)+'/'+today.getDate();
-  const cardObj=cards.find(c=>c.name===cardName);
-
-  if(editIdx>=0){
-    // 수정: 기존 충전금액 취소 후 새 금액 적용
-    const old=charges[editIdx];
-    const oldCard=cards.find(c=>c.name===old.card);
-    if(oldCard) oldCard.charged=Math.max(0,(oldCard.charged||0)-old.amt);
-    if(cardObj) cardObj.charged=(cardObj.charged||0)+amt;
-    charges[editIdx]={...old,card:cardName,dept,amt,memo};
-  } else {
-    if(cardObj) cardObj.charged=(cardObj.charged||0)+amt;
-    charges.unshift({date:dateStr,card:cardName,dept,amt,memo});
-  }
-  saveCards(cards);
-  saveCharges(charges);
-  closeChargeModal();
-  renderAll();
-  renderCharges();
-  // 충전내역 탭으로 자동 이동
-  switchSection('ch');
-}
-
-function deleteCharge(i){
-  if(!confirm('이 충전내역을 삭제하시겠습니까?\n카드 충전금액도 함께 감소합니다.'))return;
-  const charges=loadCharges(), cards=loadCards();
-  const ch=charges[i];
-  const cardObj=cards.find(c=>c.name===ch.card);
-  if(cardObj) cardObj.charged=Math.max(0,(cardObj.charged||0)-ch.amt);
-  charges.splice(i,1);
-  saveCards(cards); saveCharges(charges);
-  renderAll(); renderCharges();
-}
-
-function renderCharges(){
-  const charges=loadCharges();
-  const el=document.getElementById('chList');
-  if(!charges.length){el.innerHTML='<tr><td colspan="6" class="empty-msg">충전내역이 없습니다</td></tr>';return;}
-  el.innerHTML=charges.map((ch,i)=>`
-    <tr>
-      <td style="color:#aaa;white-space:nowrap">${ch.date}</td>
-      <td style="font-weight:600">${ch.card}</td>
-      <td style="color:#666">${ch.dept}</td>
-      <td style="color:#666">${ch.memo}</td>
-      <td style="font-weight:600;text-align:right;color:#0F9D58;white-space:nowrap">+${fmt(ch.amt)}</td>
-      <td style="white-space:nowrap">
-        <button class="icon-btn edit" onclick="showEditCharge(${i})" title="수정">✏️</button>
-        <button class="icon-btn del" onclick="deleteCharge(${i})" title="삭제">🗑</button>
-      </td>
-    </tr>`).join('');
-}
-
-// ── 중복 확인 팝업 ──
-let _dupCallback=null;
-function showDupConfirm(cb){
-  _dupCallback=cb;
-  document.getElementById('dupOverlay').classList.add('show');
-}
-function closeDupConfirm(){
-  _dupCallback=null;
-  document.getElementById('dupOverlay').classList.remove('show');
-}
-document.addEventListener('DOMContentLoaded',()=>{
-  const btn=document.getElementById('dupConfirmOk');
-  if(btn) btn.onclick=()=>{
-    document.getElementById('dupOverlay').classList.remove('show');
-    if(_dupCallback) _dupCallback();
-    _dupCallback=null;
-  };
-});
-
-function renderAll(){renderMetrics();renderCards();renderDept();renderTabs();renderTx();}
-document.getElementById('todayDate').textContent=new Date().toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric'});
-window.onclick=e=>{
-  if(e.target.id==='cardModal')closeCardModal();
-  if(e.target.id==='txModal')closeTxModal();
-  if(e.target.id==='errOverlay')closeErrPopup();
-  if(e.target.id==='chargeModal')closeChargeModal();
-  if(e.target.id==='importModal')closeImport();
-  if(e.target.id==='dupOverlay')closeDupConfirm();
-};
-renderAll();
-</script>
+  const csv='\uFEFF'+rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\n');\n  const a=document.createElement('a');\n  a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);\n  a.download='DNI_BRIDGE_'+new Date().toISOString().slice(0,10)+'.csv';\n  a.click();\n}\n\n\n\n// ── 구글시트 가져오기 ──\nlet importRows=[], importColIdx={}, importMode='file', pasteRow=null;\n\n// ── CSV 올바른 파싱 (따옴표 안 쉼표 처리) ──\nfunction parseCSVLine(line){\n  const result=[]; let cur='', inQ=false;\n  for(let i=0;i<line.length;i++){\n    const ch=line[i];\n    if(ch==='"'){ if(inQ&&line[i+1]==='"'){cur+='"';i++;}else inQ=!inQ; }\n    else if(ch===','&&!inQ){result.push(cur.trim());cur='';}\n    else cur+=ch;\n  }\n  result.push(cur.trim());\n  return result;\n}\n\n// ── 날짜 파싱 공통 ──\nfunction parseDateRaw(raw){\n  raw=(raw||'').trim();\n  const m=raw.match(/(\d{4})[.\-\/]\s*(\d{1,2})[.\-\/]\s*(\d{1,2})/);\n  if(m){\n    const mo=m[2].padStart(2,'0'), dy=m[3].padStart(2,'0');\n    return {dateStr:Number(m[2])+'/'+Number(m[3]), fullDate:m[1]+'-'+mo+'-'+dy};\n  }\n  const t=todayStr();\n  return {dateStr:t.slice(5).replace('-','/'), fullDate:t};\n}\n\n// ── 중복 체크 키 생성 ──\nfunction dupKey(t){return [t.fullDate||t.date, t.card, String(t.amt), t.memo].join('|');}\n\n// ── 탭 전환 ──\nfunction switchImportTab(tab){\n  importMode=tab;\n  document.getElementById('import-file-sec').style.display=tab==='file'?'block':'none';\n  document.getElementById('import-paste-sec').style.display=tab==='paste'?'block':'none';\n  document.getElementById('itab-file').style.cssText='flex:1;padding:7px;border-radius:8px;border:1px solid #ddd;font-size:12px;font-weight:600;cursor:pointer;background:'+(tab==='file'?'#185FA5;color:#fff':'#fff;color:#666');\n  document.getElementById('itab-paste').style.cssText='flex:1;padding:7px;border-radius:8px;border:1px solid #ddd;font-size:12px;font-weight:600;cursor:pointer;background:'+(tab==='paste'?'#185FA5;color:#fff':'#fff;color:#666');\n  document.getElementById('import-btn').disabled=true;\n  pasteRow=null;\n}\n\nfunction showImport(){\n  importRows=[];importColIdx={};pasteRow=null;importMode='file';\n  document.getElementById('import-file').value='';\n  document.getElementById('import-preview').style.display='none';\n  document.getElementById('import-col-map').style.display='none';\n  document.getElementById('import-dup-info').style.display='none';\n  document.getElementById('paste-input').value='';\n  document.getElementById('paste-preview').style.display='none';\n  document.getElementById('import-btn').disabled=true;\n  switchImportTab('file');\n  document.getElementById('importModal').classList.add('show');\n}\nfunction closeImport(){document.getElementById('importModal').classList.remove('show');}\n\n// ── 파일 읽기 ──\ndocument.addEventListener('DOMContentLoaded',()=>{\n  const fi=document.getElementById('import-file');\n  if(fi) fi.addEventListener('change',e=>{\n    const file=e.target.files[0]; if(!file)return;\n    const reader=new FileReader();\n    reader.onload=ev=>{ parseImportCSV(ev.target.result); };\n    // 구글 시트 CSV는 UTF-8 BOM 포함\n    reader.readAsText(file,'UTF-8');\n  });\n});\n\nfunction parseImportCSV(raw){\n  // BOM 제거\n  let text=raw; if(text.charCodeAt(0)===0xFEFF) text=text.slice(1);\n  // 줄 분리 (\r\n / \n 모두 처리)\n  const lines=text.trim().split(/\r?\n/);\n  if(lines.length<2){alert('데이터가 없습니다. 파일을 확인해주세요.');return;}\n  const headers=parseCSVLine(lines[0]);\n  importRows=lines.slice(1).map(l=>parseCSVLine(l)).filter(r=>r.some(c=>c));\n\n  // 열 자동 감지\n  importColIdx={};\n  headers.forEach((h,i)=>{\n    const hh=h.toLowerCase().replace(/\s/g,'');\n    if(hh.includes('타임스탬프')||hh.includes('날짜')||hh.includes('timestamp')||hh.includes('time')) importColIdx.date=i;\n    else if(hh.includes('담당자')||hh.includes('이름')||hh.includes('name')) importColIdx.name=i;\n    else if(hh.includes('금액')||hh.includes('amount')||hh.includes('사용금액')) importColIdx.amt=i;\n    else if(hh.includes('카테고리')||hh.includes('category')) importColIdx.cat=i;\n    else if(hh.includes('메모')||hh.includes('memo')||hh.includes('비고')) importColIdx.memo=i;\n  });\n\n  // 미리보기\n  const cols=Object.values(importColIdx).filter(v=>v!=null);\n  const prev=importRows.slice(0,5).map(r=>'• '+cols.map(i=>r[i]||'').join(' | ')).join('\n');\n  document.getElementById('import-preview-body').textContent=prev||'(내용 없음)';\n  document.getElementById('import-preview').style.display='block';\n\n  // 열 매핑 표시\n  document.getElementById('map-date').textContent=importColIdx.date!=null?headers[importColIdx.date]:'❌ 미감지';\n  document.getElementById('map-name').textContent=importColIdx.name!=null?headers[importColIdx.name]:'❌ 미감지';\n  document.getElementById('map-amt').textContent=importColIdx.amt!=null?headers[importColIdx.amt]:'❌ 미감지';\n  document.getElementById('map-cat').textContent=importColIdx.cat!=null?headers[importColIdx.cat]:'(없음)';\n  document.getElementById('map-memo').textContent=importColIdx.memo!=null?headers[importColIdx.memo]:'(없음)';\n  document.getElementById('import-col-map').style.display='block';\n\n  // 중복 미리 체크\n  const existKeys=new Set(loadTx().map(dupKey));\n  const dupCount=importRows.filter(r=>{\n    const name=(importColIdx.name!=null?r[importColIdx.name]:'').trim();\n    const amt=parseInt((importColIdx.amt!=null?r[importColIdx.amt]:'').replace(/[^0-9]/g,''))||0;\n    const memo=(importColIdx.memo!=null?r[importColIdx.memo]:'').trim()||'';\n    const {fullDate}=parseDateRaw(importColIdx.date!=null?r[importColIdx.date]:'');\n    return existKeys.has([fullDate,name,String(amt),memo].join('|'));\n  }).length;\n\n  const dupEl=document.getElementById('import-dup-info');\n  if(dupCount>0){\n    dupEl.textContent='⚠️ 이미 등록된 중복 건 '+dupCount+'개 감지됨 — 가져오기 시 자동으로 건너뜁니다';\n    dupEl.style.display='block';\n  } else { dupEl.style.display='none'; }\n  document.getElementById('import-count').textContent='총 '+importRows.length+'건 감지됨 (중복 '+dupCount+'건 제외 후 '+(importRows.length-dupCount)+'건 등록 예정)';\n\n  const ok=importColIdx.name!=null&&importColIdx.amt!=null;\n  document.getElementById('import-btn').disabled=!ok;\n  if(!ok) alert('담당자 또는 금액 열을 감지하지 못했습니다.\n구글 시트 열 제목을 확인해주세요.');\n}\n\n// ── 붙여넣기 파싱 (탭 구분) ──\nfunction parsePasteInput(){\n  const raw=document.getElementById('paste-input').value.trim();\n  if(!raw){document.getElementById('paste-preview').style.display='none';document.getElementById('import-btn').disabled=true;pasteRow=null;return;}\n  // 탭으로 분리\n  const cols=raw.split('\t').map(c=>c.trim());\n  if(cols.length<2){document.getElementById('paste-preview-body').innerHTML='<span style="color:#A32D2D">열이 부족합니다. 구글 시트에서 행 전체를 복사해주세요.</span>';document.getElementById('paste-preview').style.display='block';document.getElementById('import-btn').disabled=true;pasteRow=null;return;}\n\n  // 자동 감지: 날짜/이름/금액/카테고리/메모\n  let dateRaw='', name='', amtRaw='', cat='기타', memo='';\n  cols.forEach(c=>{\n    if(!dateRaw&&/\d{4}.*\d{1,2}.*\d{1,2}/.test(c)) dateRaw=c;\n    else if(!amtRaw&&/^\d{4,7}$/.test(c.replace(/[,원]/g,''))) amtRaw=c;\n    else if(!name&&/^[가-힣]{2,5}$/.test(c)) name=c;\n    else if(!cat&&['식대','교통/출장','접대비','야식비','사무용품','주유비','기타'].includes(c)) cat=c;\n    else if(cat&&!memo&&c&&!/\d{4}/.test(c)) memo=c;\n  });\n  // 카테고리 재탐색\n  cols.forEach(c=>{if(['식대','교통/출장','접대비','야식비','사무용품','주유비','기타'].includes(c)) cat=c;});\n  // 메모: 카테고리 다음 문자열\n  const catIdx=cols.findIndex(c=>['식대','교통/출장','접대비','야식비','사무용품','주유비','기타'].includes(c));\n  if(catIdx>=0&&cols[catIdx+1]) memo=cols[catIdx+1];\n\n  const amt=parseInt(amtRaw.replace(/[^0-9]/g,''))||0;\n  const {dateStr,fullDate}=parseDateRaw(dateRaw);\n\n  if(!name||!amt){\n    document.getElementById('paste-preview-body').innerHTML='<span style="color:#A32D2D">담당자 또는 금액을 인식하지 못했습니다.<br>구글 시트에서 행 전체를 Ctrl+C 후 붙여넣기 해주세요.</span>';\n    document.getElementById('paste-preview').style.display='block';\n    document.getElementById('import-btn').disabled=true; pasteRow=null; return;\n  }\n\n  pasteRow={dateStr,fullDate,name,amt,cat,memo};\n\n  // 중복 체크\n  const existKeys=new Set(loadTx().map(dupKey));\n  const isDup=existKeys.has([fullDate,name,String(amt),memo].join('|'));\n  const dupWarnEl=document.getElementById('paste-dup-warn');\n  if(isDup){\n    dupWarnEl.innerHTML=\n      '<div style="font-size:14px;font-weight:700;color:#A32D2D;margin-bottom:6px">🚫 중복 내역 — 가져오기 불가</div>'+\n      '<div style="font-size:12px;color:#791F1F;line-height:1.7">이미 동일한 내역이 등록되어 있습니다.<br>'+\n      '중복 등록은 가져오기로 처리할 수 없습니다.<br>'+\n      '<strong>수기로 직접 등록이 필요한 경우 "+ 사용내역 등록" 버튼을 이용해주세요.</strong></div>';\n    dupWarnEl.style.display='block';\n    dupWarnEl.style.cssText='display:block;background:#FCEBEB;border:1.5px solid #F09595;border-radius:8px;padding:10px 14px;margin-top:8px';\n    document.getElementById('import-btn').disabled=true;\n  } else {\n    dupWarnEl.style.display='none';\n    document.getElementById('import-btn').disabled=false;\n  }\n\n  document.getElementById('paste-preview-body').innerHTML=\n    '<div>📅 날짜: <strong>'+dateStr+'</strong></div>'+\n    '<div>👤 담당자: <strong>'+name+'</strong></div>'+\n    '<div>💰 금액: <strong>'+amt.toLocaleString('ko-KR')+'원</strong></div>'+\n    '<div>🏷 카테고리: <strong>'+cat+'</strong></div>'+\n    '<div>📝 메모: <strong>'+(memo||'(없음)')+'</strong></div>';\n  document.getElementById('paste-preview').style.display='block';\n}\n\nfunction doImport(){\n  if(importMode==='paste'){ doPasteImport(); return; }\n  // ── CSV 파일 가져오기 ──\n  const cards=loadCards(), tx=loadTx();\n  const existKeys=new Set(tx.map(dupKey));\n  let added=0, skipped=0, dupSkip=0;\n\n  importRows.forEach(r=>{\n    const name=(importColIdx.name!=null?r[importColIdx.name]:'').trim();\n    const amtRaw=(importColIdx.amt!=null?r[importColIdx.amt]:'').replace(/[^0-9]/g,'');\n    const amt=parseInt(amtRaw)||0;\n    if(!name||!amt){skipped++;return;}\n    const cat=(importColIdx.cat!=null?r[importColIdx.cat]:'기타').trim()||'기타';\n    const memo=(importColIdx.memo!=null?r[importColIdx.memo]:'').trim()||cat;\n    const {dateStr,fullDate}=parseDateRaw(importColIdx.date!=null?r[importColIdx.date]:'');\n    const cardObj=cards.find(c=>c.name===name);\n    const dept=cardObj?cardObj.dept:'미지정';\n\n    // 중복 체크\n    const key=[fullDate,name,String(amt),memo].join('|');\n    if(existKeys.has(key)){dupSkip++;return;}\n\n    // 잔액 체크\n    if(cardObj&&amt>getBalance(cardObj)){skipped++;return;}\n    if(cardObj) cardObj.used=(cardObj.used||0)+amt;\n    const newTx={date:dateStr,fullDate,card:name,dept,cat,memo,amt,status:'승인'};\n    tx.push(newTx);\n    existKeys.add(key);\n    added++;\n  });\n\n  tx.sort((a,b)=>(b.fullDate||b.date||'').localeCompare(a.fullDate||a.date||''));\n  saveCards(cards); saveTxData(tx);\n  closeImport(); renderAll();\n  let msg='✅ '+added+'건 가져오기 완료!';\n  if(dupSkip) msg+='\n🔄 중복 '+dupSkip+'건 건너뜀';\n  if(skipped) msg+='\n⚠️ 잔액 부족/오류 '+skipped+'건 건너뜀';\n  alert(msg);\n}\n\nfunction doPasteImport(){\n  if(!pasteRow){alert('분석된 데이터가 없습니다');return;}\n  const {dateStr,fullDate,name,amt,cat,memo}=pasteRow;\n  const cards=loadCards(), tx=loadTx();\n  const cardObj=cards.find(c=>c.name===name);\n  const dept=cardObj?cardObj.dept:'미지정';\n  if(cardObj&&amt>getBalance(cardObj)){\n    showErrPopup(name,getBalance(cardObj),amt); return;\n  }\n  if(cardObj) cardObj.used=(cardObj.used||0)+amt;\n  tx.unshift({date:dateStr,fullDate,card:name,dept,cat,memo,amt,status:'승인'});\n  saveCards(cards); saveTxData(tx);\n  closeImport(); renderAll();\n  alert('✅ 1건 등록 완료!\n'+name+' '+amt.toLocaleString('ko-KR')+'원');\n}\n\n// ── 충전내역 ──\nfunction loadCharges(){try{return JSON.parse(localStorage.getItem('dni_charges')||'[]');}catch(e){return[];}}\nfunction saveCharges(c){localStorage.setItem('dni_charges',JSON.stringify(c));}\n\nfunction switchSection(sec){\n  ['tx','ch','lm'].forEach(s=>{\n    const el=document.getElementById('section-'+s);\n    if(el) el.style.display=s===sec?'block':'none';\n    const tab=document.getElementById('stab-'+s);\n    if(tab) tab.classList.toggle('active',s===sec);\n  });\n  if(sec==='ch') renderCharges();\n  if(sec==='lm') renderLimitSection();\n}\n\n\nfunction goChargeCard(name){\n  switchSection('lm');\n  setTimeout(()=>{\n    const sel=document.getElementById('lm-charge-card');\n    if(sel){sel.value=name;updateLimitBal('charge');}\n    const amtEl=document.getElementById('lm-charge-amt');\n    if(amtEl) amtEl.scrollIntoView({behavior:'smooth',block:'center'});\n  },100);\n}\nfunction openHanaCharge(){\n  window.open('https://www.hanacard.co.kr/OCH30000000N.web?_frame=no&schID=ccd&mID=OCH30000000C','_blank');\n}\n\nfunction renderLimitSection(){\n  const cards=loadCards();\n  const avColors=['av-blue','av-teal','av-amber','av-coral','av-purple','av-gray'];\n\n  // 시스템 카드 셀렉트\n  const sysSel=document.getElementById('lm-sys-card');\n  if(sysSel){\n    sysSel.innerHTML='<option value="">카드를 선택하세요</option>'+\n      cards.map(c=>`<option value="${c.name}">${c.name} (${c.dept}) *${c.num||'????'}</option>`).join('');\n  }\n\n  // 전체 카드 잔액 색깔 표 (상단)\n  const allEl=document.getElementById('lm-all-cards');\n  if(allEl){\n    if(!cards.length){allEl.innerHTML='<div class="empty-msg" style="padding:1rem">카드를 추가해주세요</div>';return;}\n    allEl.innerHTML=`<table class="low-card-table">\n      <thead><tr>\n        <th>담당자</th><th>부서</th><th>카드번호</th>\n        <th style="text-align:right">충전금액</th>\n        <th style="text-align:right">사용금액</th>\n        <th style="text-align:right">잔액</th>\n        <th>사용률</th><th>상태</th><th>바로가기</th>\n      </tr></thead>\n      <tbody>${cards.map((c,i)=>{\n        const bal=getBalance(c), pct=getBarPct(c);\n        const usePct=c.charged?Math.round((c.used||0)/c.charged*100):0;\n        const av=avColors[i%avColors.length];\n        let statusBadge,barColor,balColor;\n        if(bal<100000){statusBadge='<span style="background:#FCEBEB;color:#A32D2D;padding:3px 9px;border-radius:6px;font-size:11px;font-weight:700">🚨 잔액부족</span>';barColor='#E24B4A';balColor='#A32D2D';}\n        else if(pct<30){statusBadge='<span style="background:#FAEEDA;color:#854F0B;padding:3px 9px;border-radius:6px;font-size:11px;font-weight:700">⚠️ 주의</span>';barColor='#EF9F27';balColor='#854F0B';}\n        else{statusBadge='<span style="background:#EAF3DE;color:#3B6D11;padding:3px 9px;border-radius:6px;font-size:11px;font-weight:700">✅ 정상</span>';barColor='#0F9D58';balColor='#3B6D11';}\n        return`<tr>\n          <td><div style="display:flex;align-items:center;gap:6px"><div class="avatar ${av}" style="width:26px;height:26px;font-size:11px;flex-shrink:0">${(c.name||'?')[0]}</div><strong>${c.name}</strong></div></td>\n          <td style="color:#666">${c.dept}</td>\n          <td style="color:#888;font-size:11px">*${c.num||'????'}</td>\n          <td style="text-align:right">${fmt(c.charged||0)}</td>\n          <td style="text-align:right;color:#666">${fmt(c.used||0)}</td>\n          <td style="text-align:right;font-weight:700;color:${balColor}">${fmt(bal)}</td>\n          <td style="min-width:100px">\n            <div style="display:flex;align-items:center;gap:6px">\n              <div style="flex:1;background:#f0f0ec;border-radius:4px;height:7px;overflow:hidden">\n                <div style="width:${usePct}%;height:7px;background:${barColor};border-radius:4px"></div>\n              </div>\n              <span style="font-size:11px;color:${barColor};font-weight:600;min-width:28px">${usePct}%</span>\n            </div>\n          </td>\n          <td>${statusBadge}</td>\n          <td><button class="btn-charge-sm" onclick="quickCharge2('${c.name}')">충전 등록</button></td>\n        </tr>`;\n      }).join('')}</tbody>\n    </table>`;\n  }\n}\n\nfunction updateLimitBal2(){\n  const name=document.getElementById('lm-sys-card').value;\n  const el=document.getElementById('lm-sys-bal-display');\n  if(!name){el.textContent='카드 선택 시 잔액 자동 표시';el.style.background='#f5f5f3';return;}\n  const c=loadCards().find(c=>c.name===name);\n  if(!c){return;}\n  const bal=getBalance(c),pct=getBarPct(c);\n  let color='#3B6D11',bg='#EAF3DE';\n  if(bal<100000){color='#A32D2D';bg='#FCEBEB';}\n  else if(pct<30){color='#854F0B';bg='#FAEEDA';}\n  el.style.background=bg;\n  el.innerHTML='<strong style="color:'+color+'">현재 잔액: '+fmt(bal)+'</strong> &nbsp;|&nbsp; 충전: '+fmt(c.charged||0)+' / 사용: '+fmt(c.used||0);\n}\n\nfunction doSysCharge(){\n  const name=document.getElementById('lm-sys-card').value;\n  if(!name){alert('카드를 선택해주세요');return;}\n  const cards=loadCards();\n  const c=cards.find(c=>c.name===name);\n  // 충전 등록 모달 열기\n  showAddCharge();\n  setTimeout(()=>{\n    const sel=document.getElementById('ch-card');\n    if(sel) sel.value=name+'|'+c.dept;\n  },100);\n}\n\nfunction doSysReduce(){\n  const name=document.getElementById('lm-sys-card').value;\n  if(!name){alert('카드를 선택해주세요');return;}\n  const cards=loadCards();\n  const c=cards.find(cc=>cc.name===name);\n  if(!c){return;}\n  const bal=getBalance(c);\n  const amtStr=prompt('감액 금액을 입력하세요 (현재 잔액: '+fmt(bal)+')');\n  if(!amtStr)return;\n  const amt=parseInt(amtStr.replace(/[^0-9]/g,''))||0;\n  if(!amt){alert('올바른 금액을 입력해주세요');return;}\n  if(amt>bal){alert('감액 금액이 현재 잔액('+fmt(bal)+')을 초과합니다.');return;}\n  if(!confirm('감액 처리하시겠습니까?\n'+name+' : '+fmt(amt)+' 감액\n감액 후 잔액: '+fmt(bal-amt))){return;}\n  c.charged=Math.max(0,(c.charged||0)-amt);\n  saveCards(cards);\n  // 충전내역에 감액 기록\n  const charges=loadCharges();\n  const today=new Date();\n  const dateStr=(today.getMonth()+1)+'/'+today.getDate();\n  charges.unshift({date:dateStr,fullDate:todayStr(),card:name,dept:c.dept,amt:-amt,memo:'감액 처리'});\n  saveCharges(charges);\n  renderAll();\n  renderLimitSection();\n  alert('✅ 감액 처리 완료!\n'+name+' '+fmt(amt)+' 감액\n잔액: '+fmt(getBalance(c)));\n}\n\nfunction quickCharge2(name){\n  const sel=document.getElementById('lm-sys-card');\n  if(sel){sel.value=name;updateLimitBal2();}\n  document.getElementById('lm-sys-card').scrollIntoView({behavior:'smooth',block:'center'});\n}\n\nfunction quickCharge(name){ quickCharge2(name); }\nfunction _quickCharge_old(name){\n  // 선택한 카드를 충전 폼에 자동 세팅 후 한도관리 충전 섹션 포커스\n  const sel=document.getElementById('lm-charge-card');\n  if(sel){\n    sel.value=name;\n    updateLimitBal('charge');\n  }\n  document.getElementById('lm-charge-amt').focus();\n  window.scrollTo({top:document.getElementById('lm-charge-amt').getBoundingClientRect().top+window.scrollY-100,behavior:'smooth'});\n}\n\nfunction updateLimitBal(type){\n  const selId='lm-'+type+'-card';\n  const balId='lm-'+type+'-bal';\n  const name=document.getElementById(selId).value;\n  const cards=loadCards();\n  const c=cards.find(c=>c.name===name);\n  const balEl=document.getElementById(balId);\n  if(!c){balEl.textContent='카드 선택 시 자동 표시';return;}\n  const bal=getBalance(c);\n  balEl.innerHTML='<strong style="color:'+(bal<100000?'#A32D2D':'#0F9D58')+'">'+fmt(bal)+'</strong> (충전: '+fmt(c.charged||0)+' / 사용: '+fmt(c.used||0)+')';\n  updateLimitPreview(type);\n}\n\nfunction updateLimitPreview(type){\n  const selId='lm-'+type+'-card';\n  const amtId='lm-'+type+'-amt';\n  const prevId='lm-'+type+'-preview';\n  const name=document.getElementById(selId).value;\n  const amt=parseInt(document.getElementById(amtId).value)||0;\n  const prevEl=document.getElementById(prevId);\n  if(!name||!amt){prevEl.style.display='none';return;}\n  const cards=loadCards();\n  const c=cards.find(c=>c.name===name);\n  if(!c){prevEl.style.display='none';return;}\n  const bal=getBalance(c);\n  if(type==='charge'){\n    prevEl.textContent='충전 후 예상 잔액: '+fmt(bal+amt);\n    prevEl.style.display='block';\n  } else {\n    if(amt>bal){\n      prevEl.textContent='⚠️ 감액 금액이 잔액을 초과합니다!';\n      prevEl.style.color='#A32D2D';\n    } else {\n      prevEl.textContent='감액 후 예상 잔액: '+fmt(bal-amt);\n      prevEl.style.color='#854F0B';\n    }\n    prevEl.style.display='block';\n  }\n}\n\nfunction recordChargeNote(type){\n  const selId='lm-'+type+'-card';\n  const amtId='lm-'+type+'-amt';\n  const name=document.getElementById(selId).value;\n  const amt=parseInt(document.getElementById(amtId).value)||0;\n  if(name&&amt){\n    const action=type==='charge'?'충전':'감액';\n    setTimeout(()=>{\n      if(confirm(action+' 처리 후 대시보드에 반영하시겠습니까?\n'+name+' '+fmt(amt)+' '+action+'\n\n확인: 충전 등록 화면 열기\n취소: 나중에 수동 등록')){\n        if(type==='charge') showAddCharge();\n      }\n    }, 500);\n  }\n}\n\nfunction showAddCharge(){\n  const cards=loadCards();\n  if(!cards.length){alert('먼저 카드를 추가해주세요');return;}\n  document.getElementById('chargeModalTitle').textContent='충전 등록';\n  document.getElementById('ch-edit-idx').value='-1';\n  const sel=document.getElementById('ch-card');\n  sel.innerHTML=cards.map(c=>`<option value="${c.name}|${c.dept}">${c.name} (${c.dept}) *${c.num}</option>`).join('');\n  document.getElementById('ch-amt').value='';\n  document.getElementById('ch-memo').value='';\n  document.getElementById('chargeModal').classList.add('show');\n}\n\nfunction showEditCharge(i){\n  const charges=loadCharges(), ch=charges[i];\n  const cards=loadCards();\n  document.getElementById('chargeModalTitle').textContent='충전내역 수정';\n  document.getElementById('ch-edit-idx').value=i;\n  const sel=document.getElementById('ch-card');\n  sel.innerHTML=cards.map(c=>`<option value="${c.name}|${c.dept}"${c.name===ch.card?' selected':''}>${c.name} (${c.dept}) *${c.num}</option>`).join('');\n  document.getElementById('ch-amt').value=ch.amt||'';\n  document.getElementById('ch-memo').value=ch.memo||'';\n  document.getElementById('chargeModal').classList.add('show');\n}\n\nfunction closeChargeModal(){document.getElementById('chargeModal').classList.remove('show');}\n\nfunction saveCharge(){\n  const selVal=document.getElementById('ch-card').value.split('|');\n  const cardName=selVal[0], dept=selVal[1];\n  const amt=parseInt(document.getElementById('ch-amt').value)||0;\n  const memo=document.getElementById('ch-memo').value.trim()||'충전';\n  const editIdx=parseInt(document.getElementById('ch-edit-idx').value);\n  if(!amt){alert('충전 금액을 입력해주세요');return;}\n\n  const cards=loadCards();\n  const charges=loadCharges();\n  const today=new Date();\n  const dateStr=(today.getMonth()+1)+'/'+today.getDate();\n  const cardObj=cards.find(c=>c.name===cardName);\n\n  if(editIdx>=0){\n    // 수정: 기존 충전금액 취소 후 새 금액 적용\n    const old=charges[editIdx];\n    const oldCard=cards.find(c=>c.name===old.card);\n    if(oldCard) oldCard.charged=Math.max(0,(oldCard.charged||0)-old.amt);\n    if(cardObj) cardObj.charged=(cardObj.charged||0)+amt;\n    charges[editIdx]={...old,card:cardName,dept,amt,memo};\n  } else {\n    if(cardObj) cardObj.charged=(cardObj.charged||0)+amt;\n    charges.unshift({date:dateStr,card:cardName,dept,amt,memo});\n  }\n  saveCards(cards);\n  saveCharges(charges);\n  closeChargeModal();\n  renderAll();\n  renderCharges();\n  // 충전내역 탭으로 자동 이동\n  switchSection('ch');\n}\n\nfunction deleteCharge(i){\n  if(!confirm('이 충전내역을 삭제하시겠습니까?\n카드 충전금액도 함께 감소합니다.'))return;\n  const charges=loadCharges(), cards=loadCards();\n  const ch=charges[i];\n  const cardObj=cards.find(c=>c.name===ch.card);\n  if(cardObj) cardObj.charged=Math.max(0,(cardObj.charged||0)-ch.amt);\n  charges.splice(i,1);\n  saveCards(cards); saveCharges(charges);\n  renderAll(); renderCharges();\n}\n\nfunction renderCharges(){\n  const charges=loadCharges();\n  const el=document.getElementById('chList');\n  if(!charges.length){el.innerHTML='<tr><td colspan="6" class="empty-msg">충전내역이 없습니다</td></tr>';return;}\n  el.innerHTML=charges.map((ch,i)=>`\n    <tr>\n      <td style="color:#aaa;white-space:nowrap">${ch.date}</td>\n      <td style="font-weight:600">${ch.card}</td>\n      <td style="color:#666">${ch.dept}</td>\n      <td style="color:#666">${ch.memo}</td>\n      <td style="font-weight:600;text-align:right;color:#0F9D58;white-space:nowrap">+${fmt(ch.amt)}</td>\n      <td style="white-space:nowrap">\n        <button class="icon-btn edit" onclick="showEditCharge(${i})" title="수정">✏️</button>\n        <button class="icon-btn del" onclick="deleteCharge(${i})" title="삭제">🗑</button>\n      </td>\n    </tr>`).join('');\n}\n\n// ── 중복 확인 팝업 ──\nlet _dupCallback=null;\nfunction showDupConfirm(cb){\n  _dupCallback=cb;\n  document.getElementById('dupOverlay').classList.add('show');\n}\nfunction closeDupConfirm(){\n  _dupCallback=null;\n  document.getElementById('dupOverlay').classList.remove('show');\n}\ndocument.addEventListener('DOMContentLoaded',()=>{\n  const btn=document.getElementById('dupConfirmOk');\n  if(btn) btn.onclick=()=>{\n    document.getElementById('dupOverlay').classList.remove('show');\n    if(_dupCallback) _dupCallback();\n    _dupCallback=null;\n  };\n});\n\nfunction renderAll(){renderMetrics();renderCards();renderDept();renderTabs();renderTx();}\ndocument.getElementById('todayDate').textContent=new Date().toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric'});\nwindow.onclick=e=>{\n  if(e.target.id==='cardModal')closeCardModal();\n  if(e.target.id==='txModal')closeTxModal();\n  if(e.target.id==='errOverlay')closeErrPopup();\n  if(e.target.id==='chargeModal')closeChargeModal();\n  if(e.target.id==='importModal')closeImport();\n  if(e.target.id==='dupOverlay')closeDupConfirm();\n};\nrenderAll();\n</script>
 </body>
 </html>
