@@ -108,6 +108,42 @@
   .section-tab{padding:7px 18px;border-radius:8px;border:1px solid #e0e0dc;cursor:pointer;font-size:13px;font-weight:500;color:#666;background:#fff}
   .section-tab.active{background:#185FA5;color:#fff;border-color:#185FA5}
   .ch-badge{display:inline-block;padding:2px 8px;border-radius:6px;font-size:11px;background:#E6F1FB;color:#185FA5}
+
+  /* 한도관리 탭 */
+  .limit-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+  .limit-box{background:#fff;border:1px solid #e8e8e4;border-radius:12px;padding:1.25rem}
+  .limit-box.charge{border-top:3px solid #0F9D58}
+  .limit-box.reduce{border-top:3px solid #A32D2D}
+  .limit-title{font-size:14px;font-weight:600;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+  .limit-warn{background:#FAEEDA;border:1px solid #FAC775;border-radius:8px;padding:8px 12px;font-size:12px;color:#633806;margin-bottom:12px;display:flex;gap:6px;align-items:flex-start;line-height:1.6}
+  .limit-form-group{margin-bottom:10px}
+  .limit-form-group label{font-size:12px;color:#666;display:block;margin-bottom:3px;font-weight:500}
+  .limit-form-group select,.limit-form-group input{width:100%;padding:8px 10px;border:1px solid #ddd;border-radius:8px;font-size:13px;color:#1a1a1a;background:#fff}
+  .limit-form-group input:focus,.limit-form-group select:focus{outline:none;border-color:#185FA5;box-shadow:0 0 0 3px rgba(24,95,165,.1)}
+  .limit-bal-display{background:#f5f5f3;border-radius:6px;padding:6px 10px;font-size:12px;color:#666;margin-top:4px}
+  .limit-btn{width:100%;padding:10px;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;margin-top:4px;text-decoration:none}
+  .limit-btn-charge{background:#0F9D58;color:#fff}
+  .limit-btn-charge:hover{background:#0a7a45}
+  .limit-btn-reduce{background:#A32D2D;color:#fff}
+  .limit-btn-reduce:hover{background:#7a1f1f}
+  .time-box{background:#fff;border:1px solid #e8e8e4;border-radius:12px;padding:1.25rem;margin-bottom:16px}
+  .time-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:12px}
+  .time-item{border-radius:8px;padding:12px 14px}
+  .time-item.hana{background:#EAF3DE;border:1px solid #C0DD97}
+  .time-item.other{background:#F1EFE8;border:1px solid #D3D1C7}
+  .time-bank{font-size:13px;font-weight:600;margin-bottom:4px}
+  .time-bank.hana{color:#0F9D58}
+  .time-hours{font-size:13px;color:#333}
+  .time-note{font-size:11px;color:#888;margin-top:3px}
+  .low-card-section{background:#fff;border:1px solid #e8e8e4;border-radius:12px;padding:1.25rem;margin-bottom:16px}
+  .low-card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+  .low-card-table{width:100%;border-collapse:collapse;font-size:13px}
+  .low-card-table th{background:#f5f5f3;padding:7px 10px;text-align:left;font-size:11px;color:#666;border-bottom:2px solid #e8e8e4;font-weight:600}
+  .low-card-table td{padding:8px 10px;border-bottom:1px solid #f0f0ec}
+  .low-card-table tr:last-child td{border-bottom:none}
+  .btn-charge-sm{padding:4px 10px;border:none;border-radius:6px;background:#0F9D58;color:#fff;font-size:11px;font-weight:600;cursor:pointer}
+  .btn-charge-sm:hover{background:#0a7a45}
+  @media(max-width:768px){.limit-grid{grid-template-columns:1fr}.time-grid{grid-template-columns:1fr}}
   @media(max-width:768px){
     .metrics{grid-template-columns:1fr 1fr}
     .two-col{grid-template-columns:1fr}
@@ -154,6 +190,7 @@
   <div class="section-tabs">
     <button class="section-tab active" id="stab-tx" onclick="switchSection('tx')">📋 사용내역</button>
     <button class="section-tab" id="stab-ch" onclick="switchSection('ch')">⚡ 충전내역</button>
+    <button class="section-tab" id="stab-lm" onclick="switchSection('lm')">🏦 한도 관리</button>
   </div>
 
   <!-- 사용내역 섹션 -->
@@ -187,6 +224,106 @@
     </div>
   </div>
 </div>
+
+  <!-- 한도관리 섹션 -->
+  <div id="section-lm" style="display:none">
+
+    <!-- 잔액 부족 카드 -->
+    <div class="low-card-section">
+      <div class="low-card-header">
+        <div style="font-size:14px;font-weight:600;display:flex;align-items:center;gap:6px">
+          ⚠️ 잔액 부족 카드 <span id="lm-low-count" style="background:#FCEBEB;color:#A32D2D;border-radius:20px;padding:2px 8px;font-size:12px;font-weight:700">0</span>
+        </div>
+        <button class="btn" style="font-size:12px;background:#0C447C;color:#fff;border-color:#0C447C" onclick="openHanaCharge()">🔗 일괄 충전 요청 (하나카드)</button>
+      </div>
+      <div id="lm-low-list">
+        <div class="empty-msg" style="padding:1rem">잔액 부족 카드가 없습니다 ✅</div>
+      </div>
+    </div>
+
+    <!-- 충전 / 감액 폼 -->
+    <div class="limit-grid">
+
+      <!-- 한도 충전 -->
+      <div class="limit-box charge">
+        <div class="limit-title" style="color:#0F9D58">📈 한도 충전</div>
+        <div class="limit-warn">
+          ⚠️ 충전 실행은 하나카드 기업홈페이지에서 법인공인인증서 인증 후 처리됩니다. 아래 버튼은 홈페이지로 이동합니다.
+        </div>
+        <div class="limit-form-group">
+          <label>대상 카드 선택</label>
+          <select id="lm-charge-card" onchange="updateLimitBal('charge')">
+            <option value="">카드를 선택하세요</option>
+          </select>
+        </div>
+        <div class="limit-form-group">
+          <label>현재 잔여 한도</label>
+          <div class="limit-bal-display" id="lm-charge-bal">카드 선택 시 자동 표시</div>
+        </div>
+        <div class="limit-form-group">
+          <label>충전 금액 (원)</label>
+          <input type="number" id="lm-charge-amt" placeholder="충전할 금액 입력" oninput="updateLimitPreview('charge')">
+          <div id="lm-charge-preview" style="font-size:12px;color:#0F9D58;margin-top:4px;display:none"></div>
+        </div>
+        <a id="lm-charge-link" href="https://www.hanacard.co.kr/OCH30000000N.web?_frame=no&schID=ccd&mID=OCH30000000C" target="_blank" class="limit-btn limit-btn-charge" onclick="recordChargeNote('charge')">
+          🔗 하나카드 홈페이지에서 충전 실행
+        </a>
+        <div style="font-size:11px;color:#aaa;margin-top:6px;text-align:center">클릭 시 하나카드 기업홈페이지로 이동합니다</div>
+      </div>
+
+      <!-- 한도 감액 -->
+      <div class="limit-box reduce">
+        <div class="limit-title" style="color:#A32D2D">📉 한도 감액</div>
+        <div class="limit-warn" style="background:#FCEBEB;border-color:#F7C1C1;color:#791F1F">
+          ⚠️ 감액 처리한 금액은 카드 결제계좌에 즉시 입금됩니다. 하나카드 홈페이지로 이동합니다.
+        </div>
+        <div class="limit-form-group">
+          <label>대상 카드 선택</label>
+          <select id="lm-reduce-card" onchange="updateLimitBal('reduce')">
+            <option value="">카드를 선택하세요</option>
+          </select>
+        </div>
+        <div class="limit-form-group">
+          <label>현재 잔여 한도</label>
+          <div class="limit-bal-display" id="lm-reduce-bal">카드 선택 시 자동 표시</div>
+        </div>
+        <div class="limit-form-group">
+          <label>감액 금액 (원)</label>
+          <input type="number" id="lm-reduce-amt" placeholder="감액할 금액 입력" oninput="updateLimitPreview('reduce')">
+          <div id="lm-reduce-preview" style="font-size:12px;color:#A32D2D;margin-top:4px;display:none"></div>
+        </div>
+        <a id="lm-reduce-link" href="https://www.hanacard.co.kr/OCH30000000N.web?_frame=no&schID=ccd&mID=OCH30000000C" target="_blank" class="limit-btn limit-btn-reduce" onclick="recordChargeNote('reduce')">
+          🔗 하나카드 홈페이지에서 감액 실행
+        </a>
+        <div style="font-size:11px;color:#aaa;margin-top:6px;text-align:center">클릭 시 하나카드 기업홈페이지로 이동합니다</div>
+      </div>
+    </div>
+
+    <!-- 충전 가능 시간 안내 -->
+    <div class="time-box">
+      <div style="font-size:14px;font-weight:600;display:flex;align-items:center;gap:6px;margin-bottom:4px">⏰ 충전 가능 시간 안내</div>
+      <div style="font-size:12px;color:#888;margin-bottom:10px">하나카드 B카드(충전식 법인카드) 기준</div>
+      <div class="time-grid">
+        <div class="time-item hana">
+          <div class="time-bank hana">당행 (하나은행)</div>
+          <div class="time-hours">매일 / 24시간 가능</div>
+          <div class="time-note">365일 언제나 충전 가능</div>
+        </div>
+        <div class="time-item other">
+          <div class="time-bank" style="color:#333">타행</div>
+          <div class="time-hours">월~금 / 06:00 ~ 23:45</div>
+          <div class="time-note" style="color:#A32D2D">※ BC망 이용 (국민은행): 08:00~22:00만 가능<br>※ 공휴일·대체공휴일 충전 불가</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 안내 -->
+    <div style="background:#E6F1FB;border-radius:10px;padding:14px 16px;font-size:13px;color:#0C447C;line-height:1.7">
+      <strong>💡 이용 안내</strong><br>
+      실제 충전·감액은 하나카드 기업홈페이지(법인공인인증서 필요)에서 처리됩니다.<br>
+      처리 완료 후 이 대시보드에서 <strong>⚡ 충전 등록</strong> 버튼으로 충전 금액을 업데이트해주세요.
+    </div>
+  </div>
 
 <!-- 잔액 초과 에러 팝업 -->
 <div class="err-overlay" id="errOverlay">
@@ -469,9 +606,10 @@ function renderCards(){
         <div class="avatar ${av}">${(c.name||'?')[0]}</div>
         <div><div class="card-name">${c.name}</div><div class="card-dept">${c.dept} · *${c.num||'????'}</div></div>
       </div>
-      <div style="display:flex;align-items:center;gap:6px">
+      <div style="display:flex;align-items:center;gap:5px">
         <div class="bar-wrap"><div class="bar-fill ${barClass(pct)}" style="width:${pct}%"></div></div>
         <div class="amt ${amtClass(pct)}">${fmt(bal)}</div>
+        <button style="padding:2px 7px;border:none;border-radius:5px;background:#0F9D58;color:#fff;font-size:10px;font-weight:600;cursor:pointer" onclick="goChargeCard('${c.name}')" title="충전">충전</button>
         <button class="icon-btn edit" onclick="showEditCard(${i})" title="수정">✏️</button>
         <button class="icon-btn del" onclick="deleteCard(${i})" title="삭제">🗑</button>
       </div>
@@ -942,11 +1080,124 @@ function loadCharges(){try{return JSON.parse(localStorage.getItem('dni_charges')
 function saveCharges(c){localStorage.setItem('dni_charges',JSON.stringify(c));}
 
 function switchSection(sec){
-  document.getElementById('section-tx').style.display = sec==='tx'?'block':'none';
-  document.getElementById('section-ch').style.display = sec==='ch'?'block':'none';
-  document.getElementById('stab-tx').classList.toggle('active', sec==='tx');
-  document.getElementById('stab-ch').classList.toggle('active', sec==='ch');
+  ['tx','ch','lm'].forEach(s=>{
+    const el=document.getElementById('section-'+s);
+    if(el) el.style.display=s===sec?'block':'none';
+    const tab=document.getElementById('stab-'+s);
+    if(tab) tab.classList.toggle('active',s===sec);
+  });
   if(sec==='ch') renderCharges();
+  if(sec==='lm') renderLimitSection();
+}
+
+
+function goChargeCard(name){
+  switchSection('lm');
+  setTimeout(()=>{
+    const sel=document.getElementById('lm-charge-card');
+    if(sel){sel.value=name;updateLimitBal('charge');}
+    const amtEl=document.getElementById('lm-charge-amt');
+    if(amtEl) amtEl.scrollIntoView({behavior:'smooth',block:'center'});
+  },100);
+}
+function openHanaCharge(){
+  window.open('https://www.hanacard.co.kr/OCH30000000N.web?_frame=no&schID=ccd&mID=OCH30000000C','_blank');
+}
+
+function renderLimitSection(){
+  const cards=loadCards();
+  // 카드 셀렉트 채우기
+  ['lm-charge-card','lm-reduce-card'].forEach(id=>{
+    const sel=document.getElementById(id);
+    if(!sel) return;
+    sel.innerHTML='<option value="">카드를 선택하세요</option>'+
+      cards.map(c=>`<option value="${c.name}">${c.name} (${c.dept}) *${c.num||'????'} — 잔액 ${fmt(getBalance(c))}</option>`).join('');
+  });
+  // 잔액 부족 카드 목록
+  const lowCards=cards.filter(c=>getBalance(c)<100000);
+  document.getElementById('lm-low-count').textContent=lowCards.length;
+  const listEl=document.getElementById('lm-low-list');
+  if(!lowCards.length){
+    listEl.innerHTML='<div class="empty-msg" style="padding:1rem">잔액 부족 카드가 없습니다 ✅</div>';
+    return;
+  }
+  listEl.innerHTML=`<table class="low-card-table">
+    <thead><tr><th>담당자</th><th>부서</th><th>카드번호</th><th style="text-align:right">잔액</th><th>상태</th><th>충전</th></tr></thead>
+    <tbody>${lowCards.map((c,i)=>`<tr>
+      <td style="font-weight:600">${c.name}</td>
+      <td style="color:#666">${c.dept}</td>
+      <td style="color:#888;font-size:11px">*${c.num||'????'}</td>
+      <td style="text-align:right;color:#A32D2D;font-weight:600">${fmt(getBalance(c))}</td>
+      <td><span style="background:#FCEBEB;color:#A32D2D;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:600">잔액부족</span></td>
+      <td><button class="btn-charge-sm" onclick="quickCharge('${c.name}')">충전</button></td>
+    </tr>`).join('')}</tbody>
+  </table>`;
+}
+
+function quickCharge(name){
+  // 선택한 카드를 충전 폼에 자동 세팅 후 한도관리 충전 섹션 포커스
+  const sel=document.getElementById('lm-charge-card');
+  if(sel){
+    sel.value=name;
+    updateLimitBal('charge');
+  }
+  document.getElementById('lm-charge-amt').focus();
+  window.scrollTo({top:document.getElementById('lm-charge-amt').getBoundingClientRect().top+window.scrollY-100,behavior:'smooth'});
+}
+
+function updateLimitBal(type){
+  const selId='lm-'+type+'-card';
+  const balId='lm-'+type+'-bal';
+  const name=document.getElementById(selId).value;
+  const cards=loadCards();
+  const c=cards.find(c=>c.name===name);
+  const balEl=document.getElementById(balId);
+  if(!c){balEl.textContent='카드 선택 시 자동 표시';return;}
+  const bal=getBalance(c);
+  balEl.innerHTML='<strong style="color:'+(bal<100000?'#A32D2D':'#0F9D58')+'">'+fmt(bal)+'</strong> (충전: '+fmt(c.charged||0)+' / 사용: '+fmt(c.used||0)+')';
+  updateLimitPreview(type);
+}
+
+function updateLimitPreview(type){
+  const selId='lm-'+type+'-card';
+  const amtId='lm-'+type+'-amt';
+  const prevId='lm-'+type+'-preview';
+  const name=document.getElementById(selId).value;
+  const amt=parseInt(document.getElementById(amtId).value)||0;
+  const prevEl=document.getElementById(prevId);
+  if(!name||!amt){prevEl.style.display='none';return;}
+  const cards=loadCards();
+  const c=cards.find(c=>c.name===name);
+  if(!c){prevEl.style.display='none';return;}
+  const bal=getBalance(c);
+  if(type==='charge'){
+    prevEl.textContent='충전 후 예상 잔액: '+fmt(bal+amt);
+    prevEl.style.display='block';
+  } else {
+    if(amt>bal){
+      prevEl.textContent='⚠️ 감액 금액이 잔액을 초과합니다!';
+      prevEl.style.color='#A32D2D';
+    } else {
+      prevEl.textContent='감액 후 예상 잔액: '+fmt(bal-amt);
+      prevEl.style.color='#854F0B';
+    }
+    prevEl.style.display='block';
+  }
+}
+
+function recordChargeNote(type){
+  const selId='lm-'+type+'-card';
+  const amtId='lm-'+type+'-amt';
+  const name=document.getElementById(selId).value;
+  const amt=parseInt(document.getElementById(amtId).value)||0;
+  if(name&&amt){
+    const action=type==='charge'?'충전':'감액';
+    setTimeout(()=>{
+      if(confirm(action+' 처리 후 대시보드에 반영하시겠습니까?\n'+name+' '+fmt(amt)+' '+action+'\n\n확인: 충전 등록 화면 열기\n취소: 나중에 수동 등록')){
+        if(type==='charge') showAddCharge();
+      }
+    }, 500);
+  }
 }
 
 function showAddCharge(){
