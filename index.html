@@ -4,448 +4,516 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DNI BRIDGE — 법인카드 관리</title>
+<title>하나법인 충전카드 관리시스템</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <style>
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f5f3;color:#1a1a1a;min-height:100vh}
-  .topbar{background:#fff;border-bottom:1px solid #e8e8e4;padding:0 2rem;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
-  .logo{font-size:16px;font-weight:600;letter-spacing:0.05em}
-  .logo span{color:#185FA5}
-  .topbar-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-  .btn{padding:7px 14px;border-radius:8px;border:1px solid #d0d0cc;background:#fff;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:6px;color:#444;white-space:nowrap}
-  .btn:hover{background:#f5f5f3}
-  .btn-primary{background:#185FA5;color:#fff;border-color:#185FA5}
-  .btn-primary:hover{background:#0C447C}
-  .btn-danger{background:#fff;color:#A32D2D;border-color:#F09595}
-  .btn-danger:hover{background:#FCEBEB}
-  .main{max-width:1200px;margin:0 auto;padding:1.5rem 2rem}
-  .alert{background:#FCEBEB;border:1px solid #F7C1C1;border-radius:8px;padding:10px 16px;font-size:13px;color:#791F1F;display:flex;align-items:center;gap:8px;margin-bottom:1.25rem}
-  .metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:1.25rem}
-  .metric{background:#fff;border:1px solid #e8e8e4;border-radius:10px;padding:1rem 1.1rem}
-  .metric-label{font-size:12px;color:#888;margin-bottom:6px}
-  .metric-value{font-size:24px;font-weight:600;color:#1a1a1a}
-  .metric-sub{font-size:11px;color:#aaa;margin-top:3px}
-  .metric.danger .metric-value{color:#A32D2D}
-  .metric.warn .metric-value{color:#854F0B}
-  .metric.ok .metric-value{color:#3B6D11}
-  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
-  .card{background:#fff;border:1px solid #e8e8e4;border-radius:12px;padding:1.1rem 1.25rem}
-  .card-title{font-size:13px;font-weight:600;color:#444;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between}
-  .card-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid #f0f0ec;font-size:13px}
-  .card-row:last-child{border-bottom:none}
-  .card-left{display:flex;align-items:center;gap:10px}
-  .avatar{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0}
-  .av-blue{background:#E6F1FB;color:#185FA5}.av-teal{background:#E1F5EE;color:#0F6E56}
-  .av-amber{background:#FAEEDA;color:#854F0B}.av-coral{background:#FAECE7;color:#993C1D}
-  .av-purple{background:#EEEDFE;color:#534AB7}.av-gray{background:#F1EFE8;color:#5F5E5A}
-  .card-name{font-weight:600;font-size:13px}
-  .card-dept{font-size:11px;color:#888}
-  .bar-wrap{width:72px;background:#f0f0ec;border-radius:4px;height:6px;overflow:hidden}
-  .bar-fill{height:6px;border-radius:4px;transition:width 0.3s}
-  .bar-ok{background:#639922}.bar-warn{background:#EF9F27}.bar-low{background:#E24B4A}
-  .amt{font-weight:600;font-size:13px;min-width:80px;text-align:right}
-  .amt-ok{color:#3B6D11}.amt-warn{color:#854F0B}.amt-low{color:#A32D2D}
-  .icon-btn{background:none;border:none;cursor:pointer;padding:3px 5px;border-radius:5px;font-size:13px;color:#aaa;line-height:1}
-  .icon-btn:hover{background:#f0f0ec;color:#444}
-  .icon-btn.edit:hover{color:#185FA5;background:#E6F1FB}
-  .icon-btn.del:hover{color:#A32D2D;background:#FCEBEB}
-  .dept-row{display:flex;align-items:center;gap:8px;margin-bottom:9px;font-size:12px}
-  .dept-name{width:56px;color:#666;flex-shrink:0}
-  .dept-bar-wrap{flex:1;background:#f0f0ec;border-radius:4px;height:8px;overflow:hidden}
-  .dept-bar{height:8px;border-radius:4px;transition:width 0.4s}
-  .dept-amt{width:80px;text-align:right;color:#1a1a1a;font-weight:600;font-size:12px}
-  .chart-wrap{position:relative;width:100%;height:140px;margin-top:10px}
-  .full-card{background:#fff;border:1px solid #e8e8e4;border-radius:12px;padding:1.1rem 1.25rem;margin-bottom:14px}
-  .tab-row{display:flex;gap:6px;flex-wrap:wrap}
-  .tab{font-size:12px;padding:4px 11px;border-radius:7px;border:1px solid #e0e0dc;cursor:pointer;color:#666;background:#fff}
-  .tab.active{background:#185FA5;color:#fff;border-color:#185FA5}
-  .tx-table{width:100%;border-collapse:collapse}
-  .tx-table th{font-size:11px;color:#aaa;font-weight:600;text-align:left;padding:6px 8px;border-bottom:2px solid #e8e8e4}
-  .tx-table td{font-size:12px;padding:8px 8px;border-bottom:1px solid #f0f0ec;vertical-align:middle}
-  .tx-table tr:last-child td{border-bottom:none}
-  .tx-table tr:hover td{background:#fafaf8}
-  .cat-badge{display:inline-block;padding:2px 8px;border-radius:6px;font-size:11px;white-space:nowrap}
-  .cat-meal{background:#FAEEDA;color:#854F0B}.cat-travel{background:#E1F5EE;color:#0F6E56}
-  .cat-enter{background:#FBEAF0;color:#993556}.cat-night{background:#EEEDFE;color:#534AB7}
-  .cat-supply{background:#E6F1FB;color:#185FA5}.cat-fuel{background:#EAF3DE;color:#3B6D11}
-  .cat-other{background:#F1EFE8;color:#5F5E5A}
-  .s-ok{background:#EAF3DE;color:#3B6D11;padding:2px 8px;border-radius:6px;font-size:11px}
-  .s-pend{background:#FAEEDA;color:#854F0B;padding:2px 8px;border-radius:6px;font-size:11px}
-  /* 기본 overlay */
-  .overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.45);z-index:100;align-items:center;justify-content:center}
-  .overlay.show{display:flex}
-  .modal{background:#fff;border-radius:14px;padding:1.5rem;width:380px;box-shadow:0 8px 32px rgba(0,0,0,0.15);max-height:90vh;overflow-y:auto}
-  .modal h3{font-size:15px;font-weight:600;margin-bottom:1.1rem;color:#1a1a1a}
-  .form-group{margin-bottom:12px}
-  .form-group label{font-size:12px;color:#666;display:block;margin-bottom:4px;font-weight:500}
-  .form-group input,.form-group select{width:100%;padding:8px 10px;border:1px solid #ddd;border-radius:8px;font-size:13px;color:#1a1a1a;background:#fff}
-  .form-group input:focus,.form-group select:focus{outline:none;border-color:#185FA5;box-shadow:0 0 0 3px rgba(24,95,165,0.1)}
-  .form-group input.input-error{border-color:#E24B4A;box-shadow:0 0 0 3px rgba(226,75,74,0.12)}
-  .memo-suggestions{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
-  .memo-chip{padding:4px 10px;border-radius:20px;border:1px solid #ddd;background:#f9f9f7;font-size:12px;cursor:pointer;color:#444;transition:all 0.15s}
-  .memo-chip:hover{background:#E6F1FB;border-color:#185FA5;color:#185FA5}
-  .memo-chip.selected{background:#185FA5;border-color:#185FA5;color:#fff}
-  .modal-btns{display:flex;gap:8px;justify-content:flex-end;margin-top:14px}
-  .charge-note{font-size:11px;color:#888;margin-top:4px}
-  .bal-info{font-size:12px;color:#185FA5;margin-top:5px;font-weight:500}
-  .bal-info.danger{color:#A32D2D}
-  .empty-msg{text-align:center;padding:2rem;color:#aaa;font-size:13px}
-  /* 잔액 초과 에러 팝업 */
-  .err-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.55);z-index:200;align-items:center;justify-content:center}
-  .err-overlay.show{display:flex}
-  .err-modal{background:#fff;border-radius:16px;padding:2rem 1.75rem;width:340px;box-shadow:0 12px 40px rgba(0,0,0,0.2);text-align:center}
-  .err-icon{font-size:48px;margin-bottom:12px}
-  .err-title{font-size:17px;font-weight:700;color:#A32D2D;margin-bottom:8px}
-  .err-body{font-size:13px;color:#555;line-height:1.7;margin-bottom:6px}
-  .err-highlight{background:#FCEBEB;border-radius:8px;padding:10px 14px;margin:12px 0;font-size:13px;color:#791F1F}
-  .err-highlight strong{font-size:15px;display:block;margin-bottom:2px}
-  .err-close{width:100%;padding:10px;border:none;border-radius:10px;background:#A32D2D;color:#fff;font-size:14px;font-weight:600;cursor:pointer;margin-top:8px}
-  .err-close:hover{background:#791F1F}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f5f3;color:#1a1a1a;min-height:100vh}
 
-  /* 충전내역 탭 */
-  .section-tabs{display:flex;gap:8px;margin-bottom:14px}
-  .section-tab{padding:7px 18px;border-radius:8px;border:1px solid #e0e0dc;cursor:pointer;font-size:13px;font-weight:500;color:#666;background:#fff}
-  .section-tab.active{background:#185FA5;color:#fff;border-color:#185FA5}
-  .ch-badge{display:inline-block;padding:2px 8px;border-radius:6px;font-size:11px;background:#E6F1FB;color:#185FA5}
+/* ── 상단바 ── */
+.topbar{background:#fff;border-bottom:1px solid #e8e8e4;padding:0 1.5rem;height:54px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.logo{font-size:15px;font-weight:700;letter-spacing:0.04em;white-space:nowrap}
+.logo span{color:#185FA5}
+.logo small{font-size:11px;font-weight:400;color:#aaa;margin-left:6px}
+.topbar-right{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.btn{padding:6px 12px;border-radius:8px;border:1px solid #d0d0cc;background:#fff;font-size:12px;cursor:pointer;display:flex;align-items:center;gap:5px;color:#444;white-space:nowrap}
+.btn:hover{background:#f5f5f3}
+.btn-primary{background:#185FA5;color:#fff;border-color:#185FA5}
+.btn-primary:hover{background:#0C447C}
+.btn-green{background:#0F9D58;color:#fff;border-color:#0F9D58}
+.btn-green:hover{background:#0a7a45}
+.btn-danger{color:#A32D2D;border-color:#F09595}
+.btn-danger:hover{background:#FCEBEB}
 
-  /* 한도관리 탭 */
-  .limit-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
-  .limit-box{background:#fff;border:1px solid #e8e8e4;border-radius:12px;padding:1.25rem}
-  .limit-box.charge{border-top:3px solid #0F9D58}
-  .limit-box.reduce{border-top:3px solid #A32D2D}
-  .limit-title{font-size:14px;font-weight:600;margin-bottom:12px;display:flex;align-items:center;gap:6px}
-  .limit-warn{background:#FAEEDA;border:1px solid #FAC775;border-radius:8px;padding:8px 12px;font-size:12px;color:#633806;margin-bottom:12px;display:flex;gap:6px;align-items:flex-start;line-height:1.6}
-  .limit-form-group{margin-bottom:10px}
-  .limit-form-group label{font-size:12px;color:#666;display:block;margin-bottom:3px;font-weight:500}
-  .limit-form-group select,.limit-form-group input{width:100%;padding:8px 10px;border:1px solid #ddd;border-radius:8px;font-size:13px;color:#1a1a1a;background:#fff}
-  .limit-form-group input:focus,.limit-form-group select:focus{outline:none;border-color:#185FA5;box-shadow:0 0 0 3px rgba(24,95,165,.1)}
-  .limit-bal-display{background:#f5f5f3;border-radius:6px;padding:6px 10px;font-size:12px;color:#666;margin-top:4px}
-  .limit-btn{width:100%;padding:10px;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;margin-top:4px;text-decoration:none}
-  .limit-btn-charge{background:#0F9D58;color:#fff}
-  .limit-btn-charge:hover{background:#0a7a45}
-  .limit-btn-reduce{background:#A32D2D;color:#fff}
-  .limit-btn-reduce:hover{background:#7a1f1f}
-  .time-box{background:#fff;border:1px solid #e8e8e4;border-radius:12px;padding:1.25rem;margin-bottom:16px}
-  .time-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:12px}
-  .time-item{border-radius:8px;padding:12px 14px}
-  .time-item.hana{background:#EAF3DE;border:1px solid #C0DD97}
-  .time-item.other{background:#F1EFE8;border:1px solid #D3D1C7}
-  .time-bank{font-size:13px;font-weight:600;margin-bottom:4px}
-  .time-bank.hana{color:#0F9D58}
-  .time-hours{font-size:13px;color:#333}
-  .time-note{font-size:11px;color:#888;margin-top:3px}
-  .low-card-section{background:#fff;border:1px solid #e8e8e4;border-radius:12px;padding:1.25rem;margin-bottom:16px}
-  .low-card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
-  .low-card-table{width:100%;border-collapse:collapse;font-size:13px}
-  .low-card-table th{background:#f5f5f3;padding:7px 10px;text-align:left;font-size:11px;color:#666;border-bottom:2px solid #e8e8e4;font-weight:600}
-  .low-card-table td{padding:8px 10px;border-bottom:1px solid #f0f0ec}
-  .low-card-table tr:last-child td{border-bottom:none}
-  .btn-charge-sm{padding:4px 10px;border:none;border-radius:6px;background:#0F9D58;color:#fff;font-size:11px;font-weight:600;cursor:pointer}
-  .btn-charge-sm:hover{background:#0a7a45}
-  @media(max-width:768px){.limit-grid{grid-template-columns:1fr}.time-grid{grid-template-columns:1fr}}
-  @media(max-width:768px){
-    .metrics{grid-template-columns:1fr 1fr}
-    .two-col{grid-template-columns:1fr}
-    .main{padding:1rem}
-    .topbar{padding:8px 1rem;height:auto;flex-wrap:wrap;gap:6px}
-  }
+/* ── 탭 네비 ── */
+.tabnav{background:#fff;border-bottom:1px solid #e8e8e4;padding:0 1.5rem;display:flex;gap:0;overflow-x:auto}
+.tabnav-item{padding:14px 18px;font-size:13px;font-weight:500;color:#888;border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:6px}
+.tabnav-item:hover{color:#185FA5}
+.tabnav-item.active{color:#185FA5;border-bottom-color:#185FA5;font-weight:600}
+
+/* ── 메인 ── */
+.main{max-width:1300px;margin:0 auto;padding:1.25rem 1.5rem}
+
+/* ── 지표 카드 ── */
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1.25rem}
+.metric{background:#fff;border:1px solid #e8e8e4;border-radius:10px;padding:.9rem 1rem;cursor:default}
+.metric.clickable{cursor:pointer}
+.metric.clickable:hover{border-color:#185FA5;box-shadow:0 2px 8px rgba(24,95,165,.12)}
+.metric-label{font-size:11px;color:#888;margin-bottom:5px;display:flex;align-items:center;gap:4px}
+.metric-value{font-size:22px;font-weight:700;color:#1a1a1a}
+.metric-sub{font-size:11px;color:#aaa;margin-top:2px}
+.metric.danger .metric-value{color:#A32D2D}
+.metric.warn .metric-value{color:#854F0B}
+.metric.ok .metric-value{color:#0F9D58}
+
+/* ── 알림 ── */
+.alert-bar{background:#FCEBEB;border:1px solid #F7C1C1;border-radius:8px;padding:9px 14px;font-size:13px;color:#791F1F;display:flex;align-items:center;gap:8px;margin-bottom:1rem;cursor:pointer}
+.alert-bar:hover{background:#FADFDF}
+
+/* ── 2열 레이아웃 ── */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.panel{background:#fff;border:1px solid #e8e8e4;border-radius:12px;padding:1rem 1.1rem}
+.panel-title{font-size:13px;font-weight:600;color:#444;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+
+/* ── 카드 잔액 리스트 ── */
+.card-row{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid #f0f0ec;font-size:13px}
+.card-row:last-child{border-bottom:none}
+.card-left{display:flex;align-items:center;gap:8px}
+.avatar{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+.av-blue{background:#E6F1FB;color:#185FA5}.av-teal{background:#E1F5EE;color:#0F6E56}
+.av-amber{background:#FAEEDA;color:#854F0B}.av-coral{background:#FAECE7;color:#993C1D}
+.av-purple{background:#EEEDFE;color:#534AB7}.av-gray{background:#F1EFE8;color:#5F5E5A}
+.card-name{font-weight:600;font-size:13px}
+.card-dept{font-size:11px;color:#888}
+.bar-wrap{width:60px;background:#f0f0ec;border-radius:4px;height:5px;overflow:hidden}
+.bar-fill{height:5px;border-radius:4px;transition:width .3s}
+.bar-ok{background:#0F9D58}.bar-warn{background:#EF9F27}.bar-low{background:#E24B4A}
+.amt-ok{color:#0F9D58;font-weight:700}.amt-warn{color:#854F0B;font-weight:700}.amt-low{color:#A32D2D;font-weight:700}
+.card-list-wrap{max-height:220px;overflow-y:auto}
+.card-list-wrap.expanded{max-height:none}
+
+/* ── 담당자 사용현황 ── */
+.person-row{display:flex;align-items:center;gap:7px;margin-bottom:7px;font-size:12px}
+.person-name{width:54px;color:#333;font-weight:600;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.person-bar-wrap{flex:1;background:#f0f0ec;border-radius:4px;height:7px;overflow:hidden}
+.person-bar{height:7px;border-radius:4px;transition:width .4s}
+.person-amt{width:76px;text-align:right;font-weight:600;font-size:12px}
+.chart-wrap{position:relative;width:100%;height:130px;margin-top:8px}
+.month-select{font-size:11px;padding:3px 7px;border:1px solid #ddd;border-radius:6px;background:#fff;color:#444;cursor:pointer}
+
+/* ── 섹션 탭 ── */
+.section-tabs{display:flex;gap:6px;margin-bottom:12px}
+.section-tab{padding:6px 16px;border-radius:8px;border:1px solid #e0e0dc;cursor:pointer;font-size:12px;font-weight:600;color:#666;background:#fff}
+.section-tab.active{background:#185FA5;color:#fff;border-color:#185FA5}
+
+/* ── 테이블 ── */
+.full-panel{background:#fff;border:1px solid #e8e8e4;border-radius:12px;padding:1rem 1.1rem;margin-bottom:12px}
+.data-table{width:100%;border-collapse:collapse}
+.data-table th{font-size:11px;color:#aaa;font-weight:600;text-align:left;padding:6px 8px;border-bottom:2px solid #e8e8e4;white-space:nowrap}
+.data-table td{font-size:12px;padding:7px 8px;border-bottom:1px solid #f0f0ec;vertical-align:middle}
+.data-table tr:last-child td{border-bottom:none}
+.data-table tr:hover td{background:#fafaf8}
+.empty-msg{text-align:center;padding:2rem;color:#aaa;font-size:13px}
+
+/* ── 카테고리 배지 ── */
+.cat-badge{display:inline-block;padding:2px 7px;border-radius:5px;font-size:11px;white-space:nowrap}
+.cat-meal{background:#FAEEDA;color:#854F0B}.cat-travel{background:#E1F5EE;color:#0F6E56}
+.cat-enter{background:#FBEAF0;color:#993556}.cat-night{background:#EEEDFE;color:#534AB7}
+.cat-supply{background:#E6F1FB;color:#185FA5}.cat-fuel{background:#EAF3DE;color:#3B6D11}
+.cat-other{background:#F1EFE8;color:#5F5E5A}
+.s-ok{background:#EAF3DE;color:#3B6D11;padding:2px 7px;border-radius:5px;font-size:11px}
+.s-pend{background:#FAEEDA;color:#854F0B;padding:2px 7px;border-radius:5px;font-size:11px}
+
+/* ── 아이콘 버튼 ── */
+.icon-btn{background:none;border:none;cursor:pointer;padding:3px 4px;border-radius:5px;font-size:13px;color:#aaa;line-height:1}
+.icon-btn:hover{background:#f0f0ec}
+.icon-btn.edit:hover{color:#185FA5;background:#E6F1FB}
+.icon-btn.del:hover{color:#A32D2D;background:#FCEBEB}
+
+/* ── 액션 버튼 (테이블 내) ── */
+.act-btn{padding:3px 9px;border:none;border-radius:5px;font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap}
+.act-charge{background:#0F9D58;color:#fff}
+.act-charge:hover{background:#0a7a45}
+.act-reduce{background:#A32D2D;color:#fff}
+.act-reduce:hover{background:#7a1f1f}
+
+/* ── 카드별잔액 탭 (상세) ── */
+.balance-filter{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+.balance-filter input{padding:6px 10px;border:1px solid #ddd;border-radius:7px;font-size:12px;width:180px}
+.balance-filter select{padding:6px 10px;border:1px solid #ddd;border-radius:7px;font-size:12px;background:#fff;cursor:pointer}
+.status-badge{padding:3px 9px;border-radius:6px;font-size:11px;font-weight:700}
+.sb-ok{background:#EAF3DE;color:#3B6D11}
+.sb-warn{background:#FAEEDA;color:#854F0B}
+.sb-low{background:#FCEBEB;color:#A32D2D}
+
+/* ── 모달 오버레이 ── */
+.overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.45);z-index:100;align-items:center;justify-content:center}
+.overlay.show{display:flex}
+.modal{background:#fff;border-radius:14px;padding:1.5rem;width:400px;box-shadow:0 8px 32px rgba(0,0,0,.18);max-height:90vh;overflow-y:auto}
+.modal h3{font-size:15px;font-weight:700;margin-bottom:1rem;color:#1a1a1a;display:flex;align-items:center;gap:7px}
+.form-group{margin-bottom:11px}
+.form-group label{font-size:12px;color:#666;display:block;margin-bottom:4px;font-weight:500}
+.form-group input,.form-group select{width:100%;padding:8px 10px;border:1px solid #ddd;border-radius:8px;font-size:13px;color:#1a1a1a;background:#fff}
+.form-group input:focus,.form-group select:focus{outline:none;border-color:#185FA5;box-shadow:0 0 0 3px rgba(24,95,165,.1)}
+.input-error{border-color:#E24B4A !important;box-shadow:0 0 0 3px rgba(226,75,74,.12) !important}
+.modal-btns{display:flex;gap:8px;justify-content:flex-end;margin-top:12px}
+.memo-suggestions{display:flex;flex-wrap:wrap;gap:5px;margin-top:5px}
+.memo-chip{padding:3px 9px;border-radius:18px;border:1px solid #ddd;background:#f9f9f7;font-size:12px;cursor:pointer;color:#444}
+.memo-chip:hover{background:#E6F1FB;border-color:#185FA5;color:#185FA5}
+.memo-chip.selected{background:#185FA5;border-color:#185FA5;color:#fff}
+.bal-display{background:#f5f5f3;border-radius:7px;padding:7px 10px;font-size:12px;color:#666;margin-bottom:10px}
+
+/* ── 에러/중복 팝업 ── */
+.err-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.55);z-index:200;align-items:center;justify-content:center}
+.err-overlay.show{display:flex}
+.err-modal{background:#fff;border-radius:16px;padding:1.75rem;width:320px;box-shadow:0 12px 40px rgba(0,0,0,.2);text-align:center}
+.err-icon{font-size:44px;margin-bottom:10px}
+.err-title{font-size:16px;font-weight:700;margin-bottom:7px}
+.err-body{font-size:13px;color:#555;line-height:1.65;margin-bottom:10px}
+.err-highlight{background:#FCEBEB;border-radius:8px;padding:10px;margin:10px 0;font-size:13px;color:#791F1F}
+.err-close{width:100%;padding:10px;border:none;border-radius:10px;background:#A32D2D;color:#fff;font-size:14px;font-weight:600;cursor:pointer;margin-top:6px}
+
+/* ── 부족카드 팝업 ── */
+.low-card-popup{width:520px}
+.low-card-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:8px}
+.low-card-table th{background:#f5f5f3;padding:6px 10px;text-align:left;font-size:11px;color:#666;border-bottom:2px solid #e8e8e4;font-weight:600}
+.low-card-table td{padding:7px 10px;border-bottom:1px solid #f0f0ec}
+
+/* ── 충전/감액 통합 모달 ── */
+.charge-tabs{display:flex;gap:6px;margin-bottom:14px}
+.charge-tab{flex:1;padding:8px;border-radius:8px;border:1px solid #ddd;font-size:13px;font-weight:600;cursor:pointer;text-align:center}
+.charge-tab.ch-active{background:#0F9D58;color:#fff;border-color:#0F9D58}
+.charge-tab.rd-active{background:#A32D2D;color:#fff;border-color:#A32D2D}
+
+/* ── 하나카드 탭 ── */
+.hana-wrap{max-width:700px;margin:0 auto;padding:1rem 0}
+.hana-card{background:#fff;border:1px solid #e8e8e4;border-radius:12px;padding:1.5rem;margin-bottom:14px}
+
+/* ── Import 모달 ── */
+.import-modal{width:460px}
+.itab-btn{flex:1;padding:7px;border-radius:7px;border:1px solid #ddd;font-size:12px;font-weight:600;cursor:pointer;text-align:center}
+
+@media(max-width:768px){
+  .metrics{grid-template-columns:1fr 1fr}
+  .two-col{grid-template-columns:1fr}
+  .main{padding:1rem}
+  .topbar{padding:0 1rem}
+  .tabnav{padding:0 1rem}
+}
 </style>
 </head>
 <body>
 
+<!-- ── 상단바 ── -->
 <div class="topbar">
-  <div class="logo">DNI <span>BRIDGE</span> <span style="font-weight:400;color:#888;font-size:13px;margin-left:6px">법인카드 관리</span></div>
+  <div class="logo">
+    DNI <span>BRIDGE</span>
+    <small>하나법인 충전카드 관리시스템</small>
+  </div>
   <div class="topbar-right">
-    <span id="todayDate" style="font-size:12px;color:#aaa"></span>
+    <span id="todayDate" style="font-size:11px;color:#aaa"></span>
     <button class="btn" onclick="showAddCard()">+ 카드 추가</button>
-    <button class="btn btn-primary" style="background:#0F9D58;border-color:#0F9D58" onclick="showAddCharge()">⚡ 충전 등록</button>
+    <button class="btn btn-green" onclick="openChargeModal(null,'charge')">⚡ 충전 등록</button>
     <button class="btn btn-primary" onclick="showAddTx()">+ 사용내역 등록</button>
     <button class="btn" onclick="exportCSV()">⬇ CSV</button>
-    <button class="btn" onclick="showImport()" style="color:#185FA5;border-color:#185FA5">📥 시트 가져오기</button>
+    <button class="btn" onclick="showImport()">📥 시트 가져오기</button>
     <button class="btn btn-danger" onclick="if(confirm('모든 데이터를 초기화하시겠습니까?')){localStorage.clear();location.reload()}">초기화</button>
   </div>
 </div>
 
+<!-- ── 탭 네비게이션 ── -->
+<div class="tabnav">
+  <div class="tabnav-item active" id="tab-dashboard" onclick="switchTab('dashboard')">🏠 현황 대시보드</div>
+  <div class="tabnav-item" id="tab-cards" onclick="switchTab('cards')">💳 카드별 잔액</div>
+  <div class="tabnav-item" id="tab-history" onclick="switchTab('history')">📋 충전·감액 내역</div>
+  <div class="tabnav-item" id="tab-usage" onclick="switchTab('usage')">📊 사용내역</div>
+  <div class="tabnav-item" id="tab-hana" onclick="switchTab('hana')">🏦 하나카드 홈페이지</div>
+</div>
+
 <div class="main">
-  <div class="alert" id="alertBox" style="display:none">⚠️ <span id="alertMsg"></span></div>
-  <div class="metrics">
-    <div class="metric"><div class="metric-label">💳 총 카드 수</div><div class="metric-value" id="mTotalCards">0</div><div class="metric-sub">운영 중인 법인카드</div></div>
-    <div class="metric ok"><div class="metric-label">💰 총 잔액</div><div class="metric-value" id="mTotalBal">-</div><div class="metric-sub">전체 충전 잔액 합계</div></div>
-    <div class="metric warn"><div class="metric-label">📊 이번 달 사용</div><div class="metric-value" id="mUsed">-</div><div class="metric-sub">당월 누적 사용액</div></div>
-    <div class="metric danger"><div class="metric-label">🚨 부족 카드</div><div class="metric-value" id="mLow">0장</div><div class="metric-sub">10만원 미만 카드</div></div>
-  </div>
-  <div class="two-col">
-    <div class="card">
-      <div class="card-title">카드별 잔액 현황<button class="btn" style="font-size:11px;padding:3px 8px" onclick="showAddCard()">+ 추가</button></div>
-      <div id="cardList"><div class="empty-msg">카드를 추가해주세요</div></div>
-    </div>
-    <div class="card">
-      <div class="card-title">부서별 사용 현황</div>
-      <div id="deptBars"></div>
-      <div class="chart-wrap"><canvas id="deptChart" role="img" aria-label="부서별 사용 금액 차트"></canvas></div>
-    </div>
-  </div>
-  <!-- 섹션 탭 -->
-  <div class="section-tabs">
-    <button class="section-tab active" id="stab-tx" onclick="switchSection('tx')">📋 사용내역</button>
-    <button class="section-tab" id="stab-ch" onclick="switchSection('ch')">⚡ 충전내역</button>
-    <button class="section-tab" id="stab-lm" onclick="switchSection('lm')">🏦 한도 관리</button>
+
+<!-- ════════════════════════════════
+     탭1: 현황 대시보드
+════════════════════════════════ -->
+<div id="page-dashboard">
+
+  <!-- 경고 바 (클릭 가능) -->
+  <div class="alert-bar" id="alertBox" style="display:none" onclick="showLowCardPopup()">
+    ⚠️ <span id="alertMsg"></span>
+    <span style="margin-left:auto;font-size:12px;text-decoration:underline">▶ 명세 보기 / 충전 등록</span>
   </div>
 
-  <!-- 사용내역 섹션 -->
-  <div class="full-card" id="section-tx">
-    <div class="card-title" style="margin-bottom:10px">
-      사용내역
-      <div class="tab-row">
-        <button class="tab active" onclick="filterTx('전체',this)">전체</button>
-        <div id="deptTabs" style="display:flex;gap:6px;flex-wrap:wrap"></div>
+  <!-- 지표 4개 -->
+  <div class="metrics">
+    <div class="metric">
+      <div class="metric-label">💳 총 카드 수</div>
+      <div class="metric-value" id="mTotalCards">0</div>
+      <div class="metric-sub">운영 중인 법인카드</div>
+    </div>
+    <div class="metric ok">
+      <div class="metric-label">💰 총 잔액</div>
+      <div class="metric-value" id="mTotalBal">-</div>
+      <div class="metric-sub">전체 충전 잔액 합계</div>
+    </div>
+    <div class="metric warn">
+      <div class="metric-label">📊 이번 달 사용</div>
+      <div class="metric-value" id="mUsed">-</div>
+      <div class="metric-sub">당월 누적 사용액</div>
+    </div>
+    <div class="metric danger clickable" onclick="showLowCardPopup()" title="클릭하면 명세 확인">
+      <div class="metric-label">🚨 잔액 부족 카드</div>
+      <div class="metric-value" id="mLow">0장</div>
+      <div class="metric-sub">클릭 → 바로 충전 등록</div>
+    </div>
+  </div>
+
+  <!-- 2열: 카드 잔액 현황 + 담당자별 사용현황 -->
+  <div class="two-col">
+
+    <!-- 카드 잔액 현황 -->
+    <div class="panel">
+      <div class="panel-title">
+        <span>카드별 잔액 현황</span>
+        <div style="display:flex;gap:6px;align-items:center">
+          <select id="cardSortSel" onchange="renderCards()" style="font-size:11px;padding:3px 6px;border:1px solid #ddd;border-radius:6px;background:#fff">
+            <option value="asc">잔액 적은순 ↑</option>
+            <option value="desc">잔액 많은순 ↓</option>
+          </select>
+          <button class="btn" style="font-size:11px;padding:3px 8px" onclick="showAddCard()">+ 추가</button>
+        </div>
+      </div>
+      <div class="card-list-wrap" id="cardListWrap">
+        <div id="cardList"><div class="empty-msg">카드를 추가해주세요</div></div>
+      </div>
+      <div id="cardMoreBtn" style="display:none;text-align:center;padding:6px 0;border-top:1px solid #f0f0ec;margin-top:4px">
+        <button class="btn" style="font-size:11px;width:100%" onclick="toggleCardMore()">더보기 ▾</button>
+      </div>
+    </div>
+
+    <!-- 담당자별 사용현황 -->
+    <div class="panel">
+      <div class="panel-title">
+        <span>담당자별 사용현황</span>
+        <select id="monthFilterSel" onchange="renderPersonChart()" class="month-select">
+          <option value="all">전체 기간</option>
+        </select>
+      </div>
+      <div id="personBars"></div>
+      <div class="chart-wrap">
+        <canvas id="personChart" role="img" aria-label="담당자별 사용금액 차트"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- 최근 사용내역 미리보기 -->
+  <div class="full-panel">
+    <div class="panel-title">
+      최근 사용내역
+      <button class="btn" style="font-size:11px;padding:3px 8px" onclick="switchTab('usage')">전체 보기 →</button>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="data-table">
+        <thead><tr><th>날짜</th><th>담당자</th><th>카테고리</th><th>메모</th><th style="text-align:right">금액</th><th>상태</th></tr></thead>
+        <tbody id="recentTxList"><tr><td colspan="6" class="empty-msg">사용내역이 없습니다</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div><!-- /page-dashboard -->
+
+<!-- ════════════════════════════════
+     탭2: 카드별 잔액
+════════════════════════════════ -->
+<div id="page-cards" style="display:none">
+  <div class="full-panel">
+    <div class="panel-title" style="margin-bottom:12px">
+      💳 카드별 잔액 현황
+      <button class="btn btn-green" style="font-size:12px" onclick="openChargeModal(null,'charge')">⚡ 충전 등록</button>
+    </div>
+    <!-- 필터 -->
+    <div class="balance-filter">
+      <input type="text" id="cardSearchInput" placeholder="이름 / 카드번호 검색..." oninput="renderCardTab()">
+      <select id="cardStatusFilter" onchange="renderCardTab()">
+        <option value="all">전체 상태</option>
+        <option value="low">잔액 부족</option>
+        <option value="warn">주의</option>
+        <option value="ok">정상</option>
+      </select>
+      <select id="cardDeptFilter" onchange="renderCardTab()">
+        <option value="all">전체 부서</option>
+      </select>
+      <select id="cardSortTab" onchange="renderCardTab()">
+        <option value="asc">잔액 적은순</option>
+        <option value="desc">잔액 많은순</option>
+        <option value="name">이름순</option>
+      </select>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="data-table" id="cardTabTable">
+        <thead>
+          <tr>
+            <th>담당자</th><th>부서</th><th>카드번호</th>
+            <th style="text-align:right">충전금액</th>
+            <th style="text-align:right">사용금액</th>
+            <th style="text-align:right">잔액</th>
+            <th>사용률</th><th>상태</th><th>액션</th>
+          </tr>
+        </thead>
+        <tbody id="cardTabBody"><tr><td colspan="9" class="empty-msg">카드를 추가해주세요</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div><!-- /page-cards -->
+
+<!-- ════════════════════════════════
+     탭3: 충전·감액 내역
+════════════════════════════════ -->
+<div id="page-history" style="display:none">
+  <div class="full-panel">
+    <div class="panel-title">
+      ⚡ 충전·감액 내역
+      <div style="display:flex;gap:6px">
+        <button class="btn btn-green" onclick="openChargeModal(null,'charge')">⚡ 충전 등록</button>
+        <button class="btn" style="color:#A32D2D;border-color:#F09595" onclick="openChargeModal(null,'reduce')">📉 감액(환급) 등록</button>
+      </div>
+    </div>
+    <div style="background:#E6F1FB;border-radius:8px;padding:9px 12px;font-size:12px;color:#0C447C;margin-bottom:12px;line-height:1.6">
+      💡 <strong>감액(환급)</strong>이란? 카드에 남은 잔액을 회사 계좌로 돌려받는 것입니다. 하나카드 홈페이지에서 감액 처리 후 여기에 금액을 등록하세요.
+    </div>
+    <div style="overflow-x:auto">
+      <table class="data-table">
+        <thead><tr><th>날짜</th><th>담당자</th><th>부서</th><th>구분</th><th>메모</th><th style="text-align:right">금액</th><th>수정/삭제</th></tr></thead>
+        <tbody id="historyList"><tr><td colspan="7" class="empty-msg">충전·감액 내역이 없습니다</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div><!-- /page-history -->
+
+<!-- ════════════════════════════════
+     탭4: 사용내역
+════════════════════════════════ -->
+<div id="page-usage" style="display:none">
+  <div class="full-panel">
+    <div class="panel-title">
+      📊 사용내역
+      <div class="tab-row" id="usageDeptTabs" style="display:flex;gap:6px;flex-wrap:wrap">
+        <button class="tab active" onclick="filterUsage('전체',this)">전체</button>
       </div>
     </div>
     <div style="overflow-x:auto">
-      <table class="tx-table">
+      <table class="data-table">
         <thead><tr><th>날짜</th><th>담당자</th><th>카테고리</th><th>메모</th><th style="text-align:right">금액</th><th>상태</th><th>수정/삭제</th></tr></thead>
-        <tbody id="txList"><tr><td colspan="7" class="empty-msg">사용내역이 없습니다</td></tr></tbody>
+        <tbody id="usageList"><tr><td colspan="7" class="empty-msg">사용내역이 없습니다</td></tr></tbody>
       </table>
     </div>
   </div>
+</div><!-- /page-usage -->
 
-  <!-- 충전내역 섹션 -->
-  <div class="full-card" id="section-ch" style="display:none">
-    <div class="card-title" style="margin-bottom:10px">
-      충전내역
-      <button class="btn btn-primary" style="background:#0F9D58;border-color:#0F9D58;font-size:11px;padding:4px 10px" onclick="showAddCharge()">⚡ 충전 등록</button>
-    </div>
-    <div style="overflow-x:auto">
-      <table class="tx-table">
-        <thead><tr><th>날짜</th><th>담당자</th><th>부서</th><th>메모</th><th style="text-align:right">충전금액</th><th>수정/삭제</th></tr></thead>
-        <tbody id="chList"><tr><td colspan="6" class="empty-msg">충전내역이 없습니다</td></tr></tbody>
-      </table>
-    </div>
-  </div>
-</div>
-
-  <!-- 한도관리 섹션 -->
-  <div id="section-lm" style="display:none">
-
-    <!-- 안내 배너 -->
-    <div style="background:#FFF8E6;border:1px solid #FAC775;border-radius:10px;padding:12px 16px;margin-bottom:14px;display:flex;align-items:flex-start;gap:10px">
-      <span style="font-size:20px;flex-shrink:0">ℹ️</span>
+<!-- ════════════════════════════════
+     탭5: 하나카드 홈페이지
+════════════════════════════════ -->
+<div id="page-hana" style="display:none">
+  <div class="hana-wrap">
+    <!-- 안내 -->
+    <div style="background:#FFF8E6;border:1px solid #FAC775;border-radius:10px;padding:14px 16px;margin-bottom:14px;display:flex;gap:10px">
+      <span style="font-size:22px">ℹ️</span>
       <div style="font-size:13px;color:#633806;line-height:1.7">
-        <strong>이 탭 사용 안내</strong><br>
-        이 시스템은 카드 잔액을 <strong>기록·조회</strong>하는 도구입니다.
-        실제 카드 충전·감액은 <strong>하나카드 기업홈페이지</strong>에서 처리한 뒤,
-        처리 완료 금액을 이 시스템에 등록해야 잔액이 반영됩니다.
+        <strong>이 탭 안내</strong><br>
+        실제 카드 <strong>충전·감액(환급)</strong>은 하나카드 기업홈페이지에서 법인공인인증서 인증 후 처리합니다.<br>
+        처리 완료 후 <strong>이 시스템의 "충전·감액 내역" 탭</strong>에서 금액을 등록해야 잔액이 반영됩니다.
       </div>
     </div>
 
     <!-- 업무 순서 -->
-    <div style="background:#E6F1FB;border:1px solid #B5D4F4;border-radius:10px;padding:12px 16px;margin-bottom:14px">
-      <div style="font-size:13px;font-weight:600;color:#0C447C;margin-bottom:10px">📋 충전·감액 업무 순서</div>
-      <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
-        <div style="background:#fff;border-radius:8px;padding:8px 14px;text-align:center;border:1px solid #B5D4F4;min-width:110px">
+    <div class="hana-card">
+      <div style="font-size:14px;font-weight:700;color:#0C447C;margin-bottom:14px">📋 충전·감액 업무 처리 순서</div>
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+        <div style="background:#E6F1FB;border-radius:8px;padding:10px 14px;text-align:center;min-width:110px;flex:1">
           <div style="font-size:10px;color:#888;margin-bottom:3px">STEP 1</div>
-          <div style="font-size:12px;font-weight:600;color:#185FA5">아래 표에서<br>잔액 확인</div>
+          <div style="font-size:13px;font-weight:700;color:#185FA5">대시보드에서<br>잔액 확인</div>
         </div>
-        <div style="color:#B5D4F4;font-size:16px;font-weight:600">→</div>
-        <div style="background:#fff;border-radius:8px;padding:8px 14px;text-align:center;border:1px solid #B5D4F4;min-width:110px">
+        <div style="color:#B5D4F4;font-size:18px;font-weight:700">→</div>
+        <div style="background:#E6F1FB;border-radius:8px;padding:10px 14px;text-align:center;min-width:110px;flex:1">
           <div style="font-size:10px;color:#888;margin-bottom:3px">STEP 2</div>
-          <div style="font-size:12px;font-weight:600;color:#185FA5">하나카드<br>홈페이지 접속</div>
+          <div style="font-size:13px;font-weight:700;color:#185FA5">아래 버튼으로<br>하나카드 접속</div>
         </div>
-        <div style="color:#B5D4F4;font-size:16px;font-weight:600">→</div>
-        <div style="background:#fff;border-radius:8px;padding:8px 14px;text-align:center;border:1px solid #B5D4F4;min-width:110px">
+        <div style="color:#B5D4F4;font-size:18px;font-weight:700">→</div>
+        <div style="background:#E6F1FB;border-radius:8px;padding:10px 14px;text-align:center;min-width:110px;flex:1">
           <div style="font-size:10px;color:#888;margin-bottom:3px">STEP 3</div>
-          <div style="font-size:12px;font-weight:600;color:#185FA5">카드사에서<br>충전 또는 감액</div>
+          <div style="font-size:13px;font-weight:700;color:#185FA5">카드사에서<br>충전 또는 감액</div>
         </div>
-        <div style="color:#B5D4F4;font-size:16px;font-weight:600">→</div>
-        <div style="background:#0F9D58;border-radius:8px;padding:8px 14px;text-align:center;min-width:110px">
+        <div style="color:#B5D4F4;font-size:18px;font-weight:700">→</div>
+        <div style="background:#0F9D58;border-radius:8px;padding:10px 14px;text-align:center;min-width:110px;flex:1">
           <div style="font-size:10px;color:rgba(255,255,255,.8);margin-bottom:3px">STEP 4</div>
-          <div style="font-size:12px;font-weight:600;color:#fff">아래에서<br>시스템 등록</div>
+          <div style="font-size:13px;font-weight:700;color:#fff">시스템에<br>금액 등록</div>
         </div>
       </div>
     </div>
 
-    <!-- 하나카드 링크 + 시스템 등록 (2열) -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
+    <!-- 하나카드 바로가기 -->
+    <div class="hana-card">
+      <div style="font-size:14px;font-weight:700;color:#0C447C;margin-bottom:6px">🏦 하나카드 기업홈페이지 바로가기</div>
+      <div style="font-size:12px;color:#888;margin-bottom:14px">법인공인인증서 인증 후 충전·감액 처리 가능</div>
+      <a href="https://www.hanacard.co.kr/OCH30000000N.web?_frame=no&schID=ccd&mID=OCH30000000C" target="_blank"
+        style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:13px;background:#185FA5;color:#fff;border-radius:9px;font-size:14px;font-weight:700;text-decoration:none;margin-bottom:8px">
+        🔗 하나카드 B카드 충전·감액 홈페이지
+      </a>
+      <div style="font-size:11px;color:#aaa;text-align:center">새 창으로 열립니다 · 법인공인인증서 필요</div>
 
-      <!-- 왼쪽: 하나카드 바로가기 (링크만) -->
-      <div style="background:#fff;border:1px solid #e8e8e4;border-radius:12px;padding:1.25rem;border-top:3px solid #185FA5">
-        <div style="font-size:14px;font-weight:600;color:#0C447C;margin-bottom:4px">🏦 하나카드 기업홈페이지</div>
-        <div style="font-size:12px;color:#888;margin-bottom:14px">법인공인인증서 인증 후 실제 충전·감액 처리</div>
-        <a href="https://www.hanacard.co.kr/OCH30000000N.web?_frame=no&schID=ccd&mID=OCH30000000C" target="_blank"
-          style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:12px;background:#185FA5;color:#fff;border-radius:8px;font-size:14px;font-weight:600;text-decoration:none">
-          🔗 하나카드 B카드 충전·감액
-        </a>
-        <div style="font-size:11px;color:#aaa;text-align:center;margin-top:6px">새 창으로 열립니다 · 법인공인인증서 필요</div>
-        <div style="margin-top:14px;padding-top:12px;border-top:1px solid #f0f0ec">
-          <div style="font-size:12px;font-weight:600;color:#333;margin-bottom:8px">⏰ 충전 가능 시간</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-            <div style="background:#EAF3DE;border-radius:7px;padding:8px 10px">
-              <div style="font-size:11px;font-weight:600;color:#0F9D58;margin-bottom:2px">당행 (하나은행)</div>
-              <div style="font-size:12px;color:#27500A">매일 24시간</div>
-            </div>
-            <div style="background:#F1EFE8;border-radius:7px;padding:8px 10px">
-              <div style="font-size:11px;font-weight:600;color:#444;margin-bottom:2px">타행</div>
-              <div style="font-size:11px;color:#333">월~금 06:00~23:45</div>
-              <div style="font-size:10px;color:#A32D2D;margin-top:2px">공휴일 불가</div>
-            </div>
+      <!-- 충전 가능 시간 -->
+      <div style="margin-top:16px;padding-top:14px;border-top:1px solid #f0f0ec">
+        <div style="font-size:13px;font-weight:700;color:#333;margin-bottom:10px">⏰ 충전 가능 시간</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div style="background:#EAF3DE;border-radius:8px;padding:12px 14px">
+            <div style="font-size:12px;font-weight:700;color:#0F9D58;margin-bottom:4px">당행 (하나은행)</div>
+            <div style="font-size:13px;color:#27500A;font-weight:600">매일 24시간</div>
+            <div style="font-size:11px;color:#3B6D11;margin-top:2px">365일 언제나 가능</div>
+          </div>
+          <div style="background:#F1EFE8;border-radius:8px;padding:12px 14px">
+            <div style="font-size:12px;font-weight:700;color:#444;margin-bottom:4px">타행</div>
+            <div style="font-size:13px;color:#333;font-weight:600">월~금 06:00~23:45</div>
+            <div style="font-size:11px;color:#A32D2D;margin-top:2px">※ BC망(국민은행): 08:00~22:00<br>※ 공휴일·대체공휴일 불가</div>
           </div>
         </div>
       </div>
-
-      <!-- 오른쪽: 시스템 충전·감액 등록 -->
-      <div style="background:#fff;border:1px solid #e8e8e4;border-radius:12px;padding:1.25rem;border-top:3px solid #0F9D58">
-        <div style="font-size:14px;font-weight:600;color:#0F9D58;margin-bottom:4px">📝 시스템 잔액 업데이트</div>
-        <div style="font-size:12px;color:#888;margin-bottom:12px">하나카드에서 처리 완료 후 아래에서 금액을 등록하세요</div>
-        <div style="margin-bottom:8px">
-          <div style="font-size:12px;color:#555;font-weight:500;margin-bottom:4px">카드 선택</div>
-          <select id="lm-sys-card" onchange="updateLimitBal2()" style="width:100%;padding:8px 10px;border:1px solid #ddd;border-radius:8px;font-size:13px;background:#fff;color:#1a1a1a">
-            <option value="">카드를 선택하세요</option>
-          </select>
-        </div>
-        <div id="lm-sys-bal-display" style="background:#f5f5f3;border-radius:7px;padding:8px 10px;font-size:12px;color:#666;margin-bottom:12px;min-height:36px;display:flex;align-items:center">
-          카드 선택 시 현재 잔액 표시
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-          <button onclick="doSysCharge()" style="padding:10px 6px;border:none;border-radius:8px;background:#0F9D58;color:#fff;font-size:13px;font-weight:600;cursor:pointer;line-height:1.4">
-            ⚡ 충전 등록
-          </button>
-          <button onclick="doSysReduce()" style="padding:10px 6px;border:none;border-radius:8px;background:#A32D2D;color:#fff;font-size:13px;font-weight:600;cursor:pointer;line-height:1.4">
-            📉 감액 등록
-          </button>
-        </div>
-        <div style="font-size:11px;color:#aaa;margin-top:8px;text-align:center">하나카드 처리 완료 후 클릭 → 잔액 즉시 반영</div>
-      </div>
     </div>
 
-    <!-- 전체 카드 잔액 현황 표 -->
-    <div style="background:#fff;border:1px solid #e8e8e4;border-radius:12px;padding:1.1rem 1.25rem;margin-bottom:14px">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-        <div style="font-size:14px;font-weight:600">💳 전체 카드 잔액 현황</div>
-        <div style="display:flex;gap:10px;font-size:11px;color:#666">
-          <span><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#0F9D58;margin-right:3px"></span>정상</span>
-          <span><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#EF9F27;margin-right:3px"></span>주의</span>
-          <span><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#E24B4A;margin-right:3px"></span>부족</span>
-        </div>
+    <!-- 시스템 등록 안내 -->
+    <div class="hana-card" style="border-top:3px solid #0F9D58">
+      <div style="font-size:14px;font-weight:700;color:#0F9D58;margin-bottom:6px">📝 처리 완료 후 시스템 등록</div>
+      <div style="font-size:12px;color:#666;margin-bottom:12px">하나카드에서 충전·감액 처리 완료 후 아래 버튼으로 이 시스템에 등록하세요.</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <button onclick="openChargeModal(null,'charge')" style="padding:11px;border:none;border-radius:8px;background:#0F9D58;color:#fff;font-size:13px;font-weight:700;cursor:pointer">⚡ 충전 금액 등록</button>
+        <button onclick="openChargeModal(null,'reduce')" style="padding:11px;border:none;border-radius:8px;background:#A32D2D;color:#fff;font-size:13px;font-weight:700;cursor:pointer">📉 감액(환급) 등록</button>
       </div>
-      <div id="lm-all-cards">
-        <div class="empty-msg" style="padding:1.5rem">카드를 추가해주세요</div>
-      </div>
+      <div style="font-size:11px;color:#aaa;text-align:center;margin-top:7px">하나카드 처리 완료 후 클릭 → 잔액 즉시 반영</div>
     </div>
-
   </div>
-<!-- 잔액 초과 에러 팝업 -->
-<div class="err-overlay" id="errOverlay">
-  <div class="err-modal">
-    <div class="err-icon">🚫</div>
-    <div class="err-title">잔액 초과 — 등록 불가</div>
-    <div class="err-body">입력하신 금액이 카드 잔액을 초과하여<br>사용내역을 등록할 수 없습니다.</div>
-    <div class="err-highlight">
-      <strong id="errCardName"></strong>
-      <span id="errDetail"></span>
-    </div>
-    <div style="font-size:12px;color:#888">카드를 먼저 충전하거나<br>다른 카드를 선택해주세요.</div>
-    <button class="err-close" onclick="closeErrPopup()">확인</button>
-  </div>
-</div>
+</div><!-- /page-hana -->
 
-<!-- 구글시트 CSV 가져오기 모달 -->
-<div class="overlay" id="importModal">
-  <div class="modal" style="width:460px;max-height:90vh;overflow-y:auto">
-    <h3>📥 사용내역 가져오기</h3>
-    <!-- 방법 탭 -->
-    <div style="display:flex;gap:6px;margin-bottom:14px">
-      <button id="itab-file" class="tab active" onclick="switchImportTab('file')" style="flex:1;padding:7px;border-radius:8px;border:1px solid #ddd;font-size:12px;font-weight:600;cursor:pointer;background:#185FA5;color:#fff">📁 CSV 파일 전체</button>
-      <button id="itab-paste" class="tab" onclick="switchImportTab('paste')" style="flex:1;padding:7px;border-radius:8px;border:1px solid #ddd;font-size:12px;font-weight:600;cursor:pointer;background:#fff;color:#666">📋 붙여넣기 (1건)</button>
-    </div>
+</div><!-- /main -->
 
-    <!-- CSV 파일 방법 -->
-    <div id="import-file-sec">
-      <div style="background:#E6F1FB;border-radius:8px;padding:10px 12px;font-size:12px;color:#0C447C;margin-bottom:12px;line-height:1.7">
-        <strong>방법:</strong> 구글 시트 → 파일 → 다운로드 → CSV 파일(.csv)<br>
-        다운로드한 파일을 아래에서 선택하세요.
-      </div>
-      <div class="form-group">
-        <label>CSV 파일 선택</label>
-        <input type="file" id="import-file" accept=".csv" style="padding:6px;font-size:13px;width:100%">
-      </div>
-      <div id="import-preview" style="display:none;margin-top:8px">
-        <div style="font-size:12px;color:#666;margin-bottom:4px">미리보기 (최대 5행)</div>
-        <div id="import-preview-body" style="background:#f5f5f3;border-radius:6px;padding:8px;font-size:11px;font-family:monospace;max-height:100px;overflow-y:auto;white-space:pre-wrap"></div>
-        <div id="import-count" style="font-size:12px;color:#185FA5;font-weight:600;margin-top:6px"></div>
-      </div>
-      <div id="import-col-map" style="display:none;margin-top:10px;background:#f9f9f7;border-radius:8px;padding:10px 12px">
-        <div style="font-size:12px;font-weight:600;color:#333;margin-bottom:6px">열 자동 감지 결과</div>
-        <div style="font-size:12px;color:#666;line-height:2">
-          <div>📅 날짜: <span id="map-date" style="color:#185FA5;font-weight:600"></span></div>
-          <div>👤 담당자: <span id="map-name" style="color:#185FA5;font-weight:600"></span></div>
-          <div>💰 금액: <span id="map-amt" style="color:#185FA5;font-weight:600"></span></div>
-          <div>🏷 카테고리: <span id="map-cat" style="color:#185FA5;font-weight:600"></span></div>
-          <div>📝 메모: <span id="map-memo" style="color:#185FA5;font-weight:600"></span></div>
-        </div>
-      </div>
-      <div id="import-dup-info" style="display:none;margin-top:8px;background:#FAEEDA;border-radius:8px;padding:8px 12px;font-size:12px;color:#633806"></div>
-    </div>
+<!-- ══════════════════════════════════════
+     모달들
+══════════════════════════════════════ -->
 
-    <!-- 붙여넣기 방법 -->
-    <div id="import-paste-sec" style="display:none">
-      <div style="background:#EAF3DE;border-radius:8px;padding:10px 12px;font-size:12px;color:#27500A;margin-bottom:12px;line-height:1.7">
-        <strong>방법:</strong> 구글 시트에서 행 1개 선택 → Ctrl+C 복사<br>
-        아래 입력창에 Ctrl+V 붙여넣기 → 자동 분석
-      </div>
-      <div class="form-group">
-        <label>구글 시트 행 붙여넣기</label>
-        <textarea id="paste-input" rows="3" placeholder="구글 시트에서 복사한 내용을 여기에 붙여넣으세요&#10;예: 2026. 5. 21 오후 2:04:59	강지원	42000	식대	하나카드" style="width:100%;padding:8px;border:1px solid #ddd;border-radius:8px;font-size:12px;font-family:monospace;resize:vertical" oninput="parsePasteInput()"></textarea>
-      </div>
-      <div id="paste-preview" style="display:none;background:#f9f9f7;border-radius:8px;padding:10px 12px;font-size:12px;margin-top:6px">
-        <div style="font-weight:600;color:#333;margin-bottom:6px">감지된 내용</div>
-        <div id="paste-preview-body" style="line-height:2;color:#555"></div>
-        <div id="paste-dup-warn" style="display:none;background:#FCEBEB;border-radius:6px;padding:6px 10px;color:#791F1F;margin-top:6px;font-size:11px"></div>
-      </div>
-    </div>
-
-    <div class="modal-btns" style="margin-top:14px">
-      <button class="btn" onclick="closeImport()">취소</button>
-      <button class="btn btn-primary" id="import-btn" onclick="doImport()" disabled>가져오기</button>
+<!-- 잔액 부족 카드 팝업 -->
+<div class="overlay" id="lowCardModal">
+  <div class="modal low-card-popup">
+    <h3>🚨 잔액 부족 카드 명세</h3>
+    <div id="lowCardList"></div>
+    <div class="modal-btns">
+      <button class="btn" onclick="closeModal('lowCardModal')">닫기</button>
     </div>
   </div>
 </div>
 
-<!-- 충전 등록 모달 -->
+<!-- 충전·감액 통합 모달 -->
 <div class="overlay" id="chargeModal">
   <div class="modal">
-    <h3 id="chargeModalTitle">충전 등록</h3>
+    <h3 id="chargeModalTitle">⚡ 충전 / 감액 등록</h3>
+    <div class="charge-tabs">
+      <div class="charge-tab ch-active" id="ctab-charge" onclick="setChargeType('charge')">⚡ 충전</div>
+      <div class="charge-tab" id="ctab-reduce" onclick="setChargeType('reduce')">📉 감액(환급)</div>
+    </div>
     <input type="hidden" id="ch-edit-idx" value="-1">
-    <div class="form-group"><label>카드 선택</label><select id="ch-card"></select></div>
+    <input type="hidden" id="ch-type" value="charge">
     <div class="form-group">
-      <label>충전 금액 (원)</label>
-      <input type="number" id="ch-amt" placeholder="예: 500000">
+      <label>카드 선택</label>
+      <select id="ch-card" onchange="updateChargeBal()"></select>
+    </div>
+    <div class="bal-display" id="ch-bal-display">카드 선택 시 잔액 자동 표시</div>
+    <div class="form-group">
+      <label id="ch-amt-label">충전 금액 (원)</label>
+      <input type="number" id="ch-amt" placeholder="예: 500000" oninput="updateChargePreview()">
+      <div id="ch-preview" style="font-size:12px;margin-top:4px;display:none"></div>
     </div>
     <div class="form-group">
-      <label>메모 (선택)</label>
-      <input type="text" id="ch-memo" placeholder="예: 5월 충전, 추가 충전">
+      <label>메모</label>
+      <input type="text" id="ch-memo" placeholder="예: 5월 충전">
     </div>
     <div class="modal-btns">
-      <button class="btn" onclick="closeChargeModal()">취소</button>
-      <button class="btn btn-primary" style="background:#0F9D58;border-color:#0F9D58" onclick="saveCharge()">충전 등록</button>
-    </div>
-  </div>
-</div>
-
-<!-- 중복 확인 팝업 -->
-<div class="err-overlay" id="dupOverlay">
-  <div class="err-modal">
-    <div class="err-icon">⚠️</div>
-    <div class="err-title" style="color:#854F0B">중복 내역 감지</div>
-    <div class="err-highlight" style="background:#FAEEDA;border-radius:8px;padding:12px 14px;margin:12px 0;font-size:13px;color:#633806;text-align:left;line-height:1.7">
-      동일한 날짜·담당자·금액·메모의<br>
-      내역이 이미 등록되어 있습니다.<br><br>
-      <strong>그래도 등록하시겠습니까?</strong>
-    </div>
-    <div style="font-size:12px;color:#888;margin-bottom:12px">소급 등록 등 의도적인 경우에만 확인을 눌러주세요</div>
-    <div style="display:flex;gap:8px">
-      <button onclick="closeDupConfirm()" style="flex:1;padding:10px;border:1px solid #ddd;border-radius:10px;background:#fff;font-size:14px;font-weight:500;cursor:pointer;color:#666">취소</button>
-      <button id="dupConfirmOk" style="flex:1;padding:10px;border:none;border-radius:10px;background:#854F0B;color:#fff;font-size:14px;font-weight:600;cursor:pointer">등록</button>
+      <button class="btn" onclick="closeModal('chargeModal')">취소</button>
+      <button class="btn btn-green" id="chSaveBtn" onclick="saveCharge()">충전 등록</button>
     </div>
   </div>
 </div>
@@ -453,16 +521,16 @@
 <!-- 카드 추가/수정 모달 -->
 <div class="overlay" id="cardModal">
   <div class="modal">
-    <h3 id="cardModalTitle">법인카드 추가</h3>
+    <h3 id="cardModalTitle">💳 법인카드 추가</h3>
     <input type="hidden" id="c-edit-idx" value="-1">
     <div class="form-group"><label>담당자 이름</label><input type="text" id="c-name" placeholder="예: 홍길동"></div>
     <div class="form-group"><label>부서</label><input type="text" id="c-dept" placeholder="예: 영업팀"></div>
     <div class="form-group"><label>카드 끝 4자리</label><input type="text" id="c-num" placeholder="예: 1234" maxlength="4"></div>
-    <div style="background:#E6F1FB;border-radius:8px;padding:10px 12px;font-size:12px;color:#0C447C;margin-bottom:12px">
-      💡 카드 추가 후 <strong>⚡ 충전 등록</strong> 버튼으로 충전하세요
+    <div style="background:#E6F1FB;border-radius:8px;padding:9px 12px;font-size:12px;color:#0C447C;margin-bottom:12px">
+      💡 카드 추가 후 <strong>⚡ 충전 등록</strong> 버튼으로 초기 충전하세요
     </div>
     <div class="modal-btns">
-      <button class="btn" onclick="closeCardModal()">취소</button>
+      <button class="btn" onclick="closeModal('cardModal')">취소</button>
       <button class="btn btn-primary" onclick="saveCard()">저장</button>
     </div>
   </div>
@@ -471,18 +539,18 @@
 <!-- 사용내역 추가/수정 모달 -->
 <div class="overlay" id="txModal">
   <div class="modal">
-    <h3 id="txModalTitle">사용내역 추가</h3>
+    <h3 id="txModalTitle">📋 사용내역 등록</h3>
     <input type="hidden" id="t-edit-idx" value="-1">
     <div class="form-group"><label>카드 선택</label><select id="t-card" onchange="updateBalInfo()"></select></div>
-    <div id="balInfo" class="bal-info" style="margin-top:-6px;margin-bottom:10px"></div>
+    <div class="bal-display" id="balInfo">카드 선택 시 잔액 표시</div>
     <div class="form-group">
-      <label>사용 날짜 <span style="color:#aaa;font-weight:400;font-size:11px">— 소급 등록 가능</span></label>
+      <label>날짜</label>
       <input type="date" id="t-date">
     </div>
     <div class="form-group">
       <label>사용 금액 (원)</label>
-      <input type="number" id="t-amt" placeholder="예: 35000" oninput="updateBalInfo();updateAmtDisplay()">
-      <div id="t-amt-display" style="font-size:12px;color:#185FA5;font-weight:600;margin-top:4px;min-height:18px"></div>
+      <input type="number" id="t-amt" placeholder="예: 35000" oninput="updateBalInfo()">
+      <div id="t-amt-display" style="font-size:12px;color:#0F9D58;margin-top:3px"></div>
     </div>
     <div class="form-group">
       <label>카테고리</label>
@@ -497,197 +565,586 @@
       </select>
     </div>
     <div class="form-group">
-      <label>메모 <span style="color:#aaa;font-weight:400;font-size:11px">— 아래서 선택하거나 직접 입력</span></label>
+      <label>메모 <span style="color:#aaa;font-size:11px">— 아래 버튼 선택 또는 직접 입력</span></label>
       <div class="memo-suggestions" id="memoChips"></div>
-      <input type="text" id="t-memo" placeholder="직접 입력도 가능해요" style="margin-top:8px">
+      <input type="text" id="t-memo" placeholder="직접 입력" style="margin-top:7px">
     </div>
-    <div class="form-group"><label>상태</label><select id="t-status"><option value="승인">승인</option><option value="대기">대기</option></select></div>
+    <div class="form-group"><label>상태</label>
+      <select id="t-status"><option value="승인">승인</option><option value="대기">대기</option></select>
+    </div>
     <div class="modal-btns">
-      <button class="btn" onclick="closeTxModal()">취소</button>
+      <button class="btn" onclick="closeModal('txModal')">취소</button>
       <button class="btn btn-primary" onclick="saveTx()">저장</button>
     </div>
   </div>
 </div>
 
+<!-- 잔액 초과 팝업 -->
+<div class="err-overlay" id="errOverlay">
+  <div class="err-modal">
+    <div class="err-icon">🚫</div>
+    <div class="err-title" style="color:#A32D2D">잔액 초과 — 등록 불가</div>
+    <div class="err-body">입력 금액이 카드 잔액을 초과합니다.</div>
+    <div class="err-highlight"><strong id="errCardName"></strong><br><span id="errDetail"></span></div>
+    <div style="font-size:12px;color:#888">카드를 먼저 충전하거나 다른 카드를 선택해주세요.</div>
+    <button class="err-close" onclick="closeErrPopup()">확인</button>
+  </div>
+</div>
+
+<!-- 중복 확인 팝업 -->
+<div class="err-overlay" id="dupOverlay">
+  <div class="err-modal">
+    <div class="err-icon">⚠️</div>
+    <div class="err-title" style="color:#854F0B">중복 내역 감지</div>
+    <div class="err-highlight" style="background:#FAEEDA;color:#633806;text-align:left">
+      동일한 날짜·담당자·금액·메모의 내역이 이미 등록되어 있습니다.<br><br>
+      <strong>그래도 등록하시겠습니까?</strong>
+    </div>
+    <div style="font-size:12px;color:#888;margin-bottom:12px">소급 등록 등 의도적인 경우에만 확인을 눌러주세요</div>
+    <div style="display:flex;gap:8px">
+      <button onclick="closeDupConfirm()" style="flex:1;padding:10px;border:1px solid #ddd;border-radius:9px;background:#fff;font-size:13px;font-weight:600;cursor:pointer;color:#666">취소</button>
+      <button id="dupConfirmOk" style="flex:1;padding:10px;border:none;border-radius:9px;background:#854F0B;color:#fff;font-size:13px;font-weight:600;cursor:pointer">등록</button>
+    </div>
+  </div>
+</div>
+
+<!-- 시트 가져오기 모달 -->
+<div class="overlay" id="importModal">
+  <div class="modal import-modal">
+    <h3>📥 사용내역 가져오기</h3>
+    <div style="display:flex;gap:6px;margin-bottom:12px">
+      <div class="itab-btn ch-active" id="itab-file" style="background:#185FA5;color:#fff;border-color:#185FA5" onclick="switchImportTab('file')">📁 CSV 파일 전체</div>
+      <div class="itab-btn" id="itab-paste" style="background:#fff;color:#666;border-color:#ddd" onclick="switchImportTab('paste')">📋 붙여넣기 (1건)</div>
+    </div>
+    <div id="import-file-sec">
+      <div style="background:#E6F1FB;border-radius:7px;padding:9px 12px;font-size:12px;color:#0C447C;margin-bottom:10px;line-height:1.6">
+        구글 시트 → 파일 → 다운로드 → CSV 파일(.csv)
+      </div>
+      <div class="form-group"><label>CSV 파일 선택</label><input type="file" id="import-file" accept=".csv" style="padding:6px;font-size:13px;width:100%"></div>
+      <div id="import-preview" style="display:none;margin-top:7px">
+        <div style="font-size:11px;color:#666;margin-bottom:3px">미리보기</div>
+        <div id="import-preview-body" style="background:#f5f5f3;border-radius:6px;padding:7px;font-size:11px;font-family:monospace;max-height:90px;overflow-y:auto;white-space:pre-wrap"></div>
+        <div id="import-count" style="font-size:12px;color:#185FA5;font-weight:600;margin-top:5px"></div>
+      </div>
+      <div id="import-col-map" style="display:none;margin-top:8px;background:#f9f9f7;border-radius:7px;padding:9px 12px;font-size:12px;color:#666;line-height:2">
+        <div style="font-weight:600;color:#333;margin-bottom:4px">열 자동 감지</div>
+        📅 날짜: <span id="map-date" style="color:#185FA5;font-weight:600"></span><br>
+        👤 담당자: <span id="map-name" style="color:#185FA5;font-weight:600"></span><br>
+        💰 금액: <span id="map-amt" style="color:#185FA5;font-weight:600"></span><br>
+        🏷 카테고리: <span id="map-cat" style="color:#185FA5;font-weight:600"></span><br>
+        📝 메모: <span id="map-memo" style="color:#185FA5;font-weight:600"></span>
+      </div>
+      <div id="import-dup-info" style="display:none;background:#FAEEDA;border-radius:7px;padding:8px 12px;font-size:12px;color:#633806;margin-top:7px"></div>
+    </div>
+    <div id="import-paste-sec" style="display:none">
+      <div style="background:#EAF3DE;border-radius:7px;padding:9px 12px;font-size:12px;color:#27500A;margin-bottom:10px;line-height:1.6">
+        구글 시트에서 행 1개 선택 → Ctrl+C → 아래에 Ctrl+V
+      </div>
+      <div class="form-group">
+        <label>구글 시트 행 붙여넣기</label>
+        <textarea id="paste-input" rows="3" placeholder="구글 시트에서 복사한 내용 붙여넣기" style="width:100%;padding:8px;border:1px solid #ddd;border-radius:8px;font-size:12px;font-family:monospace;resize:vertical" oninput="parsePasteInput()"></textarea>
+      </div>
+      <div id="paste-preview" style="display:none;background:#f9f9f7;border-radius:7px;padding:9px 12px;font-size:12px;margin-top:6px">
+        <div style="font-weight:600;color:#333;margin-bottom:5px">감지된 내용</div>
+        <div id="paste-preview-body" style="line-height:2;color:#555"></div>
+        <div id="paste-dup-warn" style="display:none"></div>
+      </div>
+    </div>
+    <div class="modal-btns" style="margin-top:12px">
+      <button class="btn" onclick="closeModal('importModal')">취소</button>
+      <button class="btn btn-primary" id="import-btn" onclick="doImport()" disabled>가져오기</button>
+    </div>
+  </div>
+</div>
+
 <script>
-const fmt=n=>Number(n).toLocaleString('ko-KR')+'원';
-const avColors=['av-blue','av-teal','av-amber','av-coral','av-purple','av-gray'];
-const deptColors={'영업팀':'#185FA5','관리팀':'#1D9E75','운영팀':'#854F0B','재무팀':'#993556','기획팀':'#534AB7'};
-function getDeptColor(d){return deptColors[d]||'#888780';}
+// ══════════════════════════════════
+// 데이터 유틸
+// ══════════════════════════════════
+const fmt = n => Number(n).toLocaleString('ko-KR') + '원';
+const avColors = ['av-blue','av-teal','av-amber','av-coral','av-purple','av-gray'];
+const DEPT_COLORS = {'영업팀':'#185FA5','관리팀':'#1D9E75','운영팀':'#854F0B','재무팀':'#993556','기획팀':'#534AB7','총무팀':'#0F9D58','원무팀':'#854F0B','기획부':'#534AB7'};
+const MEMO_MAP = {
+  '식대':['팀 점심','고객 점심','회의 식사','팀 저녁','간식','회식'],
+  '교통/출장':['KTX 출장','택시비','주차비','버스/지하철','항공권','렌터카'],
+  '접대비':['고객 접대','파트너 식사','거래처 미팅','골프 접대','고객 선물'],
+  '야식비':['야근 야식','팀 야식','배달 주문','편의점'],
+  '사무용품':['복사지','문구류','토너 교체','사무기기','소모품'],
+  '주유비':['차량 주유','법인차 주유','렌트카 주유'],
+  '기타':['기타 비용','잡비','소액 지출']
+};
 
-// 날짜 유틸
 function todayStr(){
-  const d=new Date();
-  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+  const d = new Date();
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
 }
-function dateToDisplay(yyyymmdd){
-  if(!yyyymmdd) return '';
-  const [y,m,d]=yyyymmdd.split('-');
-  return m+'/'+Number(d);
-}
-
-// 금액 콤마 실시간 표시
-function updateAmtDisplay(){
-  const v=parseInt(document.getElementById('t-amt').value)||0;
-  const el=document.getElementById('t-amt-display');
-  if(v>0) el.textContent='→ '+Number(v).toLocaleString('ko-KR')+'원';
-  else el.textContent='';
-}
-const MEMO_MAP={'식대':['팀 점심','고객 점심','회의 식사','팀 저녁','간식 구매','회식'],'교통/출장':['KTX 출장','택시비','주차비','버스/지하철','항공권','렌터카'],'접대비':['고객 접대','파트너 식사','거래처 미팅','골프 접대','고객 선물'],'야식비':['야근 야식','팀 야식','배달 주문','편의점 구매'],'사무용품':['복사지 구매','문구류','토너 교체','사무기기','소모품'],'주유비':['차량 주유','법인차 주유','렌트카 주유'],'기타':['기타 비용','잡비','소액 지출']};
-
 function loadCards(){try{return JSON.parse(localStorage.getItem('dni_cards')||'[]');}catch(e){return[];}}
 function saveCards(c){localStorage.setItem('dni_cards',JSON.stringify(c));}
 function loadTx(){try{return JSON.parse(localStorage.getItem('dni_tx')||'[]');}catch(e){return[];}}
 function saveTxData(t){localStorage.setItem('dni_tx',JSON.stringify(t));}
+function loadCharges(){try{return JSON.parse(localStorage.getItem('dni_charges')||'[]');}catch(e){return[];}}
+function saveCharges(c){localStorage.setItem('dni_charges',JSON.stringify(c));}
 
-let currentFilter='전체',chartInst=null;
-function getBalance(c){return(c.charged||0)-(c.used||0);}
+function getBalance(c){return (c.charged||0)-(c.used||0);}
 function getBarPct(c){if(!c.charged)return 0;return Math.min(100,Math.round(getBalance(c)/c.charged*100));}
 function barClass(p){return p>30?'bar-ok':p>15?'bar-warn':'bar-low';}
 function amtClass(p){return p>30?'amt-ok':p>15?'amt-warn':'amt-low';}
-function catClass(cat){const m={'식대':'cat-meal','교통/출장':'cat-travel','접대비':'cat-enter','야식비':'cat-night','사무용품':'cat-supply','주유비':'cat-fuel'};return m[cat]||'cat-other';}
-
-// ── 잔액 초과 에러 팝업 ──
-function showErrPopup(cardName, balance, inputAmt){
-  document.getElementById('errCardName').textContent=cardName+' 카드';
-  document.getElementById('errDetail').innerHTML=
-    '현재 잔액: <strong style="color:#3B6D11">'+fmt(balance)+'</strong> &nbsp;|&nbsp; 입력 금액: <strong style="color:#A32D2D">'+fmt(inputAmt)+'</strong><br>'+
-    '<span style="color:#A32D2D;font-weight:600">부족 금액: '+fmt(inputAmt-balance)+'</span>';
-  document.getElementById('errOverlay').classList.add('show');
+function statusBadge(p,bal){
+  if(bal<100000) return '<span class="status-badge sb-low">🚨 잔액부족</span>';
+  if(p<30) return '<span class="status-badge sb-warn">⚠️ 주의</span>';
+  return '<span class="status-badge sb-ok">✅ 정상</span>';
 }
-function closeErrPopup(){document.getElementById('errOverlay').classList.remove('show');}
+function getDeptColor(d){return DEPT_COLORS[d]||'#888780';}
+function catClass(cat){
+  const m={'식대':'cat-meal','교통/출장':'cat-travel','접대비':'cat-enter','야식비':'cat-night','사무용품':'cat-supply','주유비':'cat-fuel'};
+  return m[cat]||'cat-other';
+}
+function closeModal(id){document.getElementById(id).classList.remove('show');}
 
-// 잔액 실시간 표시
-function updateBalInfo(){
-  const selVal=document.getElementById('t-card').value;
-  if(!selVal)return;
-  const cardName=selVal.split('|')[0];
-  const cards=loadCards();
-  const editIdx=parseInt(document.getElementById('t-edit-idx').value);
-  const cardObj=cards.find(c=>c.name===cardName);
-  if(!cardObj)return;
-  let bal=getBalance(cardObj);
-  // 수정 모드면 기존 금액 복원해서 잔액 계산
-  if(editIdx>=0){
-    const tx=loadTx();
-    const old=tx[editIdx];
-    if(old&&old.card===cardName) bal+=old.amt;
-  }
-  const inputAmt=parseInt(document.getElementById('t-amt').value)||0;
-  const remaining=bal-inputAmt;
-  const infoEl=document.getElementById('balInfo');
-  if(inputAmt>0){
-    if(remaining<0){
-      infoEl.className='bal-info danger';
-      infoEl.innerHTML='⚠️ 현재 잔액 '+fmt(bal)+' — 입력 금액이 <strong>'+fmt(-remaining)+'</strong> 초과';
-    } else {
-      infoEl.className='bal-info';
-      infoEl.innerHTML='✅ 현재 잔액 '+fmt(bal)+' → 사용 후 잔액: <strong>'+fmt(remaining)+'</strong>';
-    }
-  } else {
-    infoEl.className='bal-info';
-    infoEl.innerHTML='현재 잔액: <strong>'+fmt(bal)+'</strong>';
-  }
+// ══════════════════════════════════
+// 탭 전환
+// ══════════════════════════════════
+const PAGES = ['dashboard','cards','history','usage','hana'];
+function switchTab(tab){
+  PAGES.forEach(p=>{
+    document.getElementById('page-'+p).style.display = p===tab?'block':'none';
+    document.getElementById('tab-'+p).classList.toggle('active', p===tab);
+  });
+  if(tab==='cards') renderCardTab();
+  if(tab==='history') renderHistory();
+  if(tab==='usage') renderUsage();
 }
 
+// ══════════════════════════════════
+// 대시보드 지표
+// ══════════════════════════════════
 function renderMetrics(){
-  const cards=loadCards();
-  const totalBal=cards.reduce((s,c)=>s+getBalance(c),0);
-  const totalUsed=cards.reduce((s,c)=>s+(c.used||0),0);
-  const lowCount=cards.filter(c=>getBalance(c)<100000).length;
-  document.getElementById('mTotalCards').textContent=cards.length;
-  document.getElementById('mTotalBal').textContent=fmt(totalBal);
-  document.getElementById('mUsed').textContent=fmt(totalUsed);
-  document.getElementById('mLow').textContent=lowCount+'장';
-  const ab=document.getElementById('alertBox');
-  if(lowCount>0){ab.style.display='flex';document.getElementById('alertMsg').innerHTML='잔액 부족 카드 <strong>'+lowCount+'장</strong> — 즉시 충전이 필요합니다';}
-  else ab.style.display='none';
+  const cards = loadCards();
+  const totalBal = cards.reduce((s,c)=>s+getBalance(c),0);
+  const totalUsed = cards.reduce((s,c)=>s+(c.used||0),0);
+  const lowCount = cards.filter(c=>getBalance(c)<100000).length;
+  document.getElementById('mTotalCards').textContent = cards.length;
+  document.getElementById('mTotalBal').textContent = fmt(totalBal);
+  document.getElementById('mUsed').textContent = fmt(totalUsed);
+  document.getElementById('mLow').textContent = lowCount + '장';
+  const ab = document.getElementById('alertBox');
+  if(lowCount>0){
+    ab.style.display='flex';
+    document.getElementById('alertMsg').innerHTML = '잔액 부족 카드 <strong>'+lowCount+'장</strong> — 클릭하면 명세 확인 및 충전 등록 가능';
+  } else { ab.style.display='none'; }
 }
 
+// ══════════════════════════════════
+// 잔액 부족 카드 팝업
+// ══════════════════════════════════
+function showLowCardPopup(){
+  const cards = loadCards();
+  const lowCards = cards.filter(c=>getBalance(c)<100000);
+  const el = document.getElementById('lowCardList');
+  if(!lowCards.length){
+    el.innerHTML='<div class="empty-msg">잔액 부족 카드가 없습니다 ✅</div>';
+  } else {
+    el.innerHTML='<table class="low-card-table"><thead><tr><th>담당자</th><th>부서</th><th>카드번호</th><th style="text-align:right">잔액</th><th>상태</th><th>충전/감액</th></tr></thead><tbody>'+
+    lowCards.map(c=>{
+      const bal=getBalance(c);
+      return '<tr>'+
+        '<td style="font-weight:600">'+c.name+'</td>'+
+        '<td style="color:#666">'+c.dept+'</td>'+
+        '<td style="color:#888;font-size:11px">*'+(c.num||'????')+'</td>'+
+        '<td style="text-align:right;font-weight:700;color:#A32D2D">'+fmt(bal)+'</td>'+
+        '<td><span class="status-badge sb-low">🚨 부족</span></td>'+
+        '<td style="display:flex;gap:5px">'+
+          '<button class="act-btn act-charge" onclick="closeModal(\'lowCardModal\');openChargeModal(\''+c.name+'\',\'charge\')">충전</button>'+
+          '<button class="act-btn act-reduce" onclick="closeModal(\'lowCardModal\');openChargeModal(\''+c.name+'\',\'reduce\')">감액</button>'+
+        '</td>'+
+      '</tr>';
+    }).join('')+'</tbody></table>';
+  }
+  document.getElementById('lowCardModal').classList.add('show');
+}
+
+// ══════════════════════════════════
+// 카드 잔액 리스트 (대시보드)
+// ══════════════════════════════════
+let cardMoreExpanded = false;
 function renderCards(){
-  const cards=loadCards();
-  const list=document.getElementById('cardList');
-  if(!cards.length){list.innerHTML='<div class="empty-msg">카드를 추가해주세요</div>';return;}
-  list.innerHTML=cards.map((c,i)=>{
-    const bal=getBalance(c),pct=getBarPct(c),av=avColors[i%avColors.length];
-    return`<div class="card-row">
-      <div class="card-left">
-        <div class="avatar ${av}">${(c.name||'?')[0]}</div>
-        <div><div class="card-name">${c.name}</div><div class="card-dept">${c.dept} · *${c.num||'????'}</div></div>
-      </div>
-      <div style="display:flex;align-items:center;gap:5px">
-        <div class="bar-wrap"><div class="bar-fill ${barClass(pct)}" style="width:${pct}%"></div></div>
-        <div class="amt ${amtClass(pct)}">${fmt(bal)}</div>
-        <button style="padding:2px 7px;border:none;border-radius:5px;background:#0F9D58;color:#fff;font-size:10px;font-weight:600;cursor:pointer" onclick="goChargeCard('${c.name}')" title="충전">충전</button>
-        <button class="icon-btn edit" onclick="showEditCard(${i})" title="수정">✏️</button>
-        <button class="icon-btn del" onclick="deleteCard(${i})" title="삭제">🗑</button>
-      </div>
-    </div>`;
+  const cards = loadCards();
+  const sortOrder = document.getElementById('cardSortSel').value;
+  const sorted = [...cards].sort((a,b)=>{
+    const ba=getBalance(a), bb=getBalance(b);
+    return sortOrder==='asc' ? ba-bb : bb-ba;
+  });
+  const list = document.getElementById('cardList');
+  if(!sorted.length){list.innerHTML='<div class="empty-msg">카드를 추가해주세요</div>';document.getElementById('cardMoreBtn').style.display='none';return;}
+  const LIMIT = 5;
+  const show = cardMoreExpanded ? sorted : sorted.slice(0,LIMIT);
+  list.innerHTML = show.map((c,i)=>{
+    const bal=getBalance(c), pct=getBarPct(c);
+    const av = avColors[cards.indexOf(c)%avColors.length];
+    return '<div class="card-row">'+
+      '<div class="card-left">'+
+        '<div class="avatar '+av+'">'+(c.name||'?')[0]+'</div>'+
+        '<div><div class="card-name">'+c.name+'</div><div class="card-dept">'+c.dept+' · *'+(c.num||'????')+'</div></div>'+
+      '</div>'+
+      '<div style="display:flex;align-items:center;gap:6px">'+
+        '<div class="bar-wrap"><div class="bar-fill '+barClass(pct)+'" style="width:'+pct+'%"></div></div>'+
+        '<div class="'+amtClass(pct)+'" style="min-width:72px;text-align:right;font-size:12px">'+fmt(bal)+'</div>'+
+        '<button class="act-btn act-charge" onclick="openChargeModal(\''+c.name+'\',\'charge\')" style="font-size:10px;padding:2px 7px">충전</button>'+
+        '<button class="act-btn act-reduce" onclick="openChargeModal(\''+c.name+'\',\'reduce\')" style="font-size:10px;padding:2px 7px">감액</button>'+
+        '<button class="icon-btn edit" onclick="showEditCard('+cards.indexOf(c)+')">✏️</button>'+
+        '<button class="icon-btn del" onclick="deleteCard('+cards.indexOf(c)+')">🗑</button>'+
+      '</div>'+
+    '</div>';
+  }).join('');
+  const moreBtn = document.getElementById('cardMoreBtn');
+  if(sorted.length>LIMIT){
+    moreBtn.style.display='block';
+    moreBtn.querySelector('button').textContent = cardMoreExpanded?'접기 ▴':'더보기 ('+sorted.length+'건) ▾';
+  } else { moreBtn.style.display='none'; }
+}
+function toggleCardMore(){cardMoreExpanded=!cardMoreExpanded;renderCards();}
+
+// ══════════════════════════════════
+// 담당자별 사용현황 + 월별 필터
+// ══════════════════════════════════
+let personChartInst = null;
+function getAvailableMonths(){
+  const tx = loadTx();
+  const months = new Set();
+  tx.forEach(t=>{
+    if(t.fullDate) months.add(t.fullDate.slice(0,7));
+    else if(t.date){
+      const parts = t.date.split('/');
+      if(parts.length===2) months.add(new Date().getFullYear()+'-'+parts[0].padStart(2,'0'));
+    }
+  });
+  return [...months].sort().reverse();
+}
+function populateMonthFilter(){
+  const sel = document.getElementById('monthFilterSel');
+  const months = getAvailableMonths();
+  const current = sel.value;
+  sel.innerHTML = '<option value="all">전체 기간</option>' + months.map(m=>'<option value="'+m+'">'+m.replace('-','년 ')+'월</option>').join('');
+  if(months.includes(current)) sel.value = current;
+}
+function renderPersonChart(){
+  const tx = loadTx();
+  const month = document.getElementById('monthFilterSel').value;
+  const filtered = month==='all' ? tx : tx.filter(t=>{
+    const fd = t.fullDate||'';
+    return fd.startsWith(month);
+  });
+  const personMap = {};
+  filtered.forEach(t=>{
+    if(!t.card) return;
+    personMap[t.card] = (personMap[t.card]||0) + t.amt;
+  });
+  const entries = Object.entries(personMap).sort((a,b)=>b[1]-a[1]).slice(0,8);
+  const max = entries.length ? Math.max(...entries.map(([,v])=>v)) : 1;
+  document.getElementById('personBars').innerHTML = entries.length ? entries.map(([name,v])=>{
+    const cards = loadCards();
+    const c = cards.find(c=>c.name===name);
+    const color = c ? getDeptColor(c.dept) : '#888';
+    return '<div class="person-row">'+
+      '<span class="person-name" title="'+name+'">'+name+'</span>'+
+      '<div class="person-bar-wrap"><div class="person-bar" style="width:'+Math.round(v/max*100)+'%;background:'+color+'"></div></div>'+
+      '<span class="person-amt" style="color:'+color+'">'+fmt(v)+'</span>'+
+    '</div>';
+  }).join('') : '<div class="empty-msg" style="padding:1rem">사용내역이 없습니다</div>';
+  if(personChartInst) personChartInst.destroy();
+  if(!entries.length) return;
+  const cards = loadCards();
+  personChartInst = new Chart(document.getElementById('personChart'),{
+    type:'bar',
+    data:{labels:entries.map(([n])=>n),datasets:[{label:'사용액',data:entries.map(([,v])=>v),backgroundColor:entries.map(([n])=>{const c=cards.find(c=>c.name===n);return c?getDeptColor(c.dept):'#888';}),borderRadius:4,borderSkipped:false}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{font:{size:10},color:'#888'}},y:{grid:{color:'rgba(0,0,0,0.04)'},ticks:{font:{size:9},color:'#888',callback:v=>Math.round(v/10000)+'만'}}}}
+  });
+}
+
+// ══════════════════════════════════
+// 최근 사용내역 (대시보드)
+// ══════════════════════════════════
+function renderRecentTx(){
+  const tx = loadTx().slice(0,8);
+  const el = document.getElementById('recentTxList');
+  if(!tx.length){el.innerHTML='<tr><td colspan="6" class="empty-msg">사용내역이 없습니다</td></tr>';return;}
+  el.innerHTML = tx.map(t=>'<tr>'+
+    '<td style="color:#aaa;white-space:nowrap">'+t.date+'</td>'+
+    '<td style="font-weight:600">'+t.card+'</td>'+
+    '<td><span class="cat-badge '+catClass(t.cat)+'">'+t.cat+'</span></td>'+
+    '<td style="color:#666;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+t.memo+'</td>'+
+    '<td style="font-weight:600;text-align:right;white-space:nowrap">'+fmt(t.amt)+'</td>'+
+    '<td><span class="'+(t.status==='승인'?'s-ok':'s-pend')+'">'+t.status+'</span></td>'+
+  '</tr>').join('');
+}
+
+// ══════════════════════════════════
+// 카드별 잔액 탭 (상세)
+// ══════════════════════════════════
+function renderCardTab(){
+  const cards = loadCards();
+  const search = (document.getElementById('cardSearchInput').value||'').toLowerCase();
+  const statusF = document.getElementById('cardStatusFilter').value;
+  const deptF = document.getElementById('cardDeptFilter').value;
+  const sortF = document.getElementById('cardSortTab').value;
+
+  // 부서 필터 업데이트
+  const depts = [...new Set(cards.map(c=>c.dept))];
+  const deptSel = document.getElementById('cardDeptFilter');
+  const currDept = deptSel.value;
+  deptSel.innerHTML = '<option value="all">전체 부서</option>' + depts.map(d=>'<option value="'+d+'">'+d+'</option>').join('');
+  if(depts.includes(currDept)) deptSel.value=currDept;
+
+  let filtered = cards.filter(c=>{
+    const bal=getBalance(c), pct=getBarPct(c);
+    const matchSearch = !search || c.name.toLowerCase().includes(search) || (c.num||'').includes(search);
+    const matchStatus = statusF==='all' || (statusF==='low'&&bal<100000) || (statusF==='warn'&&bal>=100000&&pct<30) || (statusF==='ok'&&pct>=30);
+    const matchDept = deptF==='all' || c.dept===deptF;
+    return matchSearch && matchStatus && matchDept;
+  });
+
+  if(sortF==='asc') filtered.sort((a,b)=>getBalance(a)-getBalance(b));
+  else if(sortF==='desc') filtered.sort((a,b)=>getBalance(b)-getBalance(a));
+  else filtered.sort((a,b)=>a.name.localeCompare(b.name));
+
+  const body = document.getElementById('cardTabBody');
+  if(!filtered.length){body.innerHTML='<tr><td colspan="9" class="empty-msg">조건에 맞는 카드가 없습니다</td></tr>';return;}
+  body.innerHTML = filtered.map((c,i)=>{
+    const bal=getBalance(c), pct=getBarPct(c);
+    const usePct = c.charged ? Math.round((c.used||0)/c.charged*100) : 0;
+    const av = avColors[cards.indexOf(c)%avColors.length];
+    let barColor = pct>30?'#0F9D58':pct>15?'#EF9F27':'#E24B4A';
+    return '<tr>'+
+      '<td><div style="display:flex;align-items:center;gap:6px"><div class="avatar '+av+'" style="width:26px;height:26px;font-size:11px;flex-shrink:0">'+(c.name||'?')[0]+'</div><strong>'+c.name+'</strong></div></td>'+
+      '<td style="color:#666">'+c.dept+'</td>'+
+      '<td style="color:#888;font-size:11px">*'+(c.num||'????')+'</td>'+
+      '<td style="text-align:right">'+fmt(c.charged||0)+'</td>'+
+      '<td style="text-align:right;color:#666">'+fmt(c.used||0)+'</td>'+
+      '<td style="text-align:right;font-weight:700;color:'+(bal<100000?'#A32D2D':pct<30?'#854F0B':'#0F9D58')+'">'+fmt(bal)+'</td>'+
+      '<td style="min-width:90px"><div style="display:flex;align-items:center;gap:5px"><div style="flex:1;background:#f0f0ec;border-radius:3px;height:6px;overflow:hidden"><div style="width:'+usePct+'%;height:6px;background:'+barColor+';border-radius:3px"></div></div><span style="font-size:11px;color:'+barColor+';font-weight:600;min-width:26px">'+usePct+'%</span></div></td>'+
+      '<td>'+statusBadge(pct,bal)+'</td>'+
+      '<td style="white-space:nowrap;display:flex;gap:4px">'+
+        '<button class="act-btn act-charge" onclick="openChargeModal(\''+c.name+'\',\'charge\')">충전</button>'+
+        '<button class="act-btn act-reduce" onclick="openChargeModal(\''+c.name+'\',\'reduce\')">감액</button>'+
+        '<button class="icon-btn edit" onclick="showEditCard('+cards.indexOf(c)+')">✏️</button>'+
+        '<button class="icon-btn del" onclick="deleteCard('+cards.indexOf(c)+')">🗑</button>'+
+      '</td>'+
+    '</tr>';
   }).join('');
 }
 
-function renderDept(){
-  const cards=loadCards(),tx=loadTx(),depts={};
-  cards.forEach(c=>{if(!depts[c.dept])depts[c.dept]=0;});
-  tx.forEach(t=>{if(t.dept)depts[t.dept]=(depts[t.dept]||0)+t.amt;});
-  const entries=Object.entries(depts).filter(([,v])=>v>0);
-  const max=entries.length?Math.max(...entries.map(([,v])=>v)):1;
-  document.getElementById('deptBars').innerHTML=entries.length?entries.map(([d,v])=>`
-    <div class="dept-row"><span class="dept-name">${d}</span>
-    <div class="dept-bar-wrap"><div class="dept-bar" style="width:${Math.round(v/max*100)}%;background:${getDeptColor(d)}"></div></div>
-    <span class="dept-amt">${fmt(v)}</span></div>`).join(''):'<div class="empty-msg" style="padding:1rem">사용내역이 없습니다</div>';
-  if(chartInst)chartInst.destroy();
-  if(!entries.length)return;
-  chartInst=new Chart(document.getElementById('deptChart'),{type:'bar',data:{labels:entries.map(([d])=>d),datasets:[{label:'사용액',data:entries.map(([,v])=>v),backgroundColor:entries.map(([d])=>getDeptColor(d)),borderRadius:5,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{font:{size:11},color:'#888'}},y:{grid:{color:'rgba(0,0,0,0.05)'},ticks:{font:{size:10},color:'#888',callback:v=>Math.round(v/10000)+'만'}}}}});
+// ══════════════════════════════════
+// 충전·감액 내역 탭
+// ══════════════════════════════════
+function renderHistory(){
+  const charges = loadCharges();
+  const el = document.getElementById('historyList');
+  if(!charges.length){el.innerHTML='<tr><td colspan="7" class="empty-msg">충전·감액 내역이 없습니다</td></tr>';return;}
+  el.innerHTML = charges.map((ch,i)=>{
+    const isReduce = ch.amt<0;
+    const typeBadge = isReduce
+      ? '<span style="background:#FCEBEB;color:#A32D2D;padding:2px 8px;border-radius:5px;font-size:11px;font-weight:600">📉 감액(환급)</span>'
+      : '<span style="background:#EAF3DE;color:#0F9D58;padding:2px 8px;border-radius:5px;font-size:11px;font-weight:600">⚡ 충전</span>';
+    return '<tr>'+
+      '<td style="color:#aaa;white-space:nowrap">'+ch.date+'</td>'+
+      '<td style="font-weight:600">'+ch.card+'</td>'+
+      '<td style="color:#666">'+ch.dept+'</td>'+
+      '<td>'+typeBadge+'</td>'+
+      '<td style="color:#666">'+ch.memo+'</td>'+
+      '<td style="font-weight:700;text-align:right;color:'+(isReduce?'#A32D2D':'#0F9D58')+';white-space:nowrap">'+(isReduce?'-'+fmt(-ch.amt):'+'+fmt(ch.amt))+'</td>'+
+      '<td style="white-space:nowrap">'+
+        (!isReduce?'<button class="icon-btn edit" onclick="showEditCharge('+i+')">✏️</button>':'')+
+        '<button class="icon-btn del" onclick="deleteCharge('+i+')">🗑</button>'+
+      '</td>'+
+    '</tr>';
+  }).join('');
 }
 
-function renderTabs(){
-  const cards=loadCards();
-  const depts=[...new Set(cards.map(c=>c.dept))];
-  document.getElementById('deptTabs').innerHTML=depts.map(d=>`<button class="tab" onclick="filterTx('${d}',this)">${d}</button>`).join('');
+// ══════════════════════════════════
+// 사용내역 탭
+// ══════════════════════════════════
+let usageFilter = '전체';
+function renderUsageTabs(){
+  const cards = loadCards();
+  const depts = [...new Set(cards.map(c=>c.dept))];
+  const tabsEl = document.getElementById('usageDeptTabs');
+  tabsEl.innerHTML = '<button class="tab'+(usageFilter==='전체'?' active':'')+'" onclick="filterUsage(\'전체\',this)">전체</button>' +
+    depts.map(d=>'<button class="tab'+(usageFilter===d?' active':'')+'" onclick="filterUsage(\''+d+'\',this)">'+d+'</button>').join('');
 }
-
-function renderTx(){
-  const tx=loadTx();
-  const filtered=currentFilter==='전체'?tx:tx.filter(t=>t.dept===currentFilter);
-  const el=document.getElementById('txList');
+function filterUsage(dept, el){
+  usageFilter = dept;
+  document.querySelectorAll('#usageDeptTabs .tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  renderUsage();
+}
+function renderUsage(){
+  const tx = loadTx();
+  const filtered = usageFilter==='전체' ? tx : tx.filter(t=>t.dept===usageFilter);
+  const el = document.getElementById('usageList');
   if(!filtered.length){el.innerHTML='<tr><td colspan="7" class="empty-msg">사용내역이 없습니다</td></tr>';return;}
-  el.innerHTML=filtered.slice(0,30).map(t=>{
-    const realIdx=tx.indexOf(t);
-    return`<tr>
-      <td style="color:#aaa;white-space:nowrap">${t.date}</td>
-      <td style="font-weight:600">${t.card}</td>
-      <td><span class="cat-badge ${catClass(t.cat)}">${t.cat}</span></td>
-      <td style="color:#666;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${t.memo}</td>
-      <td style="font-weight:600;text-align:right;white-space:nowrap">${fmt(t.amt)}</td>
-      <td><span class="${t.status==='승인'?'s-ok':'s-pend'}">${t.status}</span></td>
-      <td style="white-space:nowrap">
-        <button class="icon-btn edit" onclick="showEditTx(${realIdx})" title="수정">✏️</button>
-        <button class="icon-btn del" onclick="deleteTx(${realIdx})" title="삭제">🗑</button>
-      </td>
-    </tr>`;
+  el.innerHTML = filtered.slice(0,50).map(t=>{
+    const realIdx = tx.indexOf(t);
+    return '<tr>'+
+      '<td style="color:#aaa;white-space:nowrap">'+t.date+'</td>'+
+      '<td style="font-weight:600">'+t.card+'</td>'+
+      '<td><span class="cat-badge '+catClass(t.cat)+'">'+t.cat+'</span></td>'+
+      '<td style="color:#666;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+t.memo+'</td>'+
+      '<td style="font-weight:600;text-align:right;white-space:nowrap">'+fmt(t.amt)+'</td>'+
+      '<td><span class="'+(t.status==='승인'?'s-ok':'s-pend')+'">'+t.status+'</span></td>'+
+      '<td style="white-space:nowrap">'+
+        '<button class="icon-btn edit" onclick="showEditTx('+realIdx+')">✏️</button>'+
+        '<button class="icon-btn del" onclick="deleteTx('+realIdx+')">🗑</button>'+
+      '</td>'+
+    '</tr>';
   }).join('');
 }
 
-function filterTx(dept,el){currentFilter=dept;document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');renderTx();}
+// ══════════════════════════════════
+// 충전·감액 통합 모달
+// ══════════════════════════════════
+function openChargeModal(cardName, type){
+  const cards = loadCards();
+  if(!cards.length){alert('먼저 카드를 추가해주세요');return;}
+  document.getElementById('ch-edit-idx').value = '-1';
+  setChargeType(type||'charge');
+  const sel = document.getElementById('ch-card');
+  sel.innerHTML = cards.map(c=>'<option value="'+c.name+'|'+c.dept+'"'+(c.name===cardName?' selected':'')+'>'+c.name+' ('+c.dept+') *'+(c.num||'????')+'</option>').join('');
+  document.getElementById('ch-amt').value = '';
+  document.getElementById('ch-memo').value = '';
+  document.getElementById('ch-preview').style.display='none';
+  updateChargeBal();
+  document.getElementById('chargeModal').classList.add('show');
+}
 
-// ── 카드 모달 ──
+function setChargeType(type){
+  document.getElementById('ch-type').value = type;
+  const isCharge = type==='charge';
+  document.getElementById('ctab-charge').className = 'charge-tab'+(isCharge?' ch-active':'');
+  document.getElementById('ctab-reduce').className = 'charge-tab'+(!isCharge?' rd-active':'');
+  document.getElementById('ch-amt-label').textContent = isCharge ? '충전 금액 (원)' : '감액(환급) 금액 (원)';
+  document.getElementById('chSaveBtn').textContent = isCharge ? '충전 등록' : '감액 등록';
+  document.getElementById('chSaveBtn').className = isCharge ? 'btn btn-green' : 'btn btn-danger';
+  document.getElementById('chargeModalTitle').textContent = isCharge ? '⚡ 충전 등록' : '📉 감액(환급) 등록';
+  updateChargeBal();
+}
+
+function updateChargeBal(){
+  const selVal = document.getElementById('ch-card').value.split('|');
+  const name = selVal[0];
+  const el = document.getElementById('ch-bal-display');
+  if(!name){el.textContent='카드 선택 시 잔액 자동 표시';el.style.background='#f5f5f3';return;}
+  const c = loadCards().find(c=>c.name===name);
+  if(!c)return;
+  const bal=getBalance(c), pct=getBarPct(c);
+  let color='#0F9D58',bg='#EAF3DE';
+  if(bal<100000){color='#A32D2D';bg='#FCEBEB';}
+  else if(pct<30){color='#854F0B';bg='#FAEEDA';}
+  el.style.background=bg;
+  el.innerHTML='<strong style="color:'+color+'">현재 잔액: '+fmt(bal)+'</strong>&nbsp;|&nbsp;충전: '+fmt(c.charged||0)+' / 사용: '+fmt(c.used||0);
+  updateChargePreview();
+}
+
+function updateChargePreview(){
+  const selVal = document.getElementById('ch-card').value.split('|');
+  const name = selVal[0];
+  const type = document.getElementById('ch-type').value;
+  const amt = parseInt(document.getElementById('ch-amt').value)||0;
+  const el = document.getElementById('ch-preview');
+  if(!name||!amt){el.style.display='none';return;}
+  const c = loadCards().find(c=>c.name===name);
+  if(!c){el.style.display='none';return;}
+  const bal=getBalance(c);
+  if(type==='charge'){
+    el.textContent='충전 후 예상 잔액: '+fmt(bal+amt);
+    el.style.color='#0F9D58';
+  } else {
+    if(amt>bal){el.textContent='⚠️ 감액 금액이 잔액을 초과합니다!';el.style.color='#A32D2D';}
+    else{el.textContent='감액 후 예상 잔액: '+fmt(bal-amt);el.style.color='#854F0B';}
+  }
+  el.style.display='block';
+}
+
+function saveCharge(){
+  const selVal = document.getElementById('ch-card').value.split('|');
+  const cardName=selVal[0], dept=selVal[1];
+  const amt = parseInt(document.getElementById('ch-amt').value)||0;
+  const memo = document.getElementById('ch-memo').value.trim()||'충전';
+  const type = document.getElementById('ch-type').value;
+  const editIdx = parseInt(document.getElementById('ch-edit-idx').value);
+  if(!amt){alert('금액을 입력해주세요');return;}
+  const cards=loadCards(), charges=loadCharges();
+  const today=new Date();
+  const dateStr=(today.getMonth()+1)+'/'+today.getDate();
+  const cardObj=cards.find(c=>c.name===cardName);
+  if(type==='reduce'){
+    const bal=cardObj?getBalance(cardObj):0;
+    if(amt>bal){alert('감액 금액이 현재 잔액('+fmt(bal)+')을 초과합니다.');return;}
+  }
+  if(editIdx>=0){
+    const old=charges[editIdx];
+    const oldCard=cards.find(c=>c.name===old.card);
+    if(oldCard) oldCard.charged=Math.max(0,(oldCard.charged||0)-(old.amt>0?old.amt:0));
+    if(cardObj) cardObj.charged=(cardObj.charged||0)+(type==='charge'?amt:0);
+    if(type==='reduce'&&cardObj) cardObj.charged=Math.max(0,(cardObj.charged||0)-amt);
+    charges[editIdx]={...old,card:cardName,dept,amt:type==='reduce'?-amt:amt,memo};
+  } else {
+    if(type==='charge'&&cardObj) cardObj.charged=(cardObj.charged||0)+amt;
+    if(type==='reduce'&&cardObj) cardObj.charged=Math.max(0,(cardObj.charged||0)-amt);
+    charges.unshift({date:dateStr,card:cardName,dept,amt:type==='reduce'?-amt:amt,memo});
+  }
+  saveCards(cards);saveCharges(charges);
+  closeModal('chargeModal');
+  renderAll();
+  // 충전 후 history 탭으로 이동
+  switchTab('history');
+}
+
+function showEditCharge(i){
+  const charges=loadCharges(), ch=charges[i];
+  const cards=loadCards();
+  const type = ch.amt<0?'reduce':'charge';
+  document.getElementById('ch-edit-idx').value=i;
+  setChargeType(type);
+  const sel=document.getElementById('ch-card');
+  sel.innerHTML=cards.map(c=>'<option value="'+c.name+'|'+c.dept+'"'+(c.name===ch.card?' selected':'')+'>'+c.name+' ('+c.dept+') *'+(c.num||'????')+'</option>').join('');
+  document.getElementById('ch-amt').value=Math.abs(ch.amt)||'';
+  document.getElementById('ch-memo').value=ch.memo||'';
+  updateChargeBal();
+  document.getElementById('chargeModal').classList.add('show');
+}
+
+function deleteCharge(i){
+  if(!confirm('이 내역을 삭제하시겠습니까?\n카드 잔액도 함께 조정됩니다.'))return;
+  const charges=loadCharges(), cards=loadCards();
+  const ch=charges[i];
+  const cardObj=cards.find(c=>c.name===ch.card);
+  if(cardObj){
+    if(ch.amt>0) cardObj.charged=Math.max(0,(cardObj.charged||0)-ch.amt);
+    else cardObj.charged=(cardObj.charged||0)+Math.abs(ch.amt);
+  }
+  charges.splice(i,1);
+  saveCards(cards);saveCharges(charges);
+  renderAll();renderHistory();
+}
+
+// ══════════════════════════════════
+// 카드 추가/수정
+// ══════════════════════════════════
 function showAddCard(){
-  document.getElementById('cardModalTitle').textContent='법인카드 추가';
+  document.getElementById('cardModalTitle').textContent='💳 법인카드 추가';
   document.getElementById('c-edit-idx').value='-1';
   ['c-name','c-dept','c-num'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('cardModal').classList.add('show');
 }
 function showEditCard(i){
   const c=loadCards()[i];
-  document.getElementById('cardModalTitle').textContent='카드 정보 수정';
+  document.getElementById('cardModalTitle').textContent='💳 카드 정보 수정';
   document.getElementById('c-edit-idx').value=i;
   document.getElementById('c-name').value=c.name||'';
   document.getElementById('c-dept').value=c.dept||'';
   document.getElementById('c-num').value=c.num||'';
   document.getElementById('cardModal').classList.add('show');
 }
-function closeCardModal(){document.getElementById('cardModal').classList.remove('show');}
 function saveCard(){
   const name=document.getElementById('c-name').value.trim();
   const dept=document.getElementById('c-dept').value.trim();
@@ -696,26 +1153,69 @@ function saveCard(){
   if(!name||!dept){alert('담당자 이름과 부서를 입력해주세요');return;}
   const cards=loadCards();
   if(editIdx>=0){
-    // 수정: 이름·부서·번호만 변경, 충전금액·사용금액 유지
     const old=cards[editIdx];
     cards[editIdx]={...old,name,dept,num:num||old.num};
     const tx=loadTx();tx.forEach(t=>{if(t.card===old.name){t.card=name;t.dept=dept;}});saveTxData(tx);
-    // 충전내역 담당자명도 업데이트
     const charges=loadCharges();charges.forEach(ch=>{if(ch.card===old.name){ch.card=name;ch.dept=dept;}});saveCharges(charges);
   } else {
-    // 추가: 충전금액 0으로 시작, 충전등록에서 따로 충전
     cards.push({name,dept,num,charged:0,used:0});
   }
-  saveCards(cards);closeCardModal();renderAll();
+  saveCards(cards);closeModal('cardModal');renderAll();
 }
-function deleteCard(i){if(!confirm('이 카드를 삭제하시겠습니까?'))return;const cards=loadCards();cards.splice(i,1);saveCards(cards);renderAll();}
+function deleteCard(i){
+  if(!confirm('이 카드를 삭제하시겠습니까?'))return;
+  const cards=loadCards();
+  cards.splice(i,1);
+  saveCards(cards);
+  renderAll();
+}
 
-// ── 사용내역 모달 ──
+// ══════════════════════════════════
+// 사용내역 추가/수정
+// ══════════════════════════════════
+function showAddTx(){
+  const cards=loadCards();
+  if(!cards.length){alert('먼저 카드를 추가해주세요');return;}
+  document.getElementById('txModalTitle').textContent='📋 사용내역 등록';
+  document.getElementById('t-edit-idx').value='-1';
+  const sel=document.getElementById('t-card');
+  sel.innerHTML=cards.map(c=>'<option value="'+c.name+'|'+c.dept+'">'+c.name+' ('+c.dept+') *'+(c.num||'????')+'</option>').join('');
+  document.getElementById('t-amt').value='';
+  document.getElementById('t-date').value=todayStr();
+  document.getElementById('t-cat').value='식대';
+  document.getElementById('t-memo').value='';
+  document.getElementById('t-status').value='승인';
+  document.getElementById('t-amt').classList.remove('input-error');
+  document.getElementById('t-amt-display').textContent='';
+  updateMemoSuggestions();
+  updateBalInfo();
+  document.getElementById('txModal').classList.add('show');
+}
+
+function showEditTx(i){
+  const cards=loadCards(), tx=loadTx(), t=tx[i];
+  document.getElementById('txModalTitle').textContent='📋 사용내역 수정';
+  document.getElementById('t-edit-idx').value=i;
+  const sel=document.getElementById('t-card');
+  sel.innerHTML=cards.map(c=>'<option value="'+c.name+'|'+c.dept+'"'+(c.name===t.card?' selected':'')+'>'+c.name+' ('+c.dept+') *'+(c.num||'????')+'</option>').join('');
+  document.getElementById('t-amt').value=t.amt||'';
+  document.getElementById('t-date').value=t.fullDate||todayStr();
+  document.getElementById('t-cat').value=t.cat||'식대';
+  document.getElementById('t-memo').value=t.memo||'';
+  document.getElementById('t-status').value=t.status||'승인';
+  document.getElementById('t-amt').classList.remove('input-error');
+  updateMemoSuggestions();
+  updateBalInfo();
+  setTimeout(()=>{
+    document.querySelectorAll('.memo-chip').forEach(c=>{if(c.textContent===t.memo)c.classList.add('selected');});
+  },50);
+  document.getElementById('txModal').classList.add('show');
+}
+
 function updateMemoSuggestions(){
   const cat=document.getElementById('t-cat').value;
   const chips=MEMO_MAP[cat]||[];
-  const container=document.getElementById('memoChips');
-  container.innerHTML=chips.map(m=>`<span class="memo-chip" onclick="selectMemoChip(this,'${m}')">${m}</span>`).join('');
+  document.getElementById('memoChips').innerHTML=chips.map(m=>'<span class="memo-chip" onclick="selectMemoChip(this,\''+m+'\')">'+m+'</span>').join('');
 }
 function selectMemoChip(el,val){
   document.querySelectorAll('.memo-chip').forEach(c=>c.classList.remove('selected'));
@@ -723,88 +1223,73 @@ function selectMemoChip(el,val){
   document.getElementById('t-memo').value=val;
 }
 
-function showAddTx(){
+function updateBalInfo(){
+  const selVal=document.getElementById('t-card').value.split('|');
+  const cardName=selVal[0];
+  const el=document.getElementById('balInfo');
+  const editIdx=parseInt(document.getElementById('t-edit-idx').value);
+  if(!cardName){el.textContent='카드 선택 시 잔액 표시';el.style.background='#f5f5f3';return;}
   const cards=loadCards();
-  if(!cards.length){alert('먼저 카드를 추가해주세요');return;}
-  document.getElementById('txModalTitle').textContent='사용내역 추가';
-  document.getElementById('t-edit-idx').value='-1';
-  const sel=document.getElementById('t-card');
-  sel.innerHTML=cards.map(c=>`<option value="${c.name}|${c.dept}">${c.name} (${c.dept}) *${c.num}</option>`).join('');
-  document.getElementById('t-date').value=todayStr();
-  document.getElementById('t-amt').value='';
-  document.getElementById('t-amt-display').textContent='';
-  document.getElementById('t-cat').value='식대';
-  document.getElementById('t-memo').value='';
-  document.getElementById('t-status').value='승인';
-  document.getElementById('t-amt').classList.remove('input-error');
-  updateMemoSuggestions();
-  updateBalInfo();
-  document.getElementById('txModal').classList.add('show');
+  const c=cards.find(c=>c.name===cardName);
+  if(!c){el.textContent='카드를 찾을 수 없습니다';return;}
+  let bal=getBalance(c);
+  if(editIdx>=0){const tx=loadTx();const old=tx[editIdx];if(old&&old.card===cardName)bal+=old.amt;}
+  const inputAmt=parseInt(document.getElementById('t-amt').value)||0;
+  const remaining=bal-inputAmt;
+  let color='#0F9D58',bg='#EAF3DE';
+  if(bal<100000){color='#A32D2D';bg='#FCEBEB';}
+  else if(getBarPct(c)<30){color='#854F0B';bg='#FAEEDA';}
+  el.style.background=bg;
+  if(inputAmt>0){
+    if(remaining<0){
+      el.innerHTML='⚠️ 현재 잔액 '+fmt(bal)+' — 입력 금액이 <strong>'+fmt(-remaining)+'</strong> 초과';
+      el.style.background='#FCEBEB'; el.style.color='#A32D2D';
+    } else {
+      el.innerHTML='<strong style="color:'+color+'">현재 잔액 '+fmt(bal)+'</strong> → 사용 후: <strong>'+fmt(remaining)+'</strong>';
+      el.style.color='#444';
+    }
+  } else {
+    el.innerHTML='<strong style="color:'+color+'">현재 잔액: '+fmt(bal)+'</strong>&nbsp;|&nbsp;충전: '+fmt(c.charged||0)+' / 사용: '+fmt(c.used||0);
+    el.style.color='#444';
+  }
+  const display=document.getElementById('t-amt-display');
+  if(inputAmt>0) display.textContent='→ '+inputAmt.toLocaleString('ko-KR')+'원';
+  else display.textContent='';
 }
 
-function showEditTx(i){
-  const cards=loadCards(),tx=loadTx(),t=tx[i];
-  document.getElementById('txModalTitle').textContent='사용내역 수정';
-  document.getElementById('t-edit-idx').value=i;
-  const sel=document.getElementById('t-card');
-  sel.innerHTML=cards.map(c=>`<option value="${c.name}|${c.dept}"${c.name===t.card?' selected':''}>${c.name} (${c.dept}) *${c.num}</option>`).join('');
-  // 날짜: 저장된 날짜(YYYY-MM-DD) 또는 오늘
-  document.getElementById('t-date').value=t.fullDate||todayStr();
-  document.getElementById('t-amt').value=t.amt||'';
-  document.getElementById('t-amt-display').textContent=t.amt?'→ '+Number(t.amt).toLocaleString('ko-KR')+'원':'';
-  document.getElementById('t-cat').value=t.cat||'식대';
-  document.getElementById('t-memo').value=t.memo||'';
-  document.getElementById('t-status').value=t.status||'승인';
-  document.getElementById('t-amt').classList.remove('input-error');
-  updateMemoSuggestions();
-  updateBalInfo();
-  setTimeout(()=>{document.querySelectorAll('.memo-chip').forEach(c=>{if(c.textContent===t.memo)c.classList.add('selected');});},50);
-  document.getElementById('txModal').classList.add('show');
-}
-function closeTxModal(){document.getElementById('txModal').classList.remove('show');}
+function dupKey(t){return [t.fullDate||t.date, t.card, String(t.amt), t.memo].join('|');}
+
+let _dupCallback=null;
+function showDupConfirm(cb){_dupCallback=cb;document.getElementById('dupOverlay').classList.add('show');}
+function closeDupConfirm(){_dupCallback=null;document.getElementById('dupOverlay').classList.remove('show');}
 
 function saveTx(forceRegister){
   const selVal=document.getElementById('t-card').value.split('|');
-  const cardName=selVal[0],dept=selVal[1];
+  const cardName=selVal[0], dept=selVal[1];
   const amt=parseInt(document.getElementById('t-amt').value)||0;
   const cat=document.getElementById('t-cat').value;
   const memo=document.getElementById('t-memo').value.trim()||cat;
   const status=document.getElementById('t-status').value;
   const editIdx=parseInt(document.getElementById('t-edit-idx').value);
   if(!amt){alert('금액을 입력해주세요');return;}
-
-  const cards=loadCards();
-  const tx=loadTx();
+  const cards=loadCards(), tx=loadTx();
   const cardObj=cards.find(c=>c.name===cardName);
-
-  // ── 잔액 초과 체크 ──
   let availableBal=cardObj?getBalance(cardObj):0;
-  if(editIdx>=0){
-    const old=tx[editIdx];
-    if(old&&old.card===cardName) availableBal+=old.amt;
-  }
+  if(editIdx>=0){const old=tx[editIdx];if(old&&old.card===cardName)availableBal+=old.amt;}
   if(amt>availableBal){
     document.getElementById('t-amt').classList.add('input-error');
-    showErrPopup(cardName, availableBal, amt);
-    return;
+    showErrPopup(cardName,availableBal,amt);return;
   }
   document.getElementById('t-amt').classList.remove('input-error');
-
   const fullDate=document.getElementById('t-date').value||todayStr();
-  const [fy,fm,fd]=fullDate.split('-');
-  const dateStr=Number(fm)+'/'+Number(fd);
-
-  // ── 중복 체크 (신규 등록 시만) ──
-  if(editIdx<0 && !forceRegister){
+  const parts=fullDate.split('-');
+  const dateStr=Number(parts[1])+'/'+Number(parts[2]);
+  if(editIdx<0&&!forceRegister){
     const existKeys=new Set(tx.map(dupKey));
-    const key=[fullDate,cardName,String(amt),memo].join('|');
-    if(existKeys.has(key)){
-      // 중복 확인 팝업
-      showDupConfirm(()=>saveTx(true));
-      return;
+    if(existKeys.has([fullDate,cardName,String(amt),memo].join('|'))){
+      showDupConfirm(()=>saveTx(true));return;
     }
   }
-
   if(editIdx>=0){
     const old=tx[editIdx];
     const oldCard=cards.find(c=>c.name===old.card);
@@ -816,18 +1301,26 @@ function saveTx(forceRegister){
     tx.unshift({date:dateStr,fullDate,card:cardName,dept,cat,memo,amt,status});
   }
   saveCards(cards);saveTxData(tx);
-  document.getElementById('t-amt').value='';
-  document.getElementById('t-memo').value='';
-  closeTxModal();renderAll();
+  closeModal('txModal');renderAll();
 }
 
 function deleteTx(i){
   if(!confirm('이 내역을 삭제하시겠습니까?'))return;
-  const tx=loadTx(),cards=loadCards(),t=tx[i];
+  const tx=loadTx(), cards=loadCards();
+  const t=tx[i];
   const cardObj=cards.find(c=>c.name===t.card);
   if(cardObj)cardObj.used=Math.max(0,(cardObj.used||0)-t.amt);
-  tx.splice(i,1);saveCards(cards);saveTxData(tx);renderAll();
+  tx.splice(i,1);
+  saveCards(cards);saveTxData(tx);renderAll();
+  if(document.getElementById('page-usage').style.display!=='none')renderUsage();
 }
+
+function showErrPopup(cardName,balance,inputAmt){
+  document.getElementById('errCardName').textContent=cardName+' 카드';
+  document.getElementById('errDetail').innerHTML='현재 잔액: <strong style="color:#0F9D58">'+fmt(balance)+'</strong>&nbsp;|&nbsp;입력 금액: <strong style="color:#A32D2D">'+fmt(inputAmt)+'</strong><br><span style="color:#A32D2D;font-weight:600">부족 금액: '+fmt(inputAmt-balance)+'</span>';
+  document.getElementById('errOverlay').classList.add('show');
+}
+function closeErrPopup(){document.getElementById('errOverlay').classList.remove('show');}
 
 function exportCSV(){
   const tx=loadTx();
@@ -841,14 +1334,16 @@ function exportCSV(){
   a.click();
 }
 
-// ── 구글시트 가져오기 ──
+// ══════════════════════════════════
+// 구글시트 가져오기
+// ══════════════════════════════════
 let importRows=[], importColIdx={}, importMode='file', pasteRow=null;
 
 function parseCSVLine(line){
   const result=[]; let cur='', inQ=false;
   for(let i=0;i<line.length;i++){
     const ch=line[i];
-    if(ch==='"'){ if(inQ&&line[i+1]==='"'){cur+='"';i++;}else inQ=!inQ; }
+    if(ch==='"'){if(inQ&&line[i+1]==='"'){cur+='"';i++;}else inQ=!inQ;}
     else if(ch===','&&!inQ){result.push(cur.trim());cur='';}
     else cur+=ch;
   }
@@ -860,22 +1355,20 @@ function parseDateRaw(raw){
   raw=(raw||'').trim();
   const m=raw.match(/(\d{4})[.\-\/]\s*(\d{1,2})[.\-\/]\s*(\d{1,2})/);
   if(m){
-    const mo=m[2].padStart(2,'0'), dy=m[3].padStart(2,'0');
-    return {dateStr:Number(m[2])+'/'+Number(m[3]), fullDate:m[1]+'-'+mo+'-'+dy};
+    const mo=m[2].padStart(2,'0'),dy=m[3].padStart(2,'0');
+    return {dateStr:Number(m[2])+'/'+Number(m[3]),fullDate:m[1]+'-'+mo+'-'+dy};
   }
   const t=todayStr();
-  return {dateStr:t.slice(5).replace('-','/'), fullDate:t};
+  return {dateStr:t.slice(5).replace('-','/'),fullDate:t};
 }
-
-function dupKey(t){return [t.fullDate||t.date, t.card, String(t.amt), t.memo].join('|');}
 
 function switchImportTab(tab){
   importMode=tab;
   document.getElementById('import-file-sec').style.display=tab==='file'?'block':'none';
   document.getElementById('import-paste-sec').style.display=tab==='paste'?'block':'none';
-  const fs='flex:1;padding:7px;border-radius:8px;border:1px solid #ddd;font-size:12px;font-weight:600;cursor:pointer;background:';
-  document.getElementById('itab-file').style.cssText=fs+(tab==='file'?'#185FA5;color:#fff':'#fff;color:#666');
-  document.getElementById('itab-paste').style.cssText=fs+(tab==='paste'?'#185FA5;color:#fff':'#fff;color:#666');
+  const base='background:';
+  document.getElementById('itab-file').style.cssText='flex:1;padding:7px;border-radius:7px;border:1px solid #ddd;font-size:12px;font-weight:600;cursor:pointer;text-align:center;'+base+(tab==='file'?'#185FA5;color:#fff':'#fff;color:#666');
+  document.getElementById('itab-paste').style.cssText='flex:1;padding:7px;border-radius:7px;border:1px solid #ddd;font-size:12px;font-weight:600;cursor:pointer;text-align:center;'+base+(tab==='paste'?'#185FA5;color:#fff':'#fff;color:#666');
   document.getElementById('import-btn').disabled=true;
   pasteRow=null;
 }
@@ -892,36 +1385,39 @@ function showImport(){
   switchImportTab('file');
   document.getElementById('importModal').classList.add('show');
 }
-function closeImport(){document.getElementById('importModal').classList.remove('show');}
 
 document.addEventListener('DOMContentLoaded',()=>{
   const fi=document.getElementById('import-file');
   if(fi) fi.addEventListener('change',e=>{
-    const file=e.target.files[0]; if(!file)return;
+    const file=e.target.files[0];if(!file)return;
     const reader=new FileReader();
-    reader.onload=ev=>{ parseImportCSV(ev.target.result); };
+    reader.onload=ev=>parseImportCSV(ev.target.result);
     reader.readAsText(file,'UTF-8');
   });
+  const btn=document.getElementById('dupConfirmOk');
+  if(btn) btn.onclick=()=>{
+    document.getElementById('dupOverlay').classList.remove('show');
+    if(_dupCallback)_dupCallback();
+    _dupCallback=null;
+  };
 });
 
 function parseImportCSV(raw){
   let text=raw;
-  if(text.charCodeAt(0)===0xFEFF) text=text.slice(1);
+  if(text.charCodeAt(0)===0xFEFF)text=text.slice(1);
   const lines=text.trim().split(/\r?\n/);
-  if(lines.length<2){alert('데이터가 없습니다. 파일을 확인해주세요.');return;}
+  if(lines.length<2){alert('데이터가 없습니다.');return;}
   const headers=parseCSVLine(lines[0]);
   importRows=lines.slice(1).map(l=>parseCSVLine(l)).filter(r=>r.some(c=>c));
-
   importColIdx={};
   headers.forEach((h,i)=>{
     const hh=h.toLowerCase().replace(/\s/g,'');
-    if(hh.includes('타임스탬프')||hh.includes('날짜')||hh.includes('timestamp')) importColIdx.date=i;
-    else if(hh.includes('담당자')||hh.includes('이름')||hh.includes('name')) importColIdx.name=i;
-    else if(hh.includes('금액')||hh.includes('amount')||hh.includes('사용금액')) importColIdx.amt=i;
-    else if(hh.includes('카테고리')||hh.includes('category')) importColIdx.cat=i;
-    else if(hh.includes('메모')||hh.includes('memo')||hh.includes('비고')) importColIdx.memo=i;
+    if(hh.includes('타임스탬프')||hh.includes('날짜')||hh.includes('timestamp'))importColIdx.date=i;
+    else if(hh.includes('담당자')||hh.includes('이름')||hh.includes('name'))importColIdx.name=i;
+    else if(hh.includes('금액')||hh.includes('amount')||hh.includes('사용금액'))importColIdx.amt=i;
+    else if(hh.includes('카테고리')||hh.includes('category'))importColIdx.cat=i;
+    else if(hh.includes('메모')||hh.includes('memo')||hh.includes('비고'))importColIdx.memo=i;
   });
-
   const cols=Object.values(importColIdx).filter(v=>v!=null);
   const prev=importRows.slice(0,5).map(r=>'• '+cols.map(i=>r[i]||'').join(' | ')).join('\n');
   document.getElementById('import-preview-body').textContent=prev||'(내용 없음)';
@@ -932,7 +1428,6 @@ function parseImportCSV(raw){
   document.getElementById('map-cat').textContent=importColIdx.cat!=null?headers[importColIdx.cat]:'(없음)';
   document.getElementById('map-memo').textContent=importColIdx.memo!=null?headers[importColIdx.memo]:'(없음)';
   document.getElementById('import-col-map').style.display='block';
-
   const existKeys=new Set(loadTx().map(dupKey));
   const dupCount=importRows.filter(r=>{
     const name=(importColIdx.name!=null?r[importColIdx.name]:'').trim();
@@ -941,65 +1436,53 @@ function parseImportCSV(raw){
     const {fullDate}=parseDateRaw(importColIdx.date!=null?r[importColIdx.date]:'');
     return existKeys.has([fullDate,name,String(amt),memo].join('|'));
   }).length;
-
   const dupEl=document.getElementById('import-dup-info');
-  if(dupCount>0){
-    dupEl.textContent='⚠️ 이미 등록된 중복 건 '+dupCount+'개 감지 — 가져오기 시 자동 건너뜀';
-    dupEl.style.display='block';
-  } else { dupEl.style.display='none'; }
+  if(dupCount>0){dupEl.textContent='⚠️ 중복 '+dupCount+'건 감지 — 가져오기 시 자동 건너뜀';dupEl.style.display='block';}
+  else dupEl.style.display='none';
   document.getElementById('import-count').textContent='총 '+importRows.length+'건 (중복 '+dupCount+'건 제외 → '+(importRows.length-dupCount)+'건 등록 예정)';
-
   const ok=importColIdx.name!=null&&importColIdx.amt!=null;
   document.getElementById('import-btn').disabled=!ok;
-  if(!ok) alert('담당자 또는 금액 열을 감지하지 못했습니다.\n구글 시트 열 제목을 확인해주세요.');
+  if(!ok)alert('담당자 또는 금액 열을 감지하지 못했습니다.\n구글 시트 열 제목을 확인해주세요.');
 }
 
 function parsePasteInput(){
   const raw=document.getElementById('paste-input').value.trim();
-  if(!raw){
-    document.getElementById('paste-preview').style.display='none';
-    document.getElementById('import-btn').disabled=true;
-    pasteRow=null;return;
-  }
+  if(!raw){document.getElementById('paste-preview').style.display='none';document.getElementById('import-btn').disabled=true;pasteRow=null;return;}
   const cols=raw.split('\t').map(c=>c.trim());
   if(cols.length<2){
     document.getElementById('paste-preview-body').innerHTML='<span style="color:#A32D2D">열이 부족합니다. 구글 시트에서 행 전체를 복사해주세요.</span>';
     document.getElementById('paste-preview').style.display='block';
     document.getElementById('import-btn').disabled=true;pasteRow=null;return;
   }
-  let dateRaw='', name='', amtRaw='', cat='기타', memo='';
+  let dateRaw='',name='',amtRaw='',cat='기타',memo='';
   const catList=['식대','교통/출장','접대비','야식비','사무용품','주유비','기타'];
   cols.forEach(c=>{
-    if(!dateRaw&&/\d{4}.*\d{1,2}.*\d{1,2}/.test(c)) dateRaw=c;
-    else if(!amtRaw&&/^\d{4,7}$/.test(c.replace(/[,원]/g,''))) amtRaw=c;
-    else if(!name&&/^[가-힣]{2,5}$/.test(c)) name=c;
+    if(!dateRaw&&/\d{4}.*\d{1,2}.*\d{1,2}/.test(c))dateRaw=c;
+    else if(!amtRaw&&/^\d{4,7}$/.test(c.replace(/[,원]/g,'')))amtRaw=c;
+    else if(!name&&/^[가-힣]{2,5}$/.test(c))name=c;
   });
-  cols.forEach(c=>{if(catList.includes(c)) cat=c;});
+  cols.forEach(c=>{if(catList.includes(c))cat=c;});
   const catIdx=cols.findIndex(c=>catList.includes(c));
-  if(catIdx>=0&&cols[catIdx+1]) memo=cols[catIdx+1];
-
+  if(catIdx>=0&&cols[catIdx+1])memo=cols[catIdx+1];
   const amt=parseInt(amtRaw.replace(/[^0-9]/g,''))||0;
   const {dateStr,fullDate}=parseDateRaw(dateRaw);
-
   if(!name||!amt){
     document.getElementById('paste-preview-body').innerHTML='<span style="color:#A32D2D">담당자 또는 금액을 인식하지 못했습니다.</span>';
     document.getElementById('paste-preview').style.display='block';
     document.getElementById('import-btn').disabled=true;pasteRow=null;return;
   }
-
   pasteRow={dateStr,fullDate,name,amt,cat,memo};
   const existKeys=new Set(loadTx().map(dupKey));
   const isDup=existKeys.has([fullDate,name,String(amt),memo].join('|'));
   const dupWarnEl=document.getElementById('paste-dup-warn');
   if(isDup){
-    dupWarnEl.innerHTML='<div style="font-size:14px;font-weight:700;color:#A32D2D;margin-bottom:4px">🚫 중복 내역 — 가져오기 불가</div><div style="font-size:12px;color:#791F1F;line-height:1.7">이미 동일한 내역이 등록되어 있습니다.<br><strong>"+ 사용내역 등록" 버튼으로 수기 등록해주세요.</strong></div>';
+    dupWarnEl.innerHTML='<div style="font-size:13px;font-weight:700;color:#A32D2D;margin-bottom:4px">🚫 중복 내역 — 가져오기 불가</div><div style="font-size:12px;color:#791F1F;line-height:1.6">이미 동일한 내역이 등록되어 있습니다.<br><strong>"+ 사용내역 등록" 버튼으로 수기 등록해주세요.</strong></div>';
     dupWarnEl.style.cssText='display:block;background:#FCEBEB;border:1.5px solid #F09595;border-radius:8px;padding:10px 14px;margin-top:8px';
     document.getElementById('import-btn').disabled=true;
   } else {
     dupWarnEl.style.display='none';
     document.getElementById('import-btn').disabled=false;
   }
-
   document.getElementById('paste-preview-body').innerHTML=
     '<div>📅 날짜: <strong>'+dateStr+'</strong></div>'+
     '<div>👤 담당자: <strong>'+name+'</strong></div>'+
@@ -1011,9 +1494,9 @@ function parsePasteInput(){
 
 function doImport(){
   if(importMode==='paste'){doPasteImport();return;}
-  const cards=loadCards(), tx=loadTx();
+  const cards=loadCards(),tx=loadTx();
   const existKeys=new Set(tx.map(dupKey));
-  let added=0, skipped=0, dupSkip=0;
+  let added=0,skipped=0,dupSkip=0;
   importRows.forEach(r=>{
     const name=(importColIdx.name!=null?r[importColIdx.name]:'').trim();
     const amtRaw=(importColIdx.amt!=null?r[importColIdx.amt]:'').replace(/[^0-9]/g,'');
@@ -1027,17 +1510,17 @@ function doImport(){
     const key=[fullDate,name,String(amt),memo].join('|');
     if(existKeys.has(key)){dupSkip++;return;}
     if(cardObj&&amt>getBalance(cardObj)){skipped++;return;}
-    if(cardObj) cardObj.used=(cardObj.used||0)+amt;
+    if(cardObj)cardObj.used=(cardObj.used||0)+amt;
     tx.push({date:dateStr,fullDate,card:name,dept,cat,memo,amt,status:'승인'});
     existKeys.add(key);
     added++;
   });
   tx.sort((a,b)=>(b.fullDate||b.date||'').localeCompare(a.fullDate||a.date||''));
   saveCards(cards);saveTxData(tx);
-  closeImport();renderAll();
+  closeModal('importModal');renderAll();
   let msg='✅ '+added+'건 가져오기 완료!';
-  if(dupSkip) msg+='\n🔄 중복 '+dupSkip+'건 건너뜀';
-  if(skipped) msg+='\n⚠️ 잔액 부족/오류 '+skipped+'건 건너뜀';
+  if(dupSkip)msg+='\n🔄 중복 '+dupSkip+'건 건너뜀';
+  if(skipped)msg+='\n⚠️ 잔액 부족/오류 '+skipped+'건 건너뜀';
   alert(msg);
 }
 
@@ -1048,238 +1531,38 @@ function doPasteImport(){
   const cardObj=cards.find(c=>c.name===name);
   const dept=cardObj?cardObj.dept:'미지정';
   if(cardObj&&amt>getBalance(cardObj)){showErrPopup(name,getBalance(cardObj),amt);return;}
-  if(cardObj) cardObj.used=(cardObj.used||0)+amt;
+  if(cardObj)cardObj.used=(cardObj.used||0)+amt;
   tx.unshift({date:dateStr,fullDate,card:name,dept,cat,memo,amt,status:'승인'});
   saveCards(cards);saveTxData(tx);
-  closeImport();renderAll();
+  closeModal('importModal');renderAll();
   alert('✅ 1건 등록 완료!\n'+name+' '+amt.toLocaleString('ko-KR')+'원');
 }
 
-// ── 충전내역 ──
-function loadCharges(){try{return JSON.parse(localStorage.getItem('dni_charges')||'[]');}catch(e){return[];}}
-function saveCharges(c){localStorage.setItem('dni_charges',JSON.stringify(c));}
-
-function switchSection(sec){
-  ['tx','ch','lm'].forEach(s=>{
-    const el=document.getElementById('section-'+s);
-    if(el) el.style.display=s===sec?'block':'none';
-    const tab=document.getElementById('stab-'+s);
-    if(tab) tab.classList.toggle('active',s===sec);
-  });
-  if(sec==='ch') renderCharges();
-  if(sec==='lm') renderLimitSection();
+// ══════════════════════════════════
+// 전체 렌더
+// ══════════════════════════════════
+function renderAll(){
+  renderMetrics();
+  renderCards();
+  renderPersonChart();
+  renderRecentTx();
+  renderUsageTabs();
+  populateMonthFilter();
 }
 
-function goChargeCard(name){
-  switchSection('lm');
-  setTimeout(()=>{
-    const sel=document.getElementById('lm-sys-card');
-    if(sel){sel.value=name;updateLimitBal2();}
-  },100);
-}
-
-function renderLimitSection(){
-  const cards=loadCards();
-  const sysSel=document.getElementById('lm-sys-card');
-  if(sysSel){
-    sysSel.innerHTML='<option value="">카드를 선택하세요</option>'+
-      cards.map(c=>'<option value="'+c.name+'">'+c.name+' ('+c.dept+') *'+(c.num||'????')+'</option>').join('');
-  }
-  const allEl=document.getElementById('lm-all-cards');
-  if(!allEl) return;
-  if(!cards.length){allEl.innerHTML='<div class="empty-msg" style="padding:1rem">카드를 추가해주세요</div>';return;}
-  const avColors=['av-blue','av-teal','av-amber','av-coral','av-purple','av-gray'];
-  let rows='';
-  cards.forEach((c,i)=>{
-    const bal=getBalance(c);
-    const pct=getBarPct(c);
-    const usePct=c.charged?Math.round((c.used||0)/c.charged*100):0;
-    const av=avColors[i%avColors.length];
-    let badge,barColor,balColor;
-    if(bal<100000){badge='<span style="background:#FCEBEB;color:#A32D2D;padding:3px 9px;border-radius:6px;font-size:11px;font-weight:700">🚨 잔액부족</span>';barColor='#E24B4A';balColor='#A32D2D';}
-    else if(pct<30){badge='<span style="background:#FAEEDA;color:#854F0B;padding:3px 9px;border-radius:6px;font-size:11px;font-weight:700">⚠️ 주의</span>';barColor='#EF9F27';balColor='#854F0B';}
-    else{badge='<span style="background:#EAF3DE;color:#3B6D11;padding:3px 9px;border-radius:6px;font-size:11px;font-weight:700">✅ 정상</span>';barColor='#0F9D58';balColor='#3B6D11';}
-    rows+='<tr>'+
-      '<td><div style="display:flex;align-items:center;gap:6px"><div class="avatar '+av+'" style="width:26px;height:26px;font-size:11px;flex-shrink:0">'+((c.name||'?')[0])+'</div><strong>'+c.name+'</strong></div></td>'+
-      '<td style="color:#666">'+c.dept+'</td>'+
-      '<td style="color:#888;font-size:11px">*'+(c.num||'????')+'</td>'+
-      '<td style="text-align:right">'+fmt(c.charged||0)+'</td>'+
-      '<td style="text-align:right;color:#666">'+fmt(c.used||0)+'</td>'+
-      '<td style="text-align:right;font-weight:700;color:'+balColor+'">'+fmt(bal)+'</td>'+
-      '<td style="min-width:100px"><div style="display:flex;align-items:center;gap:6px"><div style="flex:1;background:#f0f0ec;border-radius:4px;height:7px;overflow:hidden"><div style="width:'+usePct+'%;height:7px;background:'+barColor+';border-radius:4px"></div></div><span style="font-size:11px;color:'+barColor+';font-weight:600;min-width:28px">'+usePct+'%</span></div></td>'+
-      '<td>'+badge+'</td>'+
-      '<td><button class="btn-charge-sm" onclick="quickCharge2(\''+c.name+'\')">충전 등록</button></td>'+
-      '</tr>';
-  });
-  allEl.innerHTML='<table class="low-card-table"><thead><tr><th>담당자</th><th>부서</th><th>카드번호</th><th style="text-align:right">충전금액</th><th style="text-align:right">사용금액</th><th style="text-align:right">잔액</th><th>사용률</th><th>상태</th><th>바로가기</th></tr></thead><tbody>'+rows+'</tbody></table>';
-}
-
-function updateLimitBal2(){
-  const name=document.getElementById('lm-sys-card').value;
-  const el=document.getElementById('lm-sys-bal-display');
-  if(!name){el.textContent='카드 선택 시 잔액 자동 표시';el.style.background='#f5f5f3';return;}
-  const c=loadCards().find(c=>c.name===name);
-  if(!c)return;
-  const bal=getBalance(c),pct=getBarPct(c);
-  let color='#3B6D11',bg='#EAF3DE';
-  if(bal<100000){color='#A32D2D';bg='#FCEBEB';}
-  else if(pct<30){color='#854F0B';bg='#FAEEDA';}
-  el.style.background=bg;
-  el.innerHTML='<strong style="color:'+color+'">현재 잔액: '+fmt(bal)+'</strong> &nbsp;|&nbsp; 충전: '+fmt(c.charged||0)+' / 사용: '+fmt(c.used||0);
-}
-
-function doSysCharge(){
-  const name=document.getElementById('lm-sys-card').value;
-  if(!name){alert('카드를 선택해주세요');return;}
-  const cards=loadCards();
-  const c=cards.find(c=>c.name===name);
-  showAddCharge();
-  setTimeout(()=>{
-    const sel=document.getElementById('ch-card');
-    if(sel&&c) sel.value=name+'|'+c.dept;
-  },100);
-}
-
-function doSysReduce(){
-  const name=document.getElementById('lm-sys-card').value;
-  if(!name){alert('카드를 선택해주세요');return;}
-  const cards=loadCards();
-  const c=cards.find(cc=>cc.name===name);
-  if(!c)return;
-  const bal=getBalance(c);
-  const amtStr=prompt('감액 금액을 입력하세요\n현재 잔액: '+fmt(bal));
-  if(!amtStr)return;
-  const amt=parseInt(amtStr.replace(/[^0-9]/g,''))||0;
-  if(!amt){alert('올바른 금액을 입력해주세요');return;}
-  if(amt>bal){alert('감액 금액이 현재 잔액('+fmt(bal)+')을 초과합니다.');return;}
-  if(!confirm('감액 처리하시겠습니까?\n'+name+' : '+fmt(amt)+'\n감액 후 잔액: '+fmt(bal-amt)))return;
-  c.charged=Math.max(0,(c.charged||0)-amt);
-  saveCards(cards);
-  const charges=loadCharges();
-  const today=new Date();
-  const dateStr=(today.getMonth()+1)+'/'+today.getDate();
-  charges.unshift({date:dateStr,fullDate:todayStr(),card:name,dept:c.dept,amt:-amt,memo:'감액 처리'});
-  saveCharges(charges);
-  renderAll();
-  renderLimitSection();
-  alert('✅ 감액 완료!\n'+name+' '+fmt(amt)+' 감액\n잔액: '+fmt(getBalance(c)));
-}
-
-function quickCharge2(name){
-  const sel=document.getElementById('lm-sys-card');
-  if(sel){sel.value=name;updateLimitBal2();}
-  const el=document.getElementById('lm-sys-card');
-  if(el) el.scrollIntoView({behavior:'smooth',block:'center'});
-}
-function quickCharge(name){quickCharge2(name);}
-
-function showAddCharge(){
-  const cards=loadCards();
-  if(!cards.length){alert('먼저 카드를 추가해주세요');return;}
-  document.getElementById('chargeModalTitle').textContent='충전 등록';
-  document.getElementById('ch-edit-idx').value='-1';
-  const sel=document.getElementById('ch-card');
-  sel.innerHTML=cards.map(c=>'<option value="'+c.name+'|'+c.dept+'">'+c.name+' ('+c.dept+') *'+c.num+'</option>').join('');
-  document.getElementById('ch-amt').value='';
-  document.getElementById('ch-memo').value='';
-  document.getElementById('chargeModal').classList.add('show');
-}
-
-function showEditCharge(i){
-  const charges=loadCharges(),ch=charges[i];
-  const cards=loadCards();
-  document.getElementById('chargeModalTitle').textContent='충전내역 수정';
-  document.getElementById('ch-edit-idx').value=i;
-  const sel=document.getElementById('ch-card');
-  sel.innerHTML=cards.map(c=>'<option value="'+c.name+'|'+c.dept+'"'+(c.name===ch.card?' selected':'')+'>'+c.name+' ('+c.dept+') *'+c.num+'</option>').join('');
-  document.getElementById('ch-amt').value=ch.amt||'';
-  document.getElementById('ch-memo').value=ch.memo||'';
-  document.getElementById('chargeModal').classList.add('show');
-}
-function closeChargeModal(){document.getElementById('chargeModal').classList.remove('show');}
-
-function saveCharge(){
-  const selVal=document.getElementById('ch-card').value.split('|');
-  const cardName=selVal[0],dept=selVal[1];
-  const amt=parseInt(document.getElementById('ch-amt').value)||0;
-  const memo=document.getElementById('ch-memo').value.trim()||'충전';
-  const editIdx=parseInt(document.getElementById('ch-edit-idx').value);
-  if(!amt){alert('충전 금액을 입력해주세요');return;}
-  const cards=loadCards();
-  const charges=loadCharges();
-  const today=new Date();
-  const dateStr=(today.getMonth()+1)+'/'+today.getDate();
-  const cardObj=cards.find(c=>c.name===cardName);
-  if(editIdx>=0){
-    const old=charges[editIdx];
-    const oldCard=cards.find(c=>c.name===old.card);
-    if(oldCard) oldCard.charged=Math.max(0,(oldCard.charged||0)-old.amt);
-    if(cardObj) cardObj.charged=(cardObj.charged||0)+amt;
-    charges[editIdx]={...old,card:cardName,dept,amt,memo};
-  } else {
-    if(cardObj) cardObj.charged=(cardObj.charged||0)+amt;
-    charges.unshift({date:dateStr,card:cardName,dept,amt,memo});
-  }
-  saveCards(cards);saveCharges(charges);
-  closeChargeModal();renderAll();renderCharges();
-  switchSection('ch');
-}
-
-function deleteCharge(i){
-  if(!confirm('이 충전내역을 삭제하시겠습니까?\n카드 충전금액도 함께 감소합니다.'))return;
-  const charges=loadCharges(),cards=loadCards();
-  const ch=charges[i];
-  const cardObj=cards.find(c=>c.name===ch.card);
-  if(cardObj) cardObj.charged=Math.max(0,(cardObj.charged||0)-ch.amt);
-  charges.splice(i,1);
-  saveCards(cards);saveCharges(charges);
-  renderAll();renderCharges();
-}
-
-function renderCharges(){
-  const charges=loadCharges();
-  const el=document.getElementById('chList');
-  if(!charges.length){el.innerHTML='<tr><td colspan="6" class="empty-msg">충전내역이 없습니다</td></tr>';return;}
-  el.innerHTML=charges.map((ch,i)=>{
-    const isReduce=ch.amt<0;
-    return '<tr>'+
-      '<td style="color:#aaa;white-space:nowrap">'+ch.date+'</td>'+
-      '<td style="font-weight:600">'+ch.card+'</td>'+
-      '<td style="color:#666">'+ch.dept+'</td>'+
-      '<td style="color:#666">'+ch.memo+'</td>'+
-      '<td style="font-weight:600;text-align:right;color:'+(isReduce?'#A32D2D':'#0F9D58')+';white-space:nowrap">'+(isReduce?'':'+')+(isReduce?fmt(-ch.amt)+' 감액':fmt(ch.amt))+'</td>'+
-      '<td style="white-space:nowrap">'+
-        (isReduce?'':('<button class="icon-btn edit" onclick="showEditCharge('+i+')" title="수정">✏️</button>'))+
-        '<button class="icon-btn del" onclick="deleteCharge('+i+')" title="삭제">🗑</button>'+
-      '</td></tr>';
-  }).join('');
-}
-
-// ── 중복 확인 팝업 ──
-let _dupCallback=null;
-function showDupConfirm(cb){_dupCallback=cb;document.getElementById('dupOverlay').classList.add('show');}
-function closeDupConfirm(){_dupCallback=null;document.getElementById('dupOverlay').classList.remove('show');}
-document.addEventListener('DOMContentLoaded',()=>{
-  const btn=document.getElementById('dupConfirmOk');
-  if(btn) btn.onclick=()=>{
-    document.getElementById('dupOverlay').classList.remove('show');
-    if(_dupCallback) _dupCallback();
-    _dupCallback=null;
-  };
-});
-
-function renderAll(){renderMetrics();renderCards();renderDept();renderTabs();renderTx();}
 document.getElementById('todayDate').textContent=new Date().toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric'});
+
 window.onclick=e=>{
-  if(e.target.id==='cardModal')closeCardModal();
-  if(e.target.id==='txModal')closeTxModal();
+  if(e.target.id==='cardModal')closeModal('cardModal');
+  if(e.target.id==='txModal')closeModal('txModal');
+  if(e.target.id==='chargeModal')closeModal('chargeModal');
+  if(e.target.id==='importModal')closeModal('importModal');
+  if(e.target.id==='lowCardModal')closeModal('lowCardModal');
   if(e.target.id==='errOverlay')closeErrPopup();
-  if(e.target.id==='chargeModal')closeChargeModal();
-  if(e.target.id==='importModal')closeImport();
   if(e.target.id==='dupOverlay')closeDupConfirm();
 };
-renderAll();
 
+renderAll();
 </script>
 </body>
 </html>
