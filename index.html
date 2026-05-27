@@ -10,6 +10,27 @@
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f5f3;color:#1a1a1a;min-height:100vh}
 
+
+/* ── 로그인 화면 ── */
+#loginScreen{display:flex;align-items:center;justify-content:center;min-height:100vh;background:linear-gradient(135deg,#042C53 0%,#185FA5 60%,#0C447C 100%)}
+.login-card{background:#fff;border-radius:16px;padding:2.5rem 2rem;width:360px;max-width:90vw}
+.login-logo{text-align:center;margin-bottom:2rem}
+.login-logo-text{font-size:22px;font-weight:700;letter-spacing:0.05em;color:#1a1a1a}
+.login-logo-text span{color:#185FA5}
+.login-logo-sub{font-size:13px;color:#888;margin-top:4px}
+.login-field{margin-bottom:14px}
+.login-field label{font-size:12px;color:#666;font-weight:500;display:block;margin-bottom:5px}
+.login-field input{width:100%;padding:10px 12px;border:1px solid #ddd;border-radius:8px;font-size:14px;color:#1a1a1a;background:#fff;outline:none;transition:border-color .2s,box-shadow .2s}
+.login-field input:focus{border-color:#185FA5;box-shadow:0 0 0 3px rgba(24,95,165,.1)}
+.login-btn{width:100%;padding:12px;background:#185FA5;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;margin-top:6px;transition:background .2s}
+.login-btn:hover{background:#0C447C}
+.login-error{background:#FCEBEB;border:1px solid #F7C1C1;border-radius:8px;padding:10px 12px;font-size:13px;color:#A32D2D;margin-top:10px;display:none;text-align:center}
+.login-hint{font-size:12px;color:#aaa;text-align:center;margin-top:14px;line-height:1.6}
+#appScreen{display:none}
+.account-info{font-size:12px;color:#aaa;display:flex;align-items:center;gap:5px}
+.logout-btn{padding:5px 10px;border-radius:6px;border:1px solid #e0e0dc;background:#fff;font-size:12px;cursor:pointer;color:#666;display:flex;align-items:center;gap:4px}
+.logout-btn:hover{background:#FCEBEB;color:#A32D2D;border-color:#F09595}
+
 /* ── 상단바 ── */
 .topbar{background:#fff;border-bottom:1px solid #e8e8e4;padding:0 1.5rem;height:54px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
 .logo{font-size:15px;font-weight:700;letter-spacing:0.04em;white-space:nowrap}
@@ -173,6 +194,42 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .import-modal{width:460px}
 .itab-btn{flex:1;padding:7px;border-radius:7px;border:1px solid #ddd;font-size:12px;font-weight:600;cursor:pointer;text-align:center}
 
+
+/* ── 로그인 화면 ── */
+#loginScreen{display:flex;position:fixed;top:0;left:0;width:100%;height:100%;background:linear-gradient(135deg,#042C53 0%,#0C447C 50%,#0F9D58 100%);z-index:9999;align-items:center;justify-content:center;flex-direction:column}
+.login-box{background:#fff;border-radius:16px;padding:2.5rem 2rem;width:360px;box-shadow:0 20px 60px rgba(0,0,0,0.3)}
+.login-logo{text-align:center;margin-bottom:1.5rem}
+.login-logo-text{font-size:22px;font-weight:700;color:#185FA5;letter-spacing:.06em}
+.login-logo-text span{color:#0F9D58}
+.login-logo-sub{font-size:12px;color:#888;margin-top:4px}
+.login-form-group{margin-bottom:14px}
+.login-form-group label{font-size:12px;color:#666;display:block;margin-bottom:5px;font-weight:500}
+.login-form-group input{width:100%;padding:10px 12px;border:1.5px solid #e0e0dc;border-radius:9px;font-size:14px;color:#1a1a1a;background:#fff;box-sizing:border-box;transition:border-color .2s}
+.login-form-group input:focus{outline:none;border-color:#185FA5;box-shadow:0 0 0 3px rgba(24,95,165,.12)}
+.login-btn{width:100%;padding:12px;border:none;border-radius:9px;background:#185FA5;color:#fff;font-size:15px;font-weight:700;cursor:pointer;margin-top:6px;transition:background .2s}
+.login-btn:hover{background:#0C447C}
+.login-error{background:#FCEBEB;border-radius:8px;padding:8px 12px;font-size:12px;color:#A32D2D;margin-top:10px;display:none;text-align:center}
+.login-footer{text-align:center;font-size:11px;color:rgba(255,255,255,.6);margin-top:1rem}
+.login-demo{font-size:11px;color:#aaa;text-align:center;margin-top:12px;line-height:1.7;background:#f5f5f3;border-radius:6px;padding:8px 10px}
+
+/* ── 상단바 사용자 정보 ── */
+.user-info{display:flex;align-items:center;gap:8px;padding:4px 10px;background:#f0f0ec;border-radius:20px;font-size:12px;color:#444}
+.user-badge{background:#185FA5;color:#fff;border-radius:12px;padding:2px 8px;font-size:11px;font-weight:600}
+.user-badge.admin{background:#0F9D58}
+.user-badge.viewer{background:#854F0B}
+
+/* ── 관리자 탭 ── */
+#tab-admin{display:none}
+#page-admin{display:none}
+.admin-section{background:#fff;border:1px solid #e8e8e4;border-radius:12px;padding:1.25rem;margin-bottom:14px}
+.admin-section h3{font-size:14px;font-weight:600;color:#1a1a1a;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid #f0f0ec;display:flex;align-items:center;gap:6px}
+.account-table{width:100%;border-collapse:collapse;font-size:13px}
+.account-table th{background:#f5f5f3;padding:7px 10px;text-align:left;font-size:11px;color:#666;border-bottom:2px solid #e8e8e4;font-weight:600}
+.account-table td{padding:8px 10px;border-bottom:1px solid #f0f0ec}
+.role-badge{padding:2px 8px;border-radius:5px;font-size:11px;font-weight:600}
+.rb-admin{background:#EAF3DE;color:#27500A}
+.rb-user{background:#E6F1FB;color:#0C447C}
+.rb-viewer{background:#FAEEDA;color:#633806}
 @media(max-width:768px){
   .metrics{grid-template-columns:1fr 1fr}
   .two-col{grid-template-columns:1fr}
@@ -184,6 +241,63 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </head>
 <body>
 
+<div id="loginScreen">
+  <div class="login-card">
+    <div class="login-logo">
+      <div style="width:56px;height:56px;background:#185FA5;border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:24px">💳</div>
+      <div class="login-logo-text">하나법인<span>충전카드</span></div>
+      <div class="login-logo-sub">카드 관리시스템 · 관리자 전용</div>
+    </div>
+    <div class="login-field">
+      <label for="loginCompany">기업 코드</label>
+      <input type="text" id="loginCompany" placeholder="예: dnibridge" autocomplete="off" onkeydown="if(event.key==='Enter')document.getElementById('loginPass').focus()">
+    </div>
+    <div class="login-field">
+      <label for="loginPass">비밀번호</label>
+      <input type="password" id="loginPass" placeholder="비밀번호를 입력하세요" autocomplete="off" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <button class="login-btn" onclick="doLogin()">🔐 로그인</button>
+    <div class="login-error" id="loginError">기업 코드 또는 비밀번호가 올바르지 않습니다.</div>
+    <div class="login-hint">
+      문의: DNI BRIDGE<br>
+      <span id="loginHintSub" style="color:#bbb;font-size:11px">관리자에게 기업 코드와 비밀번호를 받으세요</span>
+    </div>
+  </div>
+</div>
+
+<div id="appScreen">
+
+<!-- ══ 로그인 화면 ══ -->
+<div id="loginScreen">
+  <div class="login-box">
+    <div class="login-logo">
+      <div class="login-logo-text">DNI <span>BRIDGE</span></div>
+      <div class="login-logo-sub">하나법인 충전카드 관리시스템</div>
+    </div>
+    <div class="login-form-group">
+      <label>회사 코드</label>
+      <input type="text" id="loginCompany" placeholder="예: HANA001" autocomplete="organization" oninput="this.value=this.value.toUpperCase()">
+    </div>
+    <div class="login-form-group">
+      <label>아이디</label>
+      <input type="text" id="loginUser" placeholder="아이디 입력" autocomplete="username">
+    </div>
+    <div class="login-form-group">
+      <label>비밀번호</label>
+      <input type="password" id="loginPass" placeholder="비밀번호 입력" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <button class="login-btn" onclick="doLogin()">로그인</button>
+    <div class="login-error" id="loginError">아이디 또는 비밀번호가 올바르지 않습니다.</div>
+    <div class="login-demo">
+      <strong>테스트 계정</strong><br>
+      회사코드: DEMO | 아이디: admin | 비번: 1234 (관리자)<br>
+      회사코드: DEMO | 아이디: user1 | 비번: 1234 (일반)
+    </div>
+  </div>
+  <div class="login-footer">© DNI BRIDGE · 하나법인 충전카드 관리시스템</div>
+</div>
+
+
 <!-- ── 상단바 ── -->
 <div class="topbar">
   <div class="logo">
@@ -191,13 +305,15 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <small>하나법인 충전카드 관리시스템</small>
   </div>
   <div class="topbar-right">
+    <div class="user-info" id="userInfoBar"><span id="userInfoText"></span></div>
     <span id="todayDate" style="font-size:11px;color:#aaa"></span>
     <button class="btn" onclick="showAddCard()">+ 카드 추가</button>
     <button class="btn btn-green" onclick="openChargeModal(null,'charge')">⚡ 충전 등록</button>
     <button class="btn btn-primary" onclick="showAddTx()">+ 사용내역 등록</button>
     <button class="btn" onclick="exportCSV()">⬇ CSV</button>
     <button class="btn" onclick="showImport()">📥 시트 가져오기</button>
-    <button class="btn btn-danger" onclick="if(confirm('모든 데이터를 초기화하시겠습니까?')){localStorage.clear();location.reload()}">초기화</button>
+    <button class="btn btn-danger" id="btnReset" onclick="if(confirm('모든 데이터를 초기화하시겠습니까?')){resetCompanyData()}">초기화</button>
+    <button class="btn" onclick="doLogout()" style="color:#A32D2D;border-color:#F09595">🚪 로그아웃</button>
   </div>
 </div>
 
@@ -208,6 +324,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   <div class="tabnav-item" id="tab-history" onclick="switchTab('history')">📋 충전·감액 내역</div>
   <div class="tabnav-item" id="tab-usage" onclick="switchTab('usage')">📊 사용내역</div>
   <div class="tabnav-item" id="tab-hana" onclick="switchTab('hana')">🏦 하나카드 홈페이지</div>
+  <div class="tabnav-item" id="tab-admin" onclick="switchTab('admin')">⚙️ 계정 관리</div>
 </div>
 
 <div class="main">
@@ -470,6 +587,87 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   </div>
 </div><!-- /page-hana -->
 
+<!-- ════════════════════════════════
+     탭6: 계정 관리 (관리자 전용)
+════════════════════════════════ -->
+<div id="page-admin" style="display:none">
+  <div class="admin-section">
+    <h3>🏢 현재 접속 정보</h3>
+    <div id="adminCompanyInfo" style="font-size:13px;color:#555;line-height:2"></div>
+  </div>
+
+  <div class="admin-section">
+    <h3>👥 계정 목록</h3>
+    <div style="overflow-x:auto">
+      <table class="account-table">
+        <thead><tr><th>아이디</th><th>이름</th><th>권한</th><th>마지막 로그인</th><th>관리</th></tr></thead>
+        <tbody id="accountList"><tr><td colspan="5" class="empty-msg">계정이 없습니다</td></tr></tbody>
+      </table>
+    </div>
+    <button class="btn btn-primary" style="margin-top:10px" onclick="showAddAccount()">+ 계정 추가</button>
+  </div>
+
+  <div class="admin-section">
+    <h3>🔑 비밀번호 변경</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:10px;align-items:end">
+      <div class="form-group" style="margin:0">
+        <label>현재 비밀번호</label>
+        <input type="password" id="pwCurrent" placeholder="현재 비밀번호">
+      </div>
+      <div class="form-group" style="margin:0">
+        <label>새 비밀번호</label>
+        <input type="password" id="pwNew" placeholder="새 비밀번호 (4자 이상)">
+      </div>
+      <div class="form-group" style="margin:0">
+        <label>새 비밀번호 확인</label>
+        <input type="password" id="pwConfirm" placeholder="다시 입력">
+      </div>
+      <button class="btn btn-primary" style="white-space:nowrap" onclick="changePassword()">변경</button>
+    </div>
+  </div>
+
+  <div class="admin-section" style="border-top:2px solid #FCEBEB">
+    <h3 style="color:#A32D2D">⚠️ 데이터 관리</h3>
+    <div style="font-size:13px;color:#666;margin-bottom:12px">아래 작업은 되돌릴 수 없습니다. 신중하게 사용하세요.</div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn" style="color:#854F0B;border-color:#EF9F27" onclick="exportAllData()">💾 전체 데이터 백업</button>
+      <button class="btn btn-danger" onclick="if(confirm('정말로 모든 데이터를 초기화하시겠습니까?\n이 작업은 되돌릴 수 없습니다.'))resetCompanyData()">🗑 데이터 초기화</button>
+    </div>
+  </div>
+</div><!-- /page-admin -->
+
+<!-- 계정 추가 모달 -->
+<div class="overlay" id="accountModal">
+  <div class="modal">
+    <h3>👤 계정 추가</h3>
+    <div class="form-group">
+      <label>아이디</label>
+      <input type="text" id="acc-id" placeholder="영문+숫자 (예: user2)">
+    </div>
+    <div class="form-group">
+      <label>이름</label>
+      <input type="text" id="acc-name" placeholder="실명 입력">
+    </div>
+    <div class="form-group">
+      <label>초기 비밀번호</label>
+      <input type="password" id="acc-pass" placeholder="4자 이상">
+    </div>
+    <div class="form-group">
+      <label>권한</label>
+      <select id="acc-role">
+        <option value="admin">관리자 — 모든 기능 사용 가능</option>
+        <option value="user" selected>일반 사용자 — 사용내역 등록 가능</option>
+        <option value="viewer">조회 전용 — 읽기만 가능</option>
+      </select>
+    </div>
+    <div class="modal-btns">
+      <button class="btn" onclick="closeModal('accountModal')">취소</button>
+      <button class="btn btn-primary" onclick="addAccount()">추가</button>
+    </div>
+  </div>
+</div>
+
+
 </div><!-- /main -->
 
 <!-- ══════════════════════════════════════
@@ -678,12 +876,13 @@ function todayStr(){
   const d = new Date();
   return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
 }
-function loadCards(){try{return JSON.parse(localStorage.getItem('dni_cards')||'[]');}catch(e){return[];}}
-function saveCards(c){localStorage.setItem('dni_cards',JSON.stringify(c));}
-function loadTx(){try{return JSON.parse(localStorage.getItem('dni_tx')||'[]');}catch(e){return[];}}
-function saveTxData(t){localStorage.setItem('dni_tx',JSON.stringify(t));}
-function loadCharges(){try{return JSON.parse(localStorage.getItem('dni_charges')||'[]');}catch(e){return[];}}
-function saveCharges(c){localStorage.setItem('dni_charges',JSON.stringify(c));}
+function getKey(k){const s=getCurrentSession();return s?(s.company+'_'+k):k;}
+function loadCards(){try{return JSON.parse(localStorage.getItem(getKey('dni_cards'))||'[]');}catch(e){return[];}}
+function saveCards(c){localStorage.setItem(getKey('dni_cards'),JSON.stringify(c));}
+function loadTx(){try{return JSON.parse(localStorage.getItem(getKey('dni_tx'))||'[]');}catch(e){return[];}}
+function saveTxData(t){localStorage.setItem(getKey('dni_tx'),JSON.stringify(t));}
+function loadCharges(){try{return JSON.parse(localStorage.getItem(getKey('dni_charges'))||'[]');}catch(e){return[];}}
+function saveCharges(c){localStorage.setItem(getKey('dni_charges'),JSON.stringify(c));}
 
 function getBalance(c){return (c.charged||0)-(c.used||0);}
 function getBarPct(c){if(!c.charged)return 0;return Math.min(100,Math.round(getBalance(c)/c.charged*100));}
@@ -704,7 +903,7 @@ function closeModal(id){document.getElementById(id).classList.remove('show');}
 // ══════════════════════════════════
 // 탭 전환
 // ══════════════════════════════════
-const PAGES = ['dashboard','cards','history','usage','hana'];
+const PAGES = ['dashboard','cards','history','usage','hana','admin'];
 function switchTab(tab){
   PAGES.forEach(p=>{
     document.getElementById('page-'+p).style.display = p===tab?'block':'none';
@@ -713,6 +912,7 @@ function switchTab(tab){
   if(tab==='cards') renderCardTab();
   if(tab==='history') renderHistory();
   if(tab==='usage') renderUsage();
+  if(tab==='admin') renderAdminPage();
 }
 
 // ══════════════════════════════════
@@ -1538,6 +1738,219 @@ function doPasteImport(){
   alert('✅ 1건 등록 완료!\n'+name+' '+amt.toLocaleString('ko-KR')+'원');
 }
 
+
+// ══════════════════════════════════
+// 로그인 / 세션 / 계정 관리
+// ══════════════════════════════════
+
+// 기본 계정 (회사코드_accounts 키로 저장)
+const DEFAULT_ACCOUNTS = {
+  'DEMO': [
+    {id:'admin', name:'관리자', pass:'1234', role:'admin', lastLogin:''},
+    {id:'user1', name:'홍길동', pass:'1234', role:'user', lastLogin:''}
+  ]
+};
+
+function getAccountsKey(company){return company+'_accounts';}
+function loadAccounts(company){
+  try{
+    const saved = localStorage.getItem(getAccountsKey(company));
+    if(saved) return JSON.parse(saved);
+    // 없으면 기본 계정 생성
+    const defaults = DEFAULT_ACCOUNTS[company] || [
+      {id:'admin', name:'관리자', pass:'1234', role:'admin', lastLogin:''}
+    ];
+    localStorage.setItem(getAccountsKey(company), JSON.stringify(defaults));
+    return defaults;
+  }catch(e){return[];}
+}
+function saveAccountsData(company, accounts){
+  localStorage.setItem(getAccountsKey(company), JSON.stringify(accounts));
+}
+
+function getCurrentSession(){
+  try{return JSON.parse(sessionStorage.getItem('dni_session')||'null');}catch(e){return null;}
+}
+function setSession(company, user){
+  sessionStorage.setItem('dni_session', JSON.stringify({company, id:user.id, name:user.name, role:user.role}));
+}
+function clearSession(){sessionStorage.removeItem('dni_session');}
+
+function doLogin(){
+  const company = document.getElementById('loginCompany').value.trim().toUpperCase();
+  const userId = document.getElementById('loginUser').value.trim();
+  const pass = document.getElementById('loginPass').value;
+  const errEl = document.getElementById('loginError');
+  errEl.style.display='none';
+
+  if(!company||!userId||!pass){
+    errEl.textContent='모든 항목을 입력해주세요.';
+    errEl.style.display='block'; return;
+  }
+
+  const accounts = loadAccounts(company);
+  const user = accounts.find(a=>a.id===userId && a.pass===pass);
+  if(!user){
+    errEl.textContent='아이디, 비밀번호 또는 회사 코드가 올바르지 않습니다.';
+    errEl.style.display='block'; return;
+  }
+
+  // 마지막 로그인 시간 업데이트
+  user.lastLogin = new Date().toLocaleString('ko-KR');
+  saveAccountsData(company, accounts);
+
+  setSession(company, user);
+  document.getElementById('loginScreen').style.display='none';
+  initApp();
+}
+
+function doLogout(){
+  if(!confirm('로그아웃 하시겠습니까?'))return;
+  clearSession();
+  location.reload();
+}
+
+function resetCompanyData(){
+  const s = getCurrentSession();
+  if(!s)return;
+  const keys = ['dni_cards','dni_tx','dni_charges'];
+  keys.forEach(k=>localStorage.removeItem(s.company+'_'+k));
+  renderAll();
+  alert('데이터가 초기화되었습니다.');
+}
+
+function initApp(){
+  const s = getCurrentSession();
+  if(!s){document.getElementById('loginScreen').style.display='flex';return;}
+
+  // 사용자 정보 표시
+  const roleLabel = {admin:'관리자', user:'일반사용자', viewer:'조회전용'};
+  const roleClass = {admin:'admin', user:'', viewer:'viewer'};
+  document.getElementById('userInfoText').innerHTML =
+    '<span class="user-badge '+roleClass[s.role]+'">'+(roleLabel[s.role]||s.role)+'</span> '+
+    s.name+' <span style="color:#aaa;font-size:10px">('+s.company+')</span>';
+
+  // 권한에 따른 버튼 제어
+  const isViewer = s.role==='viewer';
+  const isAdmin = s.role==='admin';
+  ['showAddCard','showAddTx','openChargeModal','showImport'].forEach(fn=>{
+    // 조회 전용은 버튼 숨기기
+  });
+  if(isViewer){
+    document.querySelectorAll('.btn-primary,.btn-green').forEach(b=>{b.style.display='none';});
+    document.getElementById('btnReset').style.display='none';
+  }
+  // 관리자 탭 표시
+  if(isAdmin){
+    document.getElementById('tab-admin').style.display='flex';
+  }
+
+  document.getElementById('loginScreen').style.display='none';
+  document.getElementById('todayDate').textContent=new Date().toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric'});
+  renderAll();
+}
+
+// ── 관리자 페이지 렌더 ──
+function renderAdminPage(){
+  const s = getCurrentSession();
+  if(!s||s.role!=='admin'){
+    document.getElementById('page-admin').innerHTML='<div class="empty-msg" style="padding:3rem;font-size:14px">관리자만 접근할 수 있습니다.</div>';
+    return;
+  }
+  const accounts = loadAccounts(s.company);
+
+  // 회사 정보
+  document.getElementById('adminCompanyInfo').innerHTML =
+    '회사 코드: <strong>'+s.company+'</strong> &nbsp;|&nbsp; '+
+    '접속 계정: <strong>'+s.name+'</strong> ('+s.id+') &nbsp;|&nbsp; '+
+    '권한: <strong>관리자</strong> &nbsp;|&nbsp; '+
+    '등록 계정 수: <strong>'+accounts.length+'개</strong>';
+
+  // 계정 목록
+  const roleLabel={admin:'관리자',user:'일반사용자',viewer:'조회전용'};
+  const roleClass={admin:'rb-admin',user:'rb-user',viewer:'rb-viewer'};
+  document.getElementById('accountList').innerHTML = accounts.map((a,i)=>'<tr>'+
+    '<td style="font-family:monospace;font-size:12px">'+a.id+'</td>'+
+    '<td style="font-weight:600">'+a.name+'</td>'+
+    '<td><span class="role-badge '+roleClass[a.role]+'">'+roleLabel[a.role]+'</span></td>'+
+    '<td style="color:#aaa;font-size:12px">'+(a.lastLogin||'없음')+'</td>'+
+    '<td style="white-space:nowrap">'+
+      (a.id!==s.id?('<button class="icon-btn del" onclick="deleteAccount('+i+')" title="삭제">🗑</button>'):'<span style="font-size:11px;color:#aaa">현재 계정</span>')+
+    '</td>'+
+  '</tr>').join('');
+}
+
+function showAddAccount(){
+  ['acc-id','acc-name','acc-pass'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('acc-role').value='user';
+  document.getElementById('accountModal').classList.add('show');
+}
+
+function addAccount(){
+  const s = getCurrentSession();
+  if(!s)return;
+  const id=document.getElementById('acc-id').value.trim();
+  const name=document.getElementById('acc-name').value.trim();
+  const pass=document.getElementById('acc-pass').value;
+  const role=document.getElementById('acc-role').value;
+  if(!id||!name||!pass){alert('모든 항목을 입력해주세요.');return;}
+  if(pass.length<4){alert('비밀번호는 4자 이상이어야 합니다.');return;}
+  const accounts=loadAccounts(s.company);
+  if(accounts.find(a=>a.id===id)){alert('이미 존재하는 아이디입니다.');return;}
+  accounts.push({id,name,pass,role,lastLogin:''});
+  saveAccountsData(s.company,accounts);
+  closeModal('accountModal');
+  renderAdminPage();
+  alert('계정이 추가되었습니다.');
+}
+
+function deleteAccount(i){
+  const s=getCurrentSession();
+  if(!s)return;
+  const accounts=loadAccounts(s.company);
+  if(!confirm(accounts[i].name+'('+accounts[i].id+') 계정을 삭제하시겠습니까?'))return;
+  accounts.splice(i,1);
+  saveAccountsData(s.company,accounts);
+  renderAdminPage();
+}
+
+function changePassword(){
+  const s=getCurrentSession();
+  if(!s)return;
+  const curr=document.getElementById('pwCurrent').value;
+  const nw=document.getElementById('pwNew').value;
+  const conf=document.getElementById('pwConfirm').value;
+  if(!curr||!nw||!conf){alert('모든 항목을 입력해주세요.');return;}
+  if(nw.length<4){alert('새 비밀번호는 4자 이상이어야 합니다.');return;}
+  if(nw!==conf){alert('새 비밀번호가 일치하지 않습니다.');return;}
+  const accounts=loadAccounts(s.company);
+  const user=accounts.find(a=>a.id===s.id);
+  if(!user||user.pass!==curr){alert('현재 비밀번호가 올바르지 않습니다.');return;}
+  user.pass=nw;
+  saveAccountsData(s.company,accounts);
+  document.getElementById('pwCurrent').value='';
+  document.getElementById('pwNew').value='';
+  document.getElementById('pwConfirm').value='';
+  alert('비밀번호가 변경되었습니다.');
+}
+
+function exportAllData(){
+  const s=getCurrentSession();
+  if(!s)return;
+  const data={
+    company:s.company,
+    exportDate:new Date().toISOString(),
+    cards:loadCards(),
+    transactions:loadTx(),
+    charges:loadCharges()
+  };
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='DNI_BRIDGE_backup_'+s.company+'_'+todayStr()+'.json';
+  a.click();
+}
+
 // ══════════════════════════════════
 // 전체 렌더
 // ══════════════════════════════════
@@ -1550,9 +1963,9 @@ function renderAll(){
   populateMonthFilter();
 }
 
-document.getElementById('todayDate').textContent=new Date().toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric'});
-
+const _origOnClick=window.onclick;
 window.onclick=e=>{
+  if(_origOnClick)_origOnClick(e);
   if(e.target.id==='cardModal')closeModal('cardModal');
   if(e.target.id==='txModal')closeModal('txModal');
   if(e.target.id==='chargeModal')closeModal('chargeModal');
@@ -1562,7 +1975,105 @@ window.onclick=e=>{
   if(e.target.id==='dupOverlay')closeDupConfirm();
 };
 
-renderAll();
+window.onclick=e=>{
+  if(e.target.id==='accountModal')closeModal('accountModal');
+};
+
+// ── 로그인 설정 ──
+// 기업코드: 비밀번호 형식으로 등록
+// 새 고객사 추가할 때 여기에 한 줄 추가하면 됩니다
+const ACCOUNTS = {
+  'dnibridge':  { pass: 'dnibridge2024', name: 'DNI BRIDGE', adminKey: 'dni_' },
+  'testco':     { pass: 'test1234',      name: '테스트 회사',   adminKey: 'test_' },
+};
+
+function doLogin(){
+  const company = document.getElementById('loginCompany').value.trim().toLowerCase();
+  const pass = document.getElementById('loginPass').value;
+  const errEl = document.getElementById('loginError');
+
+  if(!ACCOUNTS[company]){
+    errEl.style.display='block';
+    errEl.textContent='기업 코드를 확인해주세요.';
+    return;
+  }
+  if(ACCOUNTS[company].pass !== pass){
+    errEl.style.display='block';
+    errEl.textContent='비밀번호가 올바르지 않습니다.';
+    document.getElementById('loginPass').value='';
+    document.getElementById('loginPass').focus();
+    return;
+  }
+
+  // 로그인 성공
+  const acct = ACCOUNTS[company];
+  sessionStorage.setItem('dni_login', company);
+  sessionStorage.setItem('dni_company', acct.name);
+  sessionStorage.setItem('dni_key', acct.adminKey);
+
+  // localStorage 키를 기업별로 분리
+  window.__storageKey = acct.adminKey;
+
+  errEl.style.display='none';
+  document.getElementById('loginScreen').style.display='none';
+  document.getElementById('appScreen').style.display='block';
+
+  // 로고에 회사명 표시
+  const logoEl = document.querySelector('.logo');
+  if(logoEl) logoEl.innerHTML = '하나법인 <span>충전카드</span> <small>' + acct.name + '</small>';
+
+  // 로그아웃 버튼 추가
+  const tr = document.querySelector('.topbar-right');
+  if(tr && !document.getElementById('logoutBtn')){
+    const lb = document.createElement('button');
+    lb.id = 'logoutBtn';
+    lb.className = 'logout-btn';
+    lb.innerHTML = '🔓 로그아웃';
+    lb.onclick = doLogout;
+    tr.appendChild(lb);
+  }
+
+  initApp();
+}
+
+function doLogout(){
+  if(!confirm('로그아웃 하시겠습니까?')) return;
+  sessionStorage.clear();
+  window.__storageKey = '';
+  document.getElementById('loginScreen').style.display='flex';
+  document.getElementById('appScreen').style.display='none';
+  document.getElementById('loginCompany').value='';
+  document.getElementById('loginPass').value='';
+  const lb = document.getElementById('logoutBtn');
+  if(lb) lb.remove();
+}
+
+// 기업별 localStorage 키 분리
+// 기존 localStorage 함수들이 __storageKey를 prefix로 사용하도록
+function lsKey(k){ return (window.__storageKey||'') + k; }
+
+// 자동 로그인 체크 (이전 세션)
+const _savedLogin = sessionStorage.getItem('dni_login');
+if(_savedLogin && ACCOUNTS[_savedLogin]){
+  document.getElementById('loginCompany').value = _savedLogin;
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('appScreen').style.display = 'block';
+  window.__storageKey = ACCOUNTS[_savedLogin].adminKey;
+  const _acct = ACCOUNTS[_savedLogin];
+  const logoEl = document.querySelector('.logo');
+  if(logoEl) logoEl.innerHTML = '하나법인 <span>충전카드</span> <small>' + _acct.name + '</small>';
+  const tr = document.querySelector('.topbar-right');
+  if(tr && !document.getElementById('logoutBtn')){
+    const lb = document.createElement('button');
+    lb.id = 'logoutBtn';
+    lb.className = 'logout-btn';
+    lb.innerHTML = '🔓 로그아웃';
+    lb.onclick = doLogout;
+    tr.appendChild(lb);
+  }
+  initApp();
+}
 </script>
+</div>
 </body>
 </html>
