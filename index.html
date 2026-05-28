@@ -13,25 +13,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 /* ── 로그인 화면 ── */
 #loginScreen{display:flex;align-items:center;justify-content:center;min-height:100vh;background:linear-gradient(135deg,#042C53 0%,#185FA5 60%,#0C447C 100%)}
-.login-card{background:#fff;border-radius:16px;padding:2.5rem 2rem;width:360px;max-width:90vw}
-.login-logo{text-align:center;margin-bottom:2rem}
-.login-logo-text{font-size:22px;font-weight:700;letter-spacing:0.05em;color:#1a1a1a}
-.login-logo-text span{color:#185FA5}
-.login-logo-sub{font-size:13px;color:#888;margin-top:4px}
-.login-field{margin-bottom:14px}
-.login-field label{font-size:12px;color:#666;font-weight:500;display:block;margin-bottom:5px}
-.login-field input{width:100%;padding:10px 12px;border:1px solid #ddd;border-radius:8px;font-size:14px;color:#1a1a1a;background:#fff;outline:none;transition:border-color .2s,box-shadow .2s}
-.login-field input:focus{border-color:#185FA5;box-shadow:0 0 0 3px rgba(24,95,165,.1)}
-.login-btn{width:100%;padding:12px;background:#185FA5;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;margin-top:6px;transition:background .2s}
-.login-btn:hover{background:#0C447C}
-.login-error{background:#FCEBEB;border:1px solid #F7C1C1;border-radius:8px;padding:10px 12px;font-size:13px;color:#A32D2D;margin-top:10px;display:none;text-align:center}
-
-.login-demo-hint{background:#f5f5f3;border-radius:8px;padding:10px 12px;font-size:11px;color:#888;margin-top:14px;line-height:1.7;text-align:center}
-.login-hint{font-size:12px;color:#aaa;text-align:center;margin-top:14px;line-height:1.6}
 #appScreen{display:none}
-.account-info{font-size:12px;color:#aaa;display:flex;align-items:center;gap:5px}
-.logout-btn{padding:5px 10px;border-radius:6px;border:1px solid #e0e0dc;background:#fff;font-size:12px;cursor:pointer;color:#666;display:flex;align-items:center;gap:4px}
-.logout-btn:hover{background:#FCEBEB;color:#A32D2D;border-color:#F09595}
 
 /* ── 상단바 ── */
 .topbar{background:#fff;border-bottom:1px solid #e8e8e4;padding:0 1.5rem;height:54px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
@@ -198,21 +180,20 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 
 /* ── 로그인 화면 ── */
-#loginScreen{display:flex;position:fixed;top:0;left:0;width:100%;height:100%;background:linear-gradient(135deg,#042C53 0%,#0C447C 50%,#0F9D58 100%);z-index:9999;align-items:center;justify-content:center;flex-direction:column}
-.login-box{background:#fff;border-radius:16px;padding:2.5rem 2rem;width:360px;box-shadow:0 20px 60px rgba(0,0,0,0.3)}
-.login-logo{text-align:center;margin-bottom:1.5rem}
-.login-logo-text{font-size:22px;font-weight:700;color:#185FA5;letter-spacing:.06em}
+#loginScreen{display:flex;position:fixed;top:0;left:0;width:100%;height:100%;background:linear-gradient(135deg,#042C53 0%,#185FA5 55%,#0C7A45 100%);z-index:9999;align-items:center;justify-content:center;flex-direction:column}
+.login-box{background:#fff;border-radius:18px;padding:2.5rem 2rem;width:360px;max-width:90vw;box-shadow:0 20px 60px rgba(0,0,0,0.35)}
+.login-logo{text-align:center;margin-bottom:1.75rem}
+.login-logo-text{font-size:24px;font-weight:700;color:#185FA5;letter-spacing:.06em}
 .login-logo-text span{color:#0F9D58}
-.login-logo-sub{font-size:12px;color:#888;margin-top:4px}
+.login-logo-sub{font-size:12px;color:#888;margin-top:5px}
 .login-form-group{margin-bottom:14px}
-.login-form-group label{font-size:12px;color:#666;display:block;margin-bottom:5px;font-weight:500}
-.login-form-group input{width:100%;padding:10px 12px;border:1.5px solid #e0e0dc;border-radius:9px;font-size:14px;color:#1a1a1a;background:#fff;box-sizing:border-box;transition:border-color .2s}
+.login-form-group label{font-size:12px;color:#555;display:block;margin-bottom:5px;font-weight:600}
+.login-form-group input{width:100%;padding:11px 13px;border:1.5px solid #e0e0dc;border-radius:9px;font-size:14px;color:#1a1a1a;background:#fff;box-sizing:border-box;transition:all .2s}
 .login-form-group input:focus{outline:none;border-color:#185FA5;box-shadow:0 0 0 3px rgba(24,95,165,.12)}
-.login-btn{width:100%;padding:12px;border:none;border-radius:9px;background:#185FA5;color:#fff;font-size:15px;font-weight:700;cursor:pointer;margin-top:6px;transition:background .2s}
-.login-btn:hover{background:#0C447C}
-.login-error{background:#FCEBEB;border-radius:8px;padding:8px 12px;font-size:12px;color:#A32D2D;margin-top:10px;display:none;text-align:center}
-.login-footer{text-align:center;font-size:11px;color:rgba(255,255,255,.6);margin-top:1rem}
-.login-demo{font-size:11px;color:#aaa;text-align:center;margin-top:12px;line-height:1.7;background:#f5f5f3;border-radius:6px;padding:8px 10px}
+.login-btn{width:100%;padding:13px;border:none;border-radius:9px;background:linear-gradient(135deg,#185FA5,#0C447C);color:#fff;font-size:15px;font-weight:700;cursor:pointer;margin-top:8px;transition:opacity .2s;letter-spacing:.02em}
+.login-btn:hover{opacity:.9}
+.login-error{background:#FCEBEB;border:1px solid #F7C1C1;border-radius:8px;padding:9px 12px;font-size:12px;color:#A32D2D;margin-top:10px;display:none;text-align:center;font-weight:500}
+.login-footer{text-align:center;font-size:11px;color:rgba(255,255,255,.5);margin-top:1.25rem;line-height:1.8}
 
 /* ── 상단바 사용자 정보 ── */
 .user-info{display:flex;align-items:center;gap:8px;padding:4px 10px;background:#f0f0ec;border-radius:20px;font-size:12px;color:#444}
@@ -243,38 +224,29 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </head>
 <body>
 
-<div id="loginScreen" style="display:flex;align-items:center;justify-content:center;min-height:100vh;background:linear-gradient(135deg,#042C53 0%,#185FA5 60%,#0C447C 100%);flex-direction:column">
-  <div class="login-card">
+<div id="loginScreen">
+  <div class="login-box">
     <div class="login-logo">
-      <div style="width:60px;height:60px;background:#185FA5;border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-size:28px">💳</div>
+      <div style="width:60px;height:60px;background:linear-gradient(135deg,#185FA5,#0F9D58);border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-size:28px;box-shadow:0 4px 14px rgba(24,95,165,0.3)">💳</div>
       <div class="login-logo-text">DNI <span>BRIDGE</span></div>
       <div class="login-logo-sub">하나법인 충전카드 관리시스템</div>
     </div>
-    <div class="login-field">
+    <div class="login-form-group">
       <label for="loginCompany">회사 코드</label>
-      <input type="text" id="loginCompany" placeholder="예: HANA001" autocomplete="off"
-        onkeydown="if(event.key==='Enter')document.getElementById('loginUser').focus()"
-        oninput="this.value=this.value.toUpperCase()">
+      <input type="text" id="loginCompany" placeholder="회사 코드를 입력하세요" autocomplete="off"
+        onkeydown="if(event.key==='Enter')document.getElementById('loginPass').focus()"
+        oninput="this.value=this.value.toUpperCase();document.getElementById('loginError').style.display='none'">
     </div>
-    <div class="login-field">
-      <label for="loginUser">아이디</label>
-      <input type="text" id="loginUser" placeholder="아이디 입력" autocomplete="off"
-        onkeydown="if(event.key==='Enter')document.getElementById('loginPass').focus()">
-    </div>
-    <div class="login-field">
+    <div class="login-form-group">
       <label for="loginPass">비밀번호</label>
-      <input type="password" id="loginPass" placeholder="비밀번호 입력" autocomplete="off"
-        onkeydown="if(event.key==='Enter')doLogin()">
+      <input type="password" id="loginPass" placeholder="비밀번호를 입력하세요" autocomplete="off"
+        onkeydown="if(event.key==='Enter')doLogin()"
+        oninput="document.getElementById('loginError').style.display='none'">
     </div>
-    <button class="login-btn" onclick="doLogin()">🔐 로그인</button>
-    <div class="login-error" id="loginError"></div>
-    <div class="login-demo-hint" id="loginDemoHint">
-      <div style="font-weight:500;margin-bottom:4px">테스트 계정</div>
-      <div>회사코드: DEMO | 아이디: admin | 비번: 1234 (관리자)</div>
-      <div>회사코드: DEMO | 아이디: user1 | 비번: 1234 (일반)</div>
-    </div>
+    <button class="login-btn" onclick="doLogin()">로그인</button>
+    <div class="login-error" id="loginError">회사 코드 또는 비밀번호가 올바르지 않습니다.</div>
   </div>
-  <div style="color:rgba(255,255,255,0.5);font-size:12px;margin-top:20px">© DNI BRIDGE · 하나법인 충전카드 관리시스템</div>
+  <div class="login-footer">© DNI BRIDGE · 하나법인 충전카드 관리시스템</div>
 </div>
 
 <div id="appScreen">
@@ -1729,12 +1701,17 @@ function doPasteImport(){
 // ══════════════════════════════════
 
 // 기본 계정 (회사코드_accounts 키로 저장)
-const DEFAULT_ACCOUNTS = {
-  'DEMO': [
-    {id:'admin', name:'관리자', pass:'1234', role:'admin', lastLogin:''},
-    {id:'user1', name:'홍길동', pass:'1234', role:'user', lastLogin:''}
-  ]
+// ── 고객법인 등록 목록 ──
+// 새 고객사 추가 시 아래에 한 줄만 추가하시면 됩니다
+// 형식: '회사코드': { pass:'비밀번호', name:'화면에 표시될 회사명', key:'데이터저장키_' }
+// ★ 회사코드: 영문대문자+숫자 (예: HANA001, CORP02)
+// ★ key: 다른 회사와 겹치지 않는 고유 영문 (예: hana001_, corp02_)
+const CLIENT_LIST = {
+  'DNIBRIDGE': { pass: 'dni2024',  name: 'DNI BRIDGE (본사)',    key: 'dni_'   },
+  'HANA001':   { pass: 'hana1234', name: '하나법인 고객사 1',     key: 'h001_'  },
+  'HANA002':   { pass: 'hana5678', name: '하나법인 고객사 2',     key: 'h002_'  },
 };
+// ↑ 등록 가능 업체 수: 제한 없음 (원하는 만큼 추가 가능)
 
 function getAccountsKey(company){return company+'_accounts';}
 function loadAccounts(company){
@@ -1754,47 +1731,71 @@ function saveAccountsData(company, accounts){
 }
 
 function getCurrentSession(){
-  try{return JSON.parse(sessionStorage.getItem('dni_session')||'null');}catch(e){return null;}
+  const company = sessionStorage.getItem('dni_company');
+  const name = sessionStorage.getItem('dni_name');
+  const key = sessionStorage.getItem('dni_key');
+  if(!company || !name || !key) return null;
+  return {company, name, key};
 }
 function setSession(company, user){
-  sessionStorage.setItem('dni_session', JSON.stringify({company, id:user.id, name:user.name, role:user.role}));
+  // 2단계 로그인으로 변경 — doLogin에서 직접 처리
 }
-function clearSession(){sessionStorage.removeItem('dni_session');}
+function clearSession(){
+  sessionStorage.removeItem('dni_company');
+  sessionStorage.removeItem('dni_name');
+  sessionStorage.removeItem('dni_key');
+  sessionStorage.removeItem('dni_session');
+  window.__storageKey = '';
+}
 
 function doLogin(){
   const company = document.getElementById('loginCompany').value.trim().toUpperCase();
-  const userId = document.getElementById('loginUser').value.trim();
   const pass = document.getElementById('loginPass').value;
   const errEl = document.getElementById('loginError');
-  errEl.style.display='none';
+  errEl.style.display = 'none';
 
-  if(!company||!userId||!pass){
-    errEl.textContent='모든 항목을 입력해주세요.';
-    errEl.style.display='block'; return;
+  if(!company || !pass){
+    errEl.textContent = '회사 코드와 비밀번호를 모두 입력해주세요.';
+    errEl.style.display = 'block';
+    return;
   }
 
-  const accounts = loadAccounts(company);
-  const user = accounts.find(a=>a.id===userId && a.pass===pass);
-  if(!user){
-    errEl.textContent='아이디, 비밀번호 또는 회사 코드가 올바르지 않습니다.';
-    errEl.style.display='block'; return;
+  const client = CLIENT_LIST[company];
+  if(!client || client.pass !== pass){
+    errEl.textContent = '회사 코드 또는 비밀번호가 올바르지 않습니다.';
+    errEl.style.display = 'block';
+    document.getElementById('loginPass').value = '';
+    document.getElementById('loginPass').focus();
+    return;
   }
 
-  // 마지막 로그인 시간 업데이트
-  user.lastLogin = new Date().toLocaleString('ko-KR');
-  saveAccountsData(company, accounts);
+  // 로그인 성공 — 세션에 저장
+  sessionStorage.setItem('dni_company', company);
+  sessionStorage.setItem('dni_name', client.name);
+  sessionStorage.setItem('dni_key', client.key);
+  window.__storageKey = client.key;
 
-  setSession(company, user);
-  document.getElementById('loginScreen').style.display='none';
-  document.getElementById('appScreen').style.display='block';
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('appScreen').style.display = 'block';
   initApp();
 }
 
+
 function doLogout(){
-  if(!confirm('로그아웃 하시겠습니까?'))return;
-  clearSession();
-  location.reload();
+  if(!confirm('로그아웃 하시겠습니까?')) return;
+  sessionStorage.clear();
+  window.__storageKey = '';
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('appScreen').style.display = 'none';
+  document.getElementById('loginCompany').value = '';
+  document.getElementById('loginPass').value = '';
+  document.getElementById('loginError').style.display = 'none';
 }
+
+
+// localStorage 키에 회사별 prefix 적용
+function lsKey(k){ return (window.__storageKey || '') + k; }
+
 
 function resetCompanyData(){
   const s = getCurrentSession();
@@ -1809,12 +1810,13 @@ function initApp(){
   const s = getCurrentSession();
   if(!s){document.getElementById('loginScreen').style.display='flex';return;}
 
-  // 사용자 정보 표시
-  const roleLabel = {admin:'관리자', user:'일반사용자', viewer:'조회전용'};
-  const roleClass = {admin:'admin', user:'', viewer:'viewer'};
+  // 회사명 표시
   document.getElementById('userInfoText').innerHTML =
-    '<span class="user-badge '+roleClass[s.role]+'">'+(roleLabel[s.role]||s.role)+'</span> '+
-    s.name+' <span style="color:#aaa;font-size:10px">('+s.company+')</span>';
+    '<span class="user-badge admin">관리자</span> ' + s.name +
+    ' <span style="color:#aaa;font-size:10px">('+s.company+')</span>';
+
+  // storageKey 설정 (기업별 데이터 분리)
+  window.__storageKey = s.key || '';
 
   // 권한에 따른 버튼 제어
   const isViewer = s.role==='viewer';
